@@ -1232,9 +1232,6 @@
   (junction (at 34.29 67.31) (diameter 0) (color 0 0 0 0)
     (uuid 07cce522-c24d-44d6-8c32-50fb6b8ca435)
   )
-  (junction (at 246.38 67.31) (diameter 0) (color 0 0 0 0)
-    (uuid 0962847e-2744-43a0-bcac-6a2c77b62d44)
-  )
   (junction (at 175.26 72.39) (diameter 0) (color 0 0 0 0)
     (uuid 0b9dae31-eb4e-4311-bd20-1b27d48e0669)
   )
@@ -1273,6 +1270,9 @@
   )
   (junction (at 175.26 69.85) (diameter 0) (color 0 0 0 0)
     (uuid 60302b52-27fc-47e0-a8e0-89777fcaf6fd)
+  )
+  (junction (at 246.38 67.31) (diameter 0) (color 0 0 0 0)
+    (uuid 6368ed09-a22b-4ec7-9486-fd4da943608f)
   )
   (junction (at 54.61 132.08) (diameter 0) (color 0 0 0 0)
     (uuid 6e4fb915-375e-4c87-9504-6f3fdd0e31b9)
@@ -1512,6 +1512,10 @@
     (stroke (width 0) (type default))
     (uuid 39db5e62-bf07-4aca-943e-302c8375c81a)
   )
+  (wire (pts (xy 246.38 67.31) (xy 254 67.31))
+    (stroke (width 0) (type default))
+    (uuid 3ab94618-f6b9-4148-9336-00abfcdb74c9)
+  )
   (wire (pts (xy 179.07 132.08) (xy 190.5 132.08))
     (stroke (width 0) (type default))
     (uuid 3cc727a0-7b8b-4225-ba8d-d11e2582823c)
@@ -1656,6 +1660,10 @@
     (stroke (width 0) (type default))
     (uuid 7629f577-bfa6-4ab5-ac09-7aeda840faba)
   )
+  (wire (pts (xy 215.9 36.83) (xy 215.9 52.07))
+    (stroke (width 0) (type default))
+    (uuid 76332a41-9ed2-4c42-a230-4754ade2fc8a)
+  )
   (wire (pts (xy 34.29 132.08) (xy 40.64 132.08))
     (stroke (width 0) (type default))
     (uuid 767e8e96-80b1-4167-b495-140e8028de19)
@@ -1712,6 +1720,10 @@
     (stroke (width 0) (type default))
     (uuid 8f17eecf-8c34-4fc0-9295-69e1b9ca0bee)
   )
+  (wire (pts (xy 213.36 36.83) (xy 213.36 40.64))
+    (stroke (width 0) (type default))
+    (uuid 8f35f42d-0c56-435b-adf3-5b5b1d1e65ce)
+  )
   (wire (pts (xy 110.49 95.25) (xy 128.27 95.25))
     (stroke (width 0) (type default))
     (uuid 90db0cda-6874-4d96-89b6-9a544847d4eb)
@@ -1743,6 +1755,10 @@
   (wire (pts (xy 74.93 97.79) (xy 68.58 97.79))
     (stroke (width 0) (type default))
     (uuid 9ab2b7de-c131-48b9-a70a-4f2fc80ef5ee)
+  )
+  (wire (pts (xy 215.9 59.69) (xy 215.9 87.63))
+    (stroke (width 0) (type default))
+    (uuid 9bb14b9e-27e6-473b-b4b0-6e531e482b79)
   )
   (wire (pts (xy 274.32 78.74) (xy 274.32 86.36))
     (stroke (width 0) (type default))
@@ -1836,10 +1852,6 @@
     (stroke (width 0) (type default))
     (uuid d06093d7-c3fc-4365-8bad-95b0aa768de3)
   )
-  (wire (pts (xy 215.9 57.15) (xy 215.9 87.63))
-    (stroke (width 0) (type default))
-    (uuid d09e9a89-f369-4900-8558-c2cdad0c3551)
-  )
   (wire (pts (xy 124.46 76.2) (xy 125.73 76.2))
     (stroke (width 0) (type default))
     (uuid d1be89be-7671-46db-8761-6ef32a8e4699)
@@ -1920,10 +1932,6 @@
     (stroke (width 0) (type default))
     (uuid ec50e8ac-85ed-40dd-9443-3822aac03640)
   )
-  (wire (pts (xy 213.36 57.15) (xy 213.36 104.14))
-    (stroke (width 0) (type default))
-    (uuid ecead29b-a33d-4e3e-817a-db0387bace35)
-  )
   (wire (pts (xy 74.93 80.01) (xy 74.93 87.63))
     (stroke (width 0) (type default))
     (uuid ef4065eb-8085-4799-bc80-51590918d336)
@@ -1943,6 +1951,10 @@
   (wire (pts (xy 130.81 91.44) (xy 139.7 91.44))
     (stroke (width 0) (type default))
     (uuid f712e4ad-8427-45fb-93a5-2ae2a3b32791)
+  )
+  (wire (pts (xy 213.36 48.26) (xy 213.36 104.14))
+    (stroke (width 0) (type default))
+    (uuid fbebc910-93b0-4a7f-9b4b-74cd776fce3c)
   )
   (wire (pts (xy 125.73 77.47) (xy 125.73 78.74))
     (stroke (width 0) (type default))
@@ -2055,7 +2067,7 @@
     (property "Datasheet" "" (at 274.32 130.81 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818d))
+    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818e))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2404,7 +2416,7 @@
     (property "Datasheet" "" (at 219.71 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818d))
+    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818f))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2656,7 +2668,7 @@
     (property "Datasheet" "" (at 261.62 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818d))
+    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc8190))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2692,6 +2704,32 @@
     )
   )
 
+  (symbol (lib_id "Device:R") (at 213.36 44.45 0) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid 87fb8746-4095-4294-8657-4d4557ce3199)
+    (property "Reference" "RsnL3" (at 215.9 43.18 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Value" "20" (at 215.9 45.72 0)
+      (effects (font (size 1.27 1.27)) (justify left))
+    )
+    (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 211.582 44.45 90)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 213.36 44.45 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid 24a119c5-7b17-4764-b416-23b60d5077c1))
+    (pin "2" (uuid 6a4ee83d-7bf6-453d-a53b-aaaa066ee0eb))
+    (instances
+      (project "Boost_Audio"
+        (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
+          (reference "RsnL3") (unit 1)
+        )
+      )
+    )
+  )
+
   (symbol (lib_id "power:GND") (at 274.32 96.52 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
     (uuid 8844ea12-23b2-4c39-a610-38327ca9cd04)
@@ -2707,7 +2745,7 @@
     (property "Datasheet" "" (at 274.32 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc818d))
+    (pin "1" (uuid b51834c1-1d78-4ecd-aff8-62f93ffc8191))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2732,8 +2770,8 @@
     (property "Datasheet" "~" (at 257.81 67.31 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9a))
-    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e473))
+    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9b))
+    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e474))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2862,8 +2900,8 @@
     (property "Datasheet" "~" (at 223.52 87.63 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396dc))
-    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b4))
+    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396dd))
+    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b5))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -2894,32 +2932,6 @@
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
           (reference "Cvcc2") (unit 1)
-        )
-      )
-    )
-  )
-
-  (symbol (lib_id "Device:C") (at 250.19 67.31 90) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid a7d78f67-6b16-4c86-a860-a1538ff566f6)
-    (property "Reference" "Csc1" (at 250.19 59.69 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Value" "C" (at 250.19 62.23 90)
-      (effects (font (size 1.27 1.27)))
-    )
-    (property "Footprint" "Capacitor_SMD:C_0805_2012Metric" (at 254 66.3448 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (property "Datasheet" "~" (at 250.19 67.31 0)
-      (effects (font (size 1.27 1.27)) hide)
-    )
-    (pin "2" (uuid 5a1888ed-f4ee-4508-8cc1-ab032fd9bc65))
-    (pin "1" (uuid f1501e39-0dcf-47b6-baf6-d83edf255264))
-    (instances
-      (project "Boost_Audio"
-        (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
-          (reference "Csc1") (unit 1)
         )
       )
     )
@@ -2965,8 +2977,8 @@
     (property "Datasheet" "~" (at 223.52 104.14 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396dc))
-    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b4))
+    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396de))
+    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b6))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -3042,8 +3054,8 @@
     (property "Datasheet" "~" (at 270.51 113.03 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9a))
-    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e473))
+    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9c))
+    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e475))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -3127,8 +3139,8 @@
     (property "Datasheet" "~" (at 223.52 96.52 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9a))
-    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e473))
+    (pin "2" (uuid 288f3cfc-a198-4845-b35d-967ce3042f9d))
+    (pin "1" (uuid fadba70a-6399-4848-85ce-7d813dd5e476))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -3204,8 +3216,8 @@
     (property "Datasheet" "~" (at 261.62 119.38 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid f9b8c106-e4ab-4c34-aff0-21ccbb9a04de))
-    (pin "2" (uuid 70b2139e-d9f9-41ec-a73b-bf9b63190492))
+    (pin "1" (uuid f9b8c106-e4ab-4c34-aff0-21ccbb9a04df))
+    (pin "2" (uuid 70b2139e-d9f9-41ec-a73b-bf9b63190493))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -3282,8 +3294,8 @@
     (property "Datasheet" "~" (at 261.62 128.27 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396dc))
-    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b4))
+    (pin "1" (uuid 94caf499-1041-42d7-bc68-b26ccac396df))
+    (pin "2" (uuid f2f8c9d8-5252-408b-8f68-21b4baffa0b7))
     (instances
       (project "Boost_Audio"
         (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
@@ -3293,19 +3305,45 @@
     )
   )
 
-  (symbol (lib_id "Connector_Generic:Conn_01x02") (at 213.36 52.07 90) (unit 1)
+  (symbol (lib_id "Device:R") (at 215.9 55.88 0) (unit 1)
     (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
-    (uuid e43f1f99-602f-4b39-b407-fda75cbea0a1)
-    (property "Reference" "J3" (at 218.44 50.8 90)
-      (effects (font (size 1.27 1.27)) (justify right))
+    (uuid e27e6711-b639-4cbe-8f69-0d336e380831)
+    (property "Reference" "RsnL2" (at 218.44 54.61 0)
+      (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Value" "RL_Audio_From_Main" (at 218.44 53.34 90)
-      (effects (font (size 1.27 1.27)) (justify right))
+    (property "Value" "20" (at 218.44 57.15 0)
+      (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical" (at 213.36 52.07 0)
+    (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 214.122 55.88 90)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (property "Datasheet" "~" (at 213.36 52.07 0)
+    (property "Datasheet" "~" (at 215.9 55.88 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (pin "1" (uuid dad617e2-3a49-48ee-85a7-18fa1187049d))
+    (pin "2" (uuid 93eca51b-63df-4099-9324-8c12f11fc14a))
+    (instances
+      (project "Boost_Audio"
+        (path "/fd5b3421-9c2a-40d1-9fed-b28030b8ba38"
+          (reference "RsnL2") (unit 1)
+        )
+      )
+    )
+  )
+
+  (symbol (lib_id "Connector_Generic:Conn_01x02") (at 213.36 31.75 90) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (uuid e43f1f99-602f-4b39-b407-fda75cbea0a1)
+    (property "Reference" "J3" (at 218.44 30.48 90)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+    (property "Value" "RL_Audio_From_Main" (at 218.44 33.02 90)
+      (effects (font (size 1.27 1.27)) (justify right))
+    )
+    (property "Footprint" "Connector_JST:JST_EH_B2B-EH-A_1x02_P2.50mm_Vertical" (at 213.36 31.75 0)
+      (effects (font (size 1.27 1.27)) hide)
+    )
+    (property "Datasheet" "~" (at 213.36 31.75 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (pin "1" (uuid e2b6b689-932a-4722-812d-5f71a77e4ce2))
