@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\Users\user\Documents\College\Spring 2024\Senior Design\KiCad\Boost_Audio\Boost_Audio\Boost_Audio.kicad_sch</source>
+    <date>2/15/2024 2:21:45 PM</date>
+    <tool>Eeschema 7.0.10</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Boost_Audio.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C0L1">
+      <value>1000uF</value>
+      <footprint>Artisyn_Components:Audio_1000uF</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>546ccc8c-dc38-4866-9696-0e739e3f0aec</tstamps>
+    </comp>
+    <comp ref="C0R1">
+      <value>1000uF</value>
+      <footprint>Artisyn_Components:Audio_1000uF</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b07c2814-0460-4284-a03f-ff9990013565</tstamps>
+    </comp>
+    <comp ref="C3b1">
+      <value>1000uF</value>
+      <footprint>Artisyn_Components:Audio_1000uF</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8a9d0f7f-e5cf-470a-be71-503f21155bee</tstamps>
+    </comp>
+    <comp ref="Cb1">
+      <value>100uF</value>
+      <footprint>Artisyn_Components:Audio_100uF</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b766c8be-a0c2-40e1-811f-f8490230a431</tstamps>
+    </comp>
+    <comp ref="Cbst2">
+      <value>470.0 nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b6c643bd-71c9-4616-a388-12a2a2caeda2</tstamps>
+    </comp>
+    <comp ref="Ccomp3">
+      <value>18.0 nF</value>
+      <footprint>Capacitor_SMD:C_1812_4532Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>7e8e88b6-1716-4e73-aea0-850554783777</tstamps>
+    </comp>
+    <comp ref="Ccomp4">
+      <value> 1.0 nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8eb5a0a5-bed0-45da-b9b0-46b8c255e43d</tstamps>
+    </comp>
+    <comp ref="CiL1">
+      <value>.1uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a4faca45-813c-47b3-804e-1077b4d48d2f</tstamps>
+    </comp>
+    <comp ref="Cin2">
+      <value>270uF</value>
+      <footprint>Artisyn_Components:PCAP_SVP_E7_PAN</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>216ce22b-e49a-4b28-b39e-9b17fd75cf47</tstamps>
+    </comp>
+    <comp ref="CiR1">
+      <value>.1uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>acb10a09-2a7f-4f69-8598-9ea814d99397</tstamps>
+    </comp>
+    <comp ref="Cout2">
+      <value>560.0 uF</value>
+      <footprint>Artisyn_Components:PCAP_SVP_F12_PAN</footprint>
+      <libsource lib="Device" part="C_Polarized_US" description="Polarized capacitor, US symbol"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Polarized capacitor, US symbol"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>27e8d09f-65b0-43d9-9cf8-fbcad8cb13e5</tstamps>
+    </comp>
+    <comp ref="Coutx2">
+      <value>47.0 uF</value>
+      <footprint>Capacitor_SMD:C_1206_3216Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ebbae122-39b8-4866-86a0-935df54f1ebc</tstamps>
+    </comp>
+    <comp ref="Cres2">
+      <value> 470.0 nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2677ca7b-9418-46dd-b70c-3644a810e3cf</tstamps>
+    </comp>
+    <comp ref="Csc1">
+      <value>.1uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a7d78f67-6b16-4c86-a860-a1538ff566f6</tstamps>
+    </comp>
+    <comp ref="CsnL1">
+      <value>.1uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a4a8d472-9bed-459a-8c02-d0722b78dcb4</tstamps>
+    </comp>
+    <comp ref="CsnR1">
+      <value>.1uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e1520864-d0a3-45f7-8902-020bdc0ae136</tstamps>
+    </comp>
+    <comp ref="Css2">
+      <value> 33.0 nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>2c1501f5-7a10-45f7-8235-a142bfa7f29f</tstamps>
+    </comp>
+    <comp ref="Cvcc2">
+      <value>10.0 uF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>a54d1482-6aa8-43d1-9606-5f4921d2da77</tstamps>
+    </comp>
+    <comp ref="Cvin2">
+      <value> 470.0 nF</value>
+      <footprint>Capacitor_SMD:C_0805_2012Metric</footprint>
+      <libsource lib="Device" part="C" description="Unpolarized capacitor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Unpolarized capacitor"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>bbcfb461-6e4f-45d4-84e6-785717be53ff</tstamps>
+    </comp>
+    <comp ref="Dbst2">
+      <value>D_Schottky</value>
+      <footprint>Diode_SMD:D_SMA</footprint>
+      <libsource lib="Device" part="D_Schottky" description="Schottky diode"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Schottky diode"/>
+      <property name="ki_keywords" value="diode Schottky"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8e8a2002-10db-48ac-a586-172c2dc6f6d9</tstamps>
+    </comp>
+    <comp ref="J1">
+      <value>XT60-M</value>
+      <footprint>Artisyn_Components:AMASS_XT60-M</footprint>
+      <fields>
+        <field name="Availability">Not in stock</field>
+        <field name="Check_prices">https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=eda</field>
+        <field name="Description">
+Plug; DC supply; XT60; male; PIN: 2; for cable; soldered; 30A; 500V
+</field>
+        <field name="MANUFACTURER">AMASS</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">16.00 mm</field>
+        <field name="MF">AMASS</field>
+        <field name="MP">XT60-M</field>
+        <field name="PARTREV">V1.2</field>
+        <field name="Package">Package</field>
+        <field name="Price">None</field>
+        <field name="STANDARD">IPC 7351B</field>
+        <field name="SnapEDA_Link">https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=snap</field>
+      </fields>
+      <libsource lib="XT60-M" part="XT60-M" description=""/>
+      <property name="MF" value="AMASS"/>
+      <property name="MAXIMUM_PACKAGE_HEIGHT" value="16.00 mm"/>
+      <property name="Package" value="Package"/>
+      <property name="Price" value="None"/>
+      <property name="Check_prices" value="https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=eda"/>
+      <property name="STANDARD" value="IPC 7351B"/>
+      <property name="PARTREV" value="V1.2"/>
+      <property name="SnapEDA_Link" value="https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=snap"/>
+      <property name="MP" value="XT60-M"/>
+      <property name="Description" value="&#xA;Plug; DC supply; XT60; male; PIN: 2; for cable; soldered; 30A; 500V&#xA;"/>
+      <property name="Availability" value="Not in stock"/>
+      <property name="MANUFACTURER" value="AMASS"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>222508b2-46da-4a44-b5b7-dc9779020cfe</tstamps>
+    </comp>
+    <comp ref="J3">
+      <value>RL_Audio_From_Main</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>e43f1f99-602f-4b39-b407-fda75cbea0a1</tstamps>
+    </comp>
+    <comp ref="J4">
+      <value>To_Speaker_L</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ad9c95d5-5cd6-4071-8a95-acffc91cecd1</tstamps>
+    </comp>
+    <comp ref="J5">
+      <value>To_Speaker_R</value>
+      <footprint>Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical</footprint>
+      <libsource lib="Connector_Generic" part="Conn_01x02" description="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"/>
+      <property name="ki_keywords" value="connector"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>81c8a0b0-d15f-40e7-96fd-ed1d9c98bfac</tstamps>
+    </comp>
+    <comp ref="L2">
+      <value> 3.3 µH</value>
+      <footprint>Artisyn_Components:IND_R3-R_EAT</footprint>
+      <libsource lib="Device" part="L" description="Inductor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Inductor"/>
+      <property name="ki_keywords" value="inductor choke coil reactor magnetic"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>ef873bba-7ea1-45f2-94c2-53f0f3426dc1</tstamps>
+    </comp>
+    <comp ref="M3">
+      <value>CSD17581Q3</value>
+      <footprint>Artisyn_Components:CSD17309Q3</footprint>
+      <libsource lib="" part="CSD17309Q3_1" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>0634b8be-5faa-4dee-8b6d-005431d3790d</tstamps>
+    </comp>
+    <comp ref="M4">
+      <value>CSD17581Q3A</value>
+      <footprint>Artisyn_Components:CSD17309Q3A</footprint>
+      <datasheet>CSD17581Q3A</datasheet>
+      <libsource lib="CSD17581Q3A" part="CSD17581Q3A" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_keywords" value="CSD17581Q3A"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>b18baa15-734d-4cf5-a06c-26859f1ab28a</tstamps>
+    </comp>
+    <comp ref="Rcomp2">
+      <value> 23.7k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>95eec215-c6c6-477c-8d02-fc758cb8349f</tstamps>
+    </comp>
+    <comp ref="Rfbb2">
+      <value>3.65k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>86b2f149-ba6c-4e7e-907f-718aa78be584</tstamps>
+    </comp>
+    <comp ref="Rfbt2">
+      <value> 39.0k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d6761275-c656-4d14-98e8-d9661bfb8c68</tstamps>
+    </comp>
+    <comp ref="Rsense2">
+      <value>1.5m</value>
+      <footprint>Resistor_SMD:R_2512_6332Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>4400129b-1c02-4202-af38-18f555aec143</tstamps>
+    </comp>
+    <comp ref="Rslope2">
+      <value> 150.0k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>040cc802-0bd0-4af2-bd1f-1ef5c622563f</tstamps>
+    </comp>
+    <comp ref="RsnL1">
+      <value>2.7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>8143be5d-3099-4c53-8496-1d1bcf78f15a</tstamps>
+    </comp>
+    <comp ref="RsnR1">
+      <value>2.7</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d1155713-afbc-492e-b0f7-55630be739ae</tstamps>
+    </comp>
+    <comp ref="Rt2">
+      <value> 41.2k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>34196185-d313-49b2-a258-6ff7b73d365c</tstamps>
+    </comp>
+    <comp ref="Ruvb2">
+      <value>19.1k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>51203c98-3e36-4b8c-8226-729e129c05dd</tstamps>
+    </comp>
+    <comp ref="Ruvt2">
+      <value>49.9k</value>
+      <footprint>Resistor_SMD:R_0805_2012Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>d50f7e14-75af-40f2-8556-52f84f3fcc75</tstamps>
+    </comp>
+    <comp ref="Rvin2">
+      <value>3.01</value>
+      <footprint>Resistor_SMD:R_1206_3216Metric</footprint>
+      <libsource lib="Device" part="R" description="Resistor"/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_description" value="Resistor"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>66ff6cb4-e75f-4491-9365-2f1897d46f6b</tstamps>
+    </comp>
+    <comp ref="U1">
+      <value>LM4752TS</value>
+      <footprint>Artisyn_Components:LM4752</footprint>
+      <libsource lib="LM4752TS" part="LM4752TS" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>1ae5d887-624a-449a-bc75-9bd0c2fb2a9e</tstamps>
+    </comp>
+    <comp ref="U2">
+      <value>LM5122MH/NOPB</value>
+      <footprint>Artisyn_Components:LM512220A_L</footprint>
+      <datasheet>LM5122MH/NOPB</datasheet>
+      <libsource lib="LM5122" part="LM5122MH_NOPB" description=""/>
+      <property name="Sheetname" value=""/>
+      <property name="Sheetfile" value="Boost_Audio.kicad_sch"/>
+      <property name="ki_keywords" value="LM5122MH/NOPB"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamps>390e6c55-cfac-47b6-a3cb-ff7b0ed88168</tstamps>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="" part="CSD17309Q3_1">
+      <fields>
+        <field name="Reference">U</field>
+      </fields>
+      <pins>
+        <pin num="1" name="S1" type="input"/>
+        <pin num="2" name="S2" type="input"/>
+        <pin num="3" name="S3" type="input"/>
+        <pin num="4" name="G" type="input"/>
+        <pin num="5" name="D1" type="input"/>
+        <pin num="6" name="D2" type="input"/>
+        <pin num="7" name="D3" type="input"/>
+        <pin num="8" name="D4" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="CSD17581Q3A" part="CSD17581Q3A">
+      <docs>CSD17581Q3A</docs>
+      <footprints>
+        <fp>Q3A_TEX</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">Q</field>
+        <field name="Value">CSD17581Q3A</field>
+        <field name="Footprint">Q3A_TEX</field>
+        <field name="Datasheet">CSD17581Q3A</field>
+      </fields>
+      <pins>
+        <pin num="1" name="SOURCE" type="unspecified"/>
+        <pin num="2" name="SOURCE" type="unspecified"/>
+        <pin num="3" name="SOURCE" type="unspecified"/>
+        <pin num="4" name="GATE" type="unspecified"/>
+        <pin num="5" name="DRAIN" type="unspecified"/>
+        <pin num="6" name="DRAIN" type="unspecified"/>
+        <pin num="7" name="DRAIN" type="unspecified"/>
+        <pin num="8" name="DRAIN" type="unspecified"/>
+        <pin num="9" name="DRAIN" type="unspecified"/>
+      </pins>
+    </libpart>
+    <libpart lib="Connector_Generic" part="Conn_01x02">
+      <description>Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*_1x??_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_01x02</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C">
+      <description>Unpolarized capacitor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="C_Polarized_US">
+      <description>Polarized capacitor, US symbol</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>CP_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Polarized_US</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="D_Schottky">
+      <description>Schottky diode</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>TO-???*</fp>
+        <fp>*_Diode_*</fp>
+        <fp>*SingleDiode*</fp>
+        <fp>D_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">D</field>
+        <field name="Value">D_Schottky</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="K" type="passive"/>
+        <pin num="2" name="A" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="L">
+      <description>Inductor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Choke_*</fp>
+        <fp>*Coil*</fp>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="Device" part="R">
+      <description>Resistor</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+        <field name="Datasheet">~</field>
+      </fields>
+      <pins>
+        <pin num="1" name="" type="passive"/>
+        <pin num="2" name="" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="LM4752TS" part="LM4752TS">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LM4752TS</field>
+        <field name="Footprint">LM4752TS:TO127P1435X464-8N</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Out_B" type="input"/>
+        <pin num="2" name="In_B" type="input"/>
+        <pin num="3" name="Vcc" type="input"/>
+        <pin num="4" name="GND" type="input"/>
+        <pin num="5" name="Bias" type="input"/>
+        <pin num="6" name="In_A" type="input"/>
+        <pin num="7" name="Out_A" type="input"/>
+        <pin num="8" name="TAB" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="LM5122" part="LM5122MH_NOPB">
+      <docs>LM5122MH/NOPB</docs>
+      <footprints>
+        <fp>PWP0020A_N</fp>
+        <fp>PWP0020A_M</fp>
+        <fp>PWP0020A_L</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">LM5122MH/NOPB</field>
+        <field name="Footprint">PWP0020A_N</field>
+        <field name="Datasheet">LM5122MH/NOPB</field>
+      </fields>
+      <pins>
+        <pin num="1" name="SYNCOUT" type="output"/>
+        <pin num="2" name="OPT" type="input"/>
+        <pin num="3" name="CSN" type="input"/>
+        <pin num="4" name="CSP" type="input"/>
+        <pin num="5" name="VIN" type="power_in"/>
+        <pin num="6" name="UVLO" type="input"/>
+        <pin num="7" name="SS" type="input"/>
+        <pin num="8" name="SYNCIN_RT" type="input"/>
+        <pin num="9" name="AGND" type="power_in"/>
+        <pin num="10" name="FB" type="input"/>
+        <pin num="11" name="COMP" type="output"/>
+        <pin num="12" name="SLOPE" type="input"/>
+        <pin num="13" name="MODE" type="input"/>
+        <pin num="14" name="RES" type="output"/>
+        <pin num="15" name="PGND" type="power_in"/>
+        <pin num="16" name="LO" type="power_in"/>
+        <pin num="17" name="VCC" type="power_in"/>
+        <pin num="18" name="SW" type="bidirectional"/>
+        <pin num="19" name="HO" type="power_in"/>
+        <pin num="20" name="BST" type="power_in"/>
+        <pin num="21" name="PAD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="XT60-M" part="XT60-M">
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">XT60-M</field>
+        <field name="Footprint">XT60-M:AMASS_XT60-M</field>
+        <field name="MF">AMASS</field>
+        <field name="MAXIMUM_PACKAGE_HEIGHT">16.00 mm</field>
+        <field name="Package">Package</field>
+        <field name="Price">None</field>
+        <field name="Check_prices">https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=eda</field>
+        <field name="STANDARD">IPC 7351B</field>
+        <field name="PARTREV">V1.2</field>
+        <field name="SnapEDA_Link">https://www.snapeda.com/parts/XT60-M/AMASS/view-part/?ref=snap</field>
+        <field name="MP">XT60-M</field>
+        <field name="Description">
+Plug; DC supply; XT60; male; PIN: 2; for cable; soldered; 30A; 500V
+</field>
+        <field name="Availability">Not in stock</field>
+        <field name="MANUFACTURER">AMASS</field>
+      </fields>
+      <pins>
+        <pin num="N" name="NEG" type="passive"/>
+        <pin num="P" name="POS" type="passive"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="CSD17581Q3A">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/CSD17581Q3A.kicad_sym</uri>
+    </library>
+    <library logical="Connector_Generic">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Connector_Generic.kicad_sym</uri>
+    </library>
+    <library logical="Device">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/Device.kicad_sym</uri>
+    </library>
+    <library logical="LM4752TS">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/LM4752TS.kicad_sym</uri>
+    </library>
+    <library logical="LM5122">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/LM5122.kicad_sym</uri>
+    </library>
+    <library logical="XT60-M">
+      <uri>C:\Program Files\KiCad\7.0\share\kicad\symbols\/XT60-M.kicad_sym</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="C3b1" pin="2" pintype="passive"/>
+      <node ref="Cb1" pin="2" pintype="passive"/>
+      <node ref="Cin2" pin="2" pintype="passive"/>
+      <node ref="Cout2" pin="2" pintype="passive"/>
+      <node ref="Coutx2" pin="2" pintype="passive"/>
+      <node ref="Cres2" pin="2" pintype="passive"/>
+      <node ref="CsnL1" pin="2" pintype="passive"/>
+      <node ref="CsnR1" pin="2" pintype="passive"/>
+      <node ref="Css2" pin="2" pintype="passive"/>
+      <node ref="Cvcc2" pin="1" pintype="passive"/>
+      <node ref="Cvin2" pin="2" pintype="passive"/>
+      <node ref="J1" pin="N" pinfunction="NEG" pintype="passive"/>
+      <node ref="J4" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="J5" pin="2" pinfunction="Pin_2" pintype="passive"/>
+      <node ref="M3" pin="1" pinfunction="S1" pintype="input"/>
+      <node ref="M3" pin="2" pinfunction="S2" pintype="input"/>
+      <node ref="M3" pin="3" pinfunction="S3" pintype="input"/>
+      <node ref="Rfbb2" pin="2" pintype="passive"/>
+      <node ref="Rslope2" pin="2" pintype="passive"/>
+      <node ref="Rt2" pin="2" pintype="passive"/>
+      <node ref="Ruvb2" pin="2" pintype="passive"/>
+      <node ref="U1" pin="4" pinfunction="GND" pintype="input"/>
+      <node ref="U2" pin="13" pinfunction="MODE" pintype="input"/>
+      <node ref="U2" pin="15" pinfunction="PGND" pintype="power_in"/>
+      <node ref="U2" pin="2" pinfunction="OPT" pintype="input"/>
+      <node ref="U2" pin="9" pinfunction="AGND" pintype="power_in"/>
+    </net>
+    <net code="2" name="Net-(C3b1-Pad1)">
+      <node ref="C3b1" pin="1" pintype="passive"/>
+      <node ref="Csc1" pin="2" pintype="passive"/>
+    </net>
+    <net code="3" name="Net-(Ccomp3-Pad1)">
+      <node ref="Ccomp3" pin="1" pintype="passive"/>
+      <node ref="Rcomp2" pin="2" pintype="passive"/>
+    </net>
+    <net code="4" name="Net-(CsnL1-Pad1)">
+      <node ref="CsnL1" pin="1" pintype="passive"/>
+      <node ref="RsnL1" pin="2" pintype="passive"/>
+    </net>
+    <net code="5" name="Net-(CsnR1-Pad1)">
+      <node ref="CsnR1" pin="1" pintype="passive"/>
+      <node ref="RsnR1" pin="2" pintype="passive"/>
+    </net>
+    <net code="6" name="Net-(Dbst2-A)">
+      <node ref="Cvcc2" pin="2" pintype="passive"/>
+      <node ref="Dbst2" pin="2" pinfunction="A" pintype="passive"/>
+      <node ref="U2" pin="17" pinfunction="VCC" pintype="power_in"/>
+    </net>
+    <net code="7" name="Net-(Dbst2-K)">
+      <node ref="Cbst2" pin="1" pintype="passive"/>
+      <node ref="Dbst2" pin="1" pinfunction="K" pintype="passive"/>
+      <node ref="U2" pin="20" pinfunction="BST" pintype="power_in"/>
+    </net>
+    <net code="8" name="Net-(J3-Pin_1)">
+      <node ref="CiR1" pin="1" pintype="passive"/>
+      <node ref="J3" pin="1" pinfunction="Pin_1" pintype="passive"/>
+    </net>
+    <net code="9" name="Net-(J3-Pin_2)">
+      <node ref="CiL1" pin="1" pintype="passive"/>
+      <node ref="J3" pin="2" pinfunction="Pin_2" pintype="passive"/>
+    </net>
+    <net code="10" name="Net-(J4-Pin_1)">
+      <node ref="C0L1" pin="2" pintype="passive"/>
+      <node ref="J4" pin="1" pinfunction="Pin_1" pintype="passive"/>
+    </net>
+    <net code="11" name="Net-(J5-Pin_1)">
+      <node ref="C0R1" pin="2" pintype="passive"/>
+      <node ref="J5" pin="1" pinfunction="Pin_1" pintype="passive"/>
+    </net>
+    <net code="12" name="Net-(M3-D1)">
+      <node ref="Cbst2" pin="2" pintype="passive"/>
+      <node ref="L2" pin="2" pinfunction="2" pintype="passive"/>
+      <node ref="M3" pin="5" pinfunction="D1" pintype="input"/>
+      <node ref="M3" pin="6" pinfunction="D2" pintype="input"/>
+      <node ref="M3" pin="7" pinfunction="D3" pintype="input"/>
+      <node ref="M3" pin="8" pinfunction="D4" pintype="input"/>
+      <node ref="M4" pin="1" pinfunction="SOURCE" pintype="unspecified"/>
+      <node ref="M4" pin="2" pinfunction="SOURCE" pintype="unspecified"/>
+      <node ref="M4" pin="3" pinfunction="SOURCE" pintype="unspecified"/>
+      <node ref="U2" pin="18" pinfunction="SW" pintype="bidirectional"/>
+    </net>
+    <net code="13" name="Net-(M3-G)">
+      <node ref="M3" pin="4" pinfunction="G" pintype="input"/>
+      <node ref="U2" pin="16" pinfunction="LO" pintype="power_in"/>
+    </net>
+    <net code="14" name="Net-(M4-GATE)">
+      <node ref="M4" pin="4" pinfunction="GATE" pintype="unspecified"/>
+      <node ref="U2" pin="19" pinfunction="HO" pintype="power_in"/>
+    </net>
+    <net code="15" name="Net-(U1-Bias)">
+      <node ref="Cb1" pin="1" pintype="passive"/>
+      <node ref="U1" pin="5" pinfunction="Bias" pintype="input"/>
+    </net>
+    <net code="16" name="Net-(U1-In_A)">
+      <node ref="CiR1" pin="2" pintype="passive"/>
+      <node ref="U1" pin="6" pinfunction="In_A" pintype="input"/>
+    </net>
+    <net code="17" name="Net-(U1-In_B)">
+      <node ref="CiL1" pin="2" pintype="passive"/>
+      <node ref="U1" pin="2" pinfunction="In_B" pintype="input"/>
+    </net>
+    <net code="18" name="Net-(U1-Out_A)">
+      <node ref="C0R1" pin="1" pintype="passive"/>
+      <node ref="RsnR1" pin="1" pintype="passive"/>
+      <node ref="U1" pin="7" pinfunction="Out_A" pintype="input"/>
+    </net>
+    <net code="19" name="Net-(U1-Out_B)">
+      <node ref="C0L1" pin="1" pintype="passive"/>
+      <node ref="RsnL1" pin="1" pintype="passive"/>
+      <node ref="U1" pin="1" pinfunction="Out_B" pintype="input"/>
+    </net>
+    <net code="20" name="Net-(U1-Vcc)">
+      <node ref="Cout2" pin="1" pintype="passive"/>
+      <node ref="Coutx2" pin="1" pintype="passive"/>
+      <node ref="Csc1" pin="1" pintype="passive"/>
+      <node ref="M4" pin="5" pinfunction="DRAIN" pintype="unspecified"/>
+      <node ref="M4" pin="6" pinfunction="DRAIN" pintype="unspecified"/>
+      <node ref="M4" pin="7" pinfunction="DRAIN" pintype="unspecified"/>
+      <node ref="M4" pin="8" pinfunction="DRAIN" pintype="unspecified"/>
+      <node ref="M4" pin="9" pinfunction="DRAIN" pintype="unspecified"/>
+      <node ref="Rfbt2" pin="1" pintype="passive"/>
+      <node ref="U1" pin="3" pinfunction="Vcc" pintype="input"/>
+    </net>
+    <net code="21" name="Net-(U2-COMP)">
+      <node ref="Ccomp4" pin="1" pintype="passive"/>
+      <node ref="Rcomp2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="11" pinfunction="COMP" pintype="output"/>
+    </net>
+    <net code="22" name="Net-(U2-CSN)">
+      <node ref="L2" pin="1" pinfunction="1" pintype="passive"/>
+      <node ref="Rsense2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="3" pinfunction="CSN" pintype="input"/>
+    </net>
+    <net code="23" name="Net-(U2-FB)">
+      <node ref="Ccomp3" pin="2" pintype="passive"/>
+      <node ref="Ccomp4" pin="2" pintype="passive"/>
+      <node ref="Rfbb2" pin="1" pintype="passive"/>
+      <node ref="Rfbt2" pin="2" pintype="passive"/>
+      <node ref="U2" pin="10" pinfunction="FB" pintype="input"/>
+    </net>
+    <net code="24" name="Net-(U2-RES)">
+      <node ref="Cres2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="14" pinfunction="RES" pintype="output"/>
+    </net>
+    <net code="25" name="Net-(U2-SLOPE)">
+      <node ref="Rslope2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="12" pinfunction="SLOPE" pintype="input"/>
+    </net>
+    <net code="26" name="Net-(U2-SS)">
+      <node ref="Css2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="7" pinfunction="SS" pintype="input"/>
+    </net>
+    <net code="27" name="Net-(U2-SYNCIN_RT)">
+      <node ref="Rt2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="8" pinfunction="SYNCIN_RT" pintype="input"/>
+    </net>
+    <net code="28" name="Net-(U2-UVLO)">
+      <node ref="Ruvb2" pin="1" pintype="passive"/>
+      <node ref="Ruvt2" pin="2" pintype="passive"/>
+      <node ref="U2" pin="6" pinfunction="UVLO" pintype="input"/>
+    </net>
+    <net code="29" name="Net-(U2-VIN)">
+      <node ref="Cvin2" pin="1" pintype="passive"/>
+      <node ref="Rvin2" pin="2" pintype="passive"/>
+      <node ref="U2" pin="5" pinfunction="VIN" pintype="power_in"/>
+    </net>
+    <net code="30" name="VCC">
+      <node ref="Cin2" pin="1" pintype="passive"/>
+      <node ref="J1" pin="P" pinfunction="POS" pintype="passive"/>
+      <node ref="Rsense2" pin="2" pintype="passive"/>
+      <node ref="Ruvt2" pin="1" pintype="passive"/>
+      <node ref="Rvin2" pin="1" pintype="passive"/>
+      <node ref="U2" pin="4" pinfunction="CSP" pintype="input"/>
+    </net>
+    <net code="31" name="unconnected-(U1-TAB-Pad8)">
+      <node ref="U1" pin="8" pinfunction="TAB" pintype="input"/>
+    </net>
+    <net code="32" name="unconnected-(U2-PAD-Pad21)">
+      <node ref="U2" pin="21" pinfunction="PAD" pintype="power_in"/>
+    </net>
+    <net code="33" name="unconnected-(U2-SYNCOUT-Pad1)">
+      <node ref="U2" pin="1" pinfunction="SYNCOUT" pintype="output"/>
+    </net>
+  </nets>
+</export>

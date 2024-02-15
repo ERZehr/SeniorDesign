@@ -420,6 +420,7 @@
     },
     "net_colors": null,
     "netclass_assignments": {
+      "Net-(C12-Pad1)": "EN",
       "Net-(C7-Pad1)": "EN",
       "unconnected-(U3-EN{slash}CHIP_PU-Pad3)": "EN"
     },

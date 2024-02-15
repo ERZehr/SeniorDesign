@@ -422,7 +422,7 @@
     (property "Value" "D_Photo" (at 87.63 85.4075 90)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Artisyn_Components:DIODE_0805" (at 82.55 83.82 0)
+    (property "Footprint" "Diode_THT:D_DO-15_P5.08mm_Vertical_AnodeUp" (at 82.55 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 82.55 83.82 0)
