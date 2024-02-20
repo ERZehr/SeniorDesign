@@ -1,4 +1,4 @@
-22817393004499707
+22839600448004193
 Artisyn_Components
 AMASS_XT60-M
 
@@ -27,6 +27,13 @@ EEE-FT1E102UP
 0
 2
 2
+Artisyn_Components
+Boot_Switches
+
+PTS647SK38SMTR2LFS 
+0
+4
+4
 Artisyn_Components
 CSD17309Q3
 
@@ -59,6 +66,13 @@ Artisyn_Components
 DIODE_0805-M
 
 TEMD7000X01 
+0
+2
+2
+Artisyn_Components
+EX_DAC_ELEC_CAPS_10uF
+
+EDK106M016A9BAA 
 0
 2
 2
@@ -119,6 +133,13 @@ LM5122MH/NOPB
 33
 22
 Artisyn_Components
+Onboard_Clock
+
+
+0
+4
+4
+Artisyn_Components
 PCAP_SVP_E7_PAN
 
 16SVPF270M 
@@ -167,6 +188,13 @@ TO127P1435X464-8N
 0
 8
 8
+Artisyn_Components
+USB_TO_TTL_FT232RL
+
+
+0
+6
+6
 Artisyn_Components
 VREG_LM3940IMP-3.3_NOPB
 
@@ -2799,6 +2827,13 @@ Gauge Massstab 100mm SilkScreenTop Type 2
 0
 0
 0
+Capacitor_SMD
+CAPAE430X550N
+
+
+0
+2
+2
 Capacitor_SMD
 CP_Elec_3x5.3
 SMT capacitor, aluminium electrolytic, 3x5.3, Cornell Dubilier Electronics 
@@ -8361,6 +8396,13 @@ Connector_BarrelJack
 BarrelJack_Wuerth_6941xx301002
 Wuerth electronics barrel jack connector (5.5mm outher diameter, inner diameter 2.05mm or 2.55mm depending on exact order number), See: http://katalog.we-online.de/em/datasheet/6941xx301002.pdf
 connector barrel jack
+0
+3
+3
+Connector_BarrelJack
+PJ-036AH-SMT-TR
+
+
 0
 3
 3
@@ -53263,6 +53305,13 @@ SMD SMT ceramic resonator filter filter hand-soldering
 3
 3
 Diode_SMD
+1PGSMC5351H
+
+
+0
+2
+2
+Diode_SMD
 D_0201_0603Metric
 Diode SMD 0201 (0603 Metric), square (rectangular) end terminal, IPC_7351 nominal, (Body size source: https://www.vishay.com/docs/20052/crcw0201e3.pdf), generated with kicad-footprint-generator
 diode
@@ -62068,6 +62117,48 @@ solder jumper open
 0
 5
 3
+LDOs
+BA7809FP-E2
+
+BA7809FP-E2 
+0
+3
+3
+LDOs
+LD1117S12TR
+
+LD1117S12TR 
+0
+3
+3
+LDOs
+LD1117S33TR
+
+LD1117S33TR 
+0
+3
+3
+LDOs
+LM1117MPX-1.8
+
+LM1117MPX-1.8/NOPB 
+0
+4
+4
+LDOs
+LM1117MPX-2.5
+
+LM1117MPX-25NOPB 
+0
+3
+3
+LDOs
+LM1117MPX-5.0
+
+LM1117MPX-5.0 
+0
+4
+4
 LED_SMD
 LED-APA102-2020
 http://www.led-color.com/upload/201604/APA102-2020%20SMD%20LED.pdf
