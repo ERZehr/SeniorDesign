@@ -9659,8 +9659,8 @@
     )
   )
 
-  (symbol (lib_id "Device:R") (at 50.8 -74.93 270) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+  (symbol (lib_id "Device:R") (at 50.8 -74.93 90) (mirror x) (unit 1)
+    (in_bom yes) (on_board yes) (dnp no)
     (uuid 9266a68c-d1ca-4314-91d9-0454a5ab2297)
     (property "Reference" "Rsense1" (at 50.8 -81.28 90)
       (effects (font (size 1.27 1.27)))
@@ -10987,7 +10987,7 @@
   )
 
   (symbol (lib_id "power:GND") (at 316.23 87.63 0) (unit 1)
-    (in_bom yes) (on_board yes) (dnp no) (fields_autoplaced)
+    (in_bom yes) (on_board yes) (dnp no)
     (uuid c8a4987f-f9b8-4e8d-99b1-f360e0508683)
     (property "Reference" "#PWR09" (at 316.23 93.98 0)
       (effects (font (size 1.27 1.27)) hide)
