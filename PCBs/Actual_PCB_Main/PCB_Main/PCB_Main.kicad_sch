@@ -7490,8 +7490,8 @@
     (property "Datasheet" "https://diotec.com/tl_files/diotec/files/pdf/datasheets/mm5z2v4.pdf" (at 386.08 66.04 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b1e))
-    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a28))
+    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b1f))
+    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a29))
     (instances
       (project "PCB_Main"
         (path "/63211e58-9b83-4b05-a812-d0deae98b860"
@@ -9752,8 +9752,8 @@
     (property "Datasheet" "https://diotec.com/tl_files/diotec/files/pdf/datasheets/mm5z2v4.pdf" (at 379.73 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b1e))
-    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a28))
+    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b20))
+    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a2a))
     (instances
       (project "PCB_Main"
         (path "/63211e58-9b83-4b05-a812-d0deae98b860"
@@ -10142,8 +10142,8 @@
     (property "Datasheet" "~" (at 121.92 76.2 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "1" (uuid 0c1d15c0-6390-474e-86d6-cfa168b97077))
-    (pin "2" (uuid 077701d9-c09f-4309-b920-3ad8458fffd7))
+    (pin "1" (uuid 0c1d15c0-6390-474e-86d6-cfa168b97078))
+    (pin "2" (uuid 077701d9-c09f-4309-b920-3ad8458fffd8))
     (instances
       (project "PCB_Main"
         (path "/63211e58-9b83-4b05-a812-d0deae98b860"
@@ -10315,7 +10315,7 @@
     (property "Value" "1k" (at 257.81 35.56 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Resistor_SMD:R_0815_2038Metric" (at 253.492 34.29 90)
+    (property "Footprint" "Resistor_SMD:R_0805_2012Metric" (at 253.492 34.29 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 255.27 34.29 0)
@@ -11390,8 +11390,8 @@
     (property "Datasheet" "https://diotec.com/tl_files/diotec/files/pdf/datasheets/mm5z2v4.pdf" (at 383.54 83.82 0)
       (effects (font (size 1.27 1.27)) hide)
     )
-    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b1e))
-    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a28))
+    (pin "2" (uuid aee13b37-3f32-44b1-aca4-09a4f7517b21))
+    (pin "1" (uuid d792670f-9378-4b7b-b056-12b4f12c5a2b))
     (instances
       (project "PCB_Main"
         (path "/63211e58-9b83-4b05-a812-d0deae98b860"
