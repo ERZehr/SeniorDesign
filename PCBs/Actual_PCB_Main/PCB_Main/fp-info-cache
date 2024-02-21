@@ -1,4 +1,4 @@
-22839600448004193
+22843019478510554
 Artisyn_Components
 AMASS_XT60-M
 
@@ -6,6 +6,13 @@ AMASS_XT60-M
 0
 2
 2
+Artisyn_Components
+Artysin_USB_CONN
+
+
+0
+11
+11
 Artisyn_Components
 Audio_.1uF
 
@@ -76,6 +83,13 @@ EDK106M016A9BAA
 0
 2
 2
+Artisyn_Components
+Fan_MOSFET
+
+SI1902CDL-T1-BE3 
+0
+6
+6
 Artisyn_Components
 HM19
 
