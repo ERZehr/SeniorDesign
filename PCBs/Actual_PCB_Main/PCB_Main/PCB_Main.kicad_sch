@@ -9400,7 +9400,7 @@
     (property "Value" "1000uF" (at 29.21 31.115 0)
       (effects (font (size 1.27 1.27)) (justify left))
     )
-    (property "Footprint" "Artisyn_Components:EX_DAC_ELEC_CAPS_10uF" (at 25.4 30.48 0)
+    (property "Footprint" "Artisyn_Components:Audio_1000uF" (at 25.4 30.48 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (at 25.4 30.48 0)
