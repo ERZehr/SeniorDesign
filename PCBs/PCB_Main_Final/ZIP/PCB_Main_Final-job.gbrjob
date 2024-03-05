@@ -5,17 +5,17 @@
       "Application": "Pcbnew",
       "Version": "7.0.10"
     },
-    "CreationDate": "2024-03-05T15:58:56-05:00"
+    "CreationDate": "2024-03-05T15:53:27-05:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
-      "Name": "Light_Sensor",
-      "GUID": "4c696768-745f-4536-956e-736f722e6b69",
+      "Name": "PCB_Main_Final",
+      "GUID": "5043425f-4d61-4696-9e5f-46696e616c2e",
       "Revision": "rev?"
     },
     "Size": {
-      "X": 10.26,
-      "Y": 28.04
+      "X": 190.6,
+      "Y": 63.6
     },
     "LayerNumber": 2,
     "BoardThickness": 1.6,
@@ -24,8 +24,8 @@
   "DesignRules": [
     {
       "Layers": "Outer",
-      "PadToPad": 0.2,
-      "PadToTrack": 0.2,
+      "PadToPad": 0.0,
+      "PadToTrack": 0.0,
       "TrackToTrack": 0.2,
       "MinLineWidth": 0.25,
       "TrackToRegion": 0.5,
@@ -34,47 +34,47 @@
   ],
   "FilesAttributes": [
     {
-      "Path": "Light_Sensor-F_Cu.gbr",
+      "Path": "PCB_Main_Final-F_Cu.gbr",
       "FileFunction": "Copper,L1,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-B_Cu.gbr",
+      "Path": "PCB_Main_Final-B_Cu.gbr",
       "FileFunction": "Copper,L2,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-F_Paste.gbr",
+      "Path": "PCB_Main_Final-F_Paste.gbr",
       "FileFunction": "SolderPaste,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-B_Paste.gbr",
+      "Path": "PCB_Main_Final-B_Paste.gbr",
       "FileFunction": "SolderPaste,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-F_Silkscreen.gbr",
+      "Path": "PCB_Main_Final-F_Silkscreen.gbr",
       "FileFunction": "Legend,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-B_Silkscreen.gbr",
+      "Path": "PCB_Main_Final-B_Silkscreen.gbr",
       "FileFunction": "Legend,Bot",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "Light_Sensor-F_Mask.gbr",
+      "Path": "PCB_Main_Final-F_Mask.gbr",
       "FileFunction": "SolderMask,Top",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "Light_Sensor-B_Mask.gbr",
+      "Path": "PCB_Main_Final-B_Mask.gbr",
       "FileFunction": "SolderMask,Bot",
       "FilePolarity": "Negative"
     },
     {
-      "Path": "Light_Sensor-Edge_Cuts.gbr",
+      "Path": "PCB_Main_Final-Edge_Cuts.gbr",
       "FileFunction": "Profile",
       "FilePolarity": "Positive"
     }
