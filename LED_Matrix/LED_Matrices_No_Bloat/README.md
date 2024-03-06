@@ -1,32 +1,20 @@
-# _Sample project_
+# _LED_Matrices_No_Bloat_
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+## Code Usage
+Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Libary builds in Windows 10/11 VSCode using 
+the ESP-IDF extension. Listed below are the requirements for a good build.
 
-This is the simplest buildable example. The example is used by command `idf.py create-project`
-that copies the project to user specified path and set it's name. For more information follow the [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project)
+## Build Instructions
+Download VSCode, and follow this tutorial to install the ESP-IDF extension: 
+https://github.com/espressif/vscode-esp-idf-extension/blob/HEAD/docs/tutorial/install.md After this is completed, follow these steps:
+- Click on the ESP-IDF button on the left pane to see the Espressif Command List.
+- Set the Espressif target as esp32 > ESP32 chip (via USB-Bridge).
+- Ensure that the serial port matches the COM port on the machine.
+- Build the project using the Espressif Build Command
 
+## Flashing Instructions
+After building the project, select the Espressif Flash Command (or Espressif Build, Flash, and Monitor command). If this is the first time
+flashing with this library, a prompt will appear asking which interface to flash with: select UART
 
-
-## How to use example
-We encourage the users to use the example as a template for the new projects.
-A recommended way is to follow the instructions on a [docs page](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project).
-
-## Example folder contents
-
-The project **sample_project** contains one source file in C language [main.c](main/main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt`
-files that provide set of directives and instructions describing the project's source files and targets
-(executable, library, or both). 
-
-Below is short explanation of remaining files in the project folder.
-
-```
-├── CMakeLists.txt
-├── main
-│   ├── CMakeLists.txt
-│   └── main.c
-└── README.md                  This is the file you are currently reading
-```
-Additionally, the sample project contains Makefile and component.mk files, used for the legacy Make based build system. 
-They are not used or needed when building with CMake and idf.py.
+## Hardware Instructions
+Follow the pin mappings in [main](main/main.cpp) (GPIO numbers, not hardware pins) to connect ESP32 pins to HUB75 matrix pins. 
