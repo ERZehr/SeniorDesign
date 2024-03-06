@@ -49,7 +49,7 @@
     (property "Sheetname" "External_DAC" (at 41.91 80.2034 0)
       (effects (font (size 2 2)) (justify left bottom))
     )
-    (property "Sheetfile" "untitled.kicad_sch" (at 41.91 125.0446 0)
+    (property "Sheetfile" "External_DAC.kicad_sch" (at 41.91 125.0446 0)
       (effects (font (size 1.27 1.27)) (justify left top))
     )
     (instances
