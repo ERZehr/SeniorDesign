@@ -23,6 +23,11 @@
 #ifndef PatternFlowField_H
 // #include "FastLED.h"
 
+#include "Vector.h"
+#include "Boid.h"
+#include "Attractor.h"
+#include "../components/arduino/libraries/FastLED/src/noise.h"
+
 class PatternFlowField : public Drawable {
   public:
     PatternFlowField() {
@@ -61,8 +66,9 @@ class PatternFlowField : public Drawable {
         int ioffset = scale * boid->location.x;
         int joffset = scale * boid->location.y;
 
-        // byte angle = inoise8(x + ioffset, y + joffset, z); - causing issues right now
-        byte angle = 0;
+        byte angle = inoise8(x + ioffset, y + joffset, z); // - causing issues right now
+        // byte angle = 0;
+        // byte angle = (uint8_t) esp_random();
 
         boid->velocity.x = (float) sin8(angle) * 0.0078125 - 1.0;
         boid->velocity.y = -((float)cos8(angle) * 0.0078125 - 1.0);

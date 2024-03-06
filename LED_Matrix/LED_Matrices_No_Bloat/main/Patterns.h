@@ -25,10 +25,6 @@
 
 #define ARRAY_SIZE(A) (sizeof(A) / sizeof((A)[0]))
 
-#include "Vector.h"
-#include "Boid.h"
-#include "Attractor.h"
-
 #include "PatternFlowField.h"
 #include "PatternPlasma.h"
 #include "PatternLife.h"

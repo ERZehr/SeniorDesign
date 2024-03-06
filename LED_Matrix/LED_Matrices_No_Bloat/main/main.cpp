@@ -81,8 +81,17 @@ static void patternAdvance(){
 static TaskHandle_t s_matrix_driving_task_handle = NULL;  /* handle of driving task  */
 
 static void matrix_driving_handler(void *arg) {
+  // TickType_t xLastWakeTime;
+  // const TickType_t xFrequency = 50;
+  // BaseType_t xWasDelayed;
 
+  // Initialise the xLastWakeTime variable with the current time.
+  // xLastWakeTime = xTaskGetTickCount ();
   for(;;) {
+    // Wait for the next cycle.
+    // xWasDelayed = xTaskDelayUntil( &xLastWakeTime, xFrequency );
+    vTaskDelay(1 / portTICK_PERIOD_MS);
+
     ms_current = esp_timer_get_time() / 1000;
     if ((ms_current - ms_previous) > ms_animation_max_duration) {
        patternAdvance();
@@ -93,7 +102,6 @@ static void matrix_driving_handler(void *arg) {
       next_frame = patterns.drawFrame() + ms_current;
     }
   }
-
 }
 
 /********************************

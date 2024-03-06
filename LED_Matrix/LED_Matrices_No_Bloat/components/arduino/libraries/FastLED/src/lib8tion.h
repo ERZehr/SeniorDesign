@@ -923,9 +923,10 @@ template<class T, int F, int I> static uint32_t operator*(uint32_t v, q<T,F,I> &
 template<class T, int F, int I> static uint16_t operator*(uint16_t v, q<T,F,I> & q) { return q * v; }
 template<class T, int F, int I> static int32_t operator*(int32_t v, q<T,F,I> & q) { return q * v; }
 template<class T, int F, int I> static int16_t operator*(int16_t v, q<T,F,I> & q) { return q * v; }
-#if defined(FASTLED_ARM) | defined(FASTLED_RISCV) | defined(FASTLED_APOLLO3)
-template<class T, int F, int I> static int operator*(int v, q<T,F,I> & q) { return q * v; }
-#endif
+// #if defined(FASTLED_ARM) | defined(FASTLED_RISCV) | defined(FASTLED_APOLLO3)
+// template<class T, int F, int I> static int operator*(int v, q<T,F,I> & q) { return q * v; }
+// template<class T, int F, int I> static int operator*(q<T,F,I> & q, int v) { return q * v; }
+// #endif
 
 /// A 4.4 integer (4 bits integer, 4 bits fraction)
 typedef q<uint8_t, 4,4> q44;
