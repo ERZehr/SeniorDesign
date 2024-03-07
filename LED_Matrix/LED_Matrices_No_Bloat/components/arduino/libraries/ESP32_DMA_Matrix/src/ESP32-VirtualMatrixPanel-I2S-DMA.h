@@ -474,7 +474,7 @@ inline void VirtualMatrixPanel::fillScreen(CRGB color)
 
 inline void VirtualMatrixPanel::setRotation(uint8_t rotate)
 {
-  if(rotate < 4 && rotate >= 0)
+  if(rotate < 4)
     _rotate = rotate;
 
   // Change the _width and _height variables used by the underlying adafruit gfx library.

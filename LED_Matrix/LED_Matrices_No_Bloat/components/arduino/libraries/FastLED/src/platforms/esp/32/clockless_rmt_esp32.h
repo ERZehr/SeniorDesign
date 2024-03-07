@@ -128,7 +128,8 @@ extern "C" {
 #endif
 #include "driver/gpio.h"
 #include "driver/rmt.h"
-#include "driver/periph_ctrl.h"
+// #include "driver/periph_ctrl.h" - deprecated
+#include "esp_private/periph_ctrl.h"
 #include "freertos/semphr.h"
 #include "soc/rmt_struct.h"
 

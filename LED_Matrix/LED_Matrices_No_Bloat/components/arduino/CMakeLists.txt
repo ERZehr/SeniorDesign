@@ -77,41 +77,25 @@ set(CORE_SRCS
 set(ARDUINO_ALL_LIBRARIES
   Adafruit_BusIO
   Adafruit_GFX
-  ArduinoOTA
-  AsyncUDP
   BLE
-  BluetoothSerial
-  DNSServer
-  EEPROM
   ESP32_DMA_Matrix
-  ESP_I2S
-  ESP_SR
-  ESPmDNS
-  Ethernet
   FastLED
-  FFat
-  FS
-  HTTPClient
-  HTTPUpdate
-  Insights
-  LittleFS
-  NetBIOS
-  Preferences
-  RainMaker
-  SD_MMC
-  SD
   SimpleBLE
-  SPIFFS
   SPI
-  Ticker
-  Update
-  USB
-  WebServer
-  WiFiClientSecure
-  WiFi
-  WiFiProv
   Wire
   )
+
+  # Libraries needed for build:
+  # ESP32_DMA_Matrix
+  # Adafruit_BusIO (needed by ESP32_DMA_Matrix)
+  # Adafruit_GFX (needed by ESP32_DMA_Matrix)
+  # FastLED (needed by ESP32_DMA_Matrix, Adafruit_GFX)
+  # SPI (needed by Adafruit_BusIO)
+  # Wire (needed by Adafruit_BusIO)
+
+  # Libraries not needed for build (LED Matrix only):
+  # BLE
+  # SimpleBLE
 
   
 set(ARDUINO_LIBRARY_Adafruit_BusIO_SRCS 
@@ -125,39 +109,10 @@ set(ARDUINO_LIBRARY_Adafruit_GFX_SRCS
   libraries/Adafruit_GFX/src/Adafruit_SPITFT.cpp
   libraries/Adafruit_GFX/src/glcdfont.c)
 
-set(ARDUINO_LIBRARY_ArduinoOTA_SRCS libraries/ArduinoOTA/src/ArduinoOTA.cpp)
-set(ARDUINO_LIBRARY_ArduinoOTA_REQUIRES esp_https_ota)
-
-set(ARDUINO_LIBRARY_AsyncUDP_SRCS libraries/AsyncUDP/src/AsyncUDP.cpp)
-
-set(ARDUINO_LIBRARY_BluetoothSerial_SRCS
-  libraries/BluetoothSerial/src/BluetoothSerial.cpp
-  libraries/BluetoothSerial/src/BTAddress.cpp
-  libraries/BluetoothSerial/src/BTAdvertisedDeviceSet.cpp
-  libraries/BluetoothSerial/src/BTScanResultsSet.cpp)
-
-set(ARDUINO_LIBRARY_DNSServer_SRCS libraries/DNSServer/src/DNSServer.cpp)
-
-set(ARDUINO_LIBRARY_EEPROM_SRCS libraries/EEPROM/src/EEPROM.cpp)
-
-# set(ARDUINO_LIBRARY_ESP32_HUB75_LED_MATRIX_PANEL_DMA_Display_SRCS
-#   libraries/ESP32_HUB75_LED_MATRIX_PANEL_DMA_Display/src/ESP32-HUB75-MatrixPanel-I2S-DMA.cpp
-#   libraries/ESP32_HUB75_LED_MATRIX_PANEL_DMA_Display/src/ESP32-HUB75-MatrixPanel-leddrivers.cpp)
-
 set(ARDUINO_LIBRARY_ESP32_DMA_Matrix_SRCS
   libraries/ESP32_DMA_Matrix/src/ESP32-HUB75-MatrixPanel-I2S-DMA.cpp
   libraries/ESP32_DMA_Matrix/src/ESP32-HUB75-MatrixPanel-leddrivers.cpp
   libraries/ESP32_DMA_Matrix/src/platforms/esp32/esp32_i2s_parallel_dma.cpp)
-
-set(ARDUINO_LIBRARY_ESP_I2S_SRCS libraries/ESP_I2S/src/ESP_I2S.cpp)
-  
-set(ARDUINO_LIBRARY_ESP_SR_SRCS 
-  libraries/ESP_SR/src/ESP_SR.cpp
-  libraries/ESP_SR/src/esp32-hal-sr.c)
- 
-set(ARDUINO_LIBRARY_ESPmDNS_SRCS libraries/ESPmDNS/src/ESPmDNS.cpp)
- 
-set(ARDUINO_LIBRARY_Ethernet_SRCS libraries/Ethernet/src/ETH.cpp)
 
 set(ARDUINO_LIBRARY_FastLED_SRCS
   libraries/FastLED/src/bitswap.cpp
@@ -169,89 +124,12 @@ set(ARDUINO_LIBRARY_FastLED_SRCS
   libraries/FastLED/src/lib8tion.cpp
   libraries/FastLED/src/platforms.cpp
   libraries/FastLED/src/power_mgt.cpp
+  libraries/FastLED/src/noise.cpp
   libraries/FastLED/src/wiring.cpp)
-  
-  # libraries/FastLED/src/noise.cpp
-
-set(ARDUINO_LIBRARY_FFat_SRCS libraries/FFat/src/FFat.cpp)
-
-set(ARDUINO_LIBRARY_FS_SRCS
-  libraries/FS/src/FS.cpp
-  libraries/FS/src/vfs_api.cpp)
-
-set(ARDUINO_LIBRARY_HTTPClient_SRCS libraries/HTTPClient/src/HTTPClient.cpp)
-
-set(ARDUINO_LIBRARY_HTTPUpdate_SRCS libraries/HTTPUpdate/src/HTTPUpdate.cpp)
-
-set(ARDUINO_LIBRARY_Insights_SRCS libraries/Insights/src/Insights.cpp)
-
-set(ARDUINO_LIBRARY_LittleFS_SRCS libraries/LittleFS/src/LittleFS.cpp)
-
-set(ARDUINO_LIBRARY_NetBIOS_SRCS libraries/NetBIOS/src/NetBIOS.cpp)
-
-set(ARDUINO_LIBRARY_Preferences_SRCS libraries/Preferences/src/Preferences.cpp)
-
-set(ARDUINO_LIBRARY_RainMaker_SRCS
-  libraries/RainMaker/src/RMaker.cpp
-  libraries/RainMaker/src/RMakerNode.cpp
-  libraries/RainMaker/src/RMakerParam.cpp
-  libraries/RainMaker/src/RMakerDevice.cpp
-  libraries/RainMaker/src/RMakerType.cpp
-  libraries/RainMaker/src/RMakerQR.cpp
-  libraries/RainMaker/src/RMakerUtils.cpp
-  libraries/RainMaker/src/AppInsights.cpp)
-
-set(ARDUINO_LIBRARY_SD_MMC_SRCS libraries/SD_MMC/src/SD_MMC.cpp)
-
-set(ARDUINO_LIBRARY_SD_SRCS
-  libraries/SD/src/SD.cpp
-  libraries/SD/src/sd_diskio.cpp
-  libraries/SD/src/sd_diskio_crc.c)
 
 set(ARDUINO_LIBRARY_SimpleBLE_SRCS libraries/SimpleBLE/src/SimpleBLE.cpp)
 
-set(ARDUINO_LIBRARY_SPIFFS_SRCS libraries/SPIFFS/src/SPIFFS.cpp)
-
 set(ARDUINO_LIBRARY_SPI_SRCS libraries/SPI/src/SPI.cpp)
-
-set(ARDUINO_LIBRARY_Ticker_SRCS libraries/Ticker/src/Ticker.cpp)
-
-set(ARDUINO_LIBRARY_Update_SRCS
-  libraries/Update/src/Updater.cpp
-  libraries/Update/src/HttpsOTAUpdate.cpp)
-  
-set(ARDUINO_LIBRARY_USB_SRCS
-  libraries/USB/src/USBHID.cpp
-  libraries/USB/src/USBMIDI.cpp
-  libraries/USB/src/USBHIDMouse.cpp
-  libraries/USB/src/USBHIDKeyboard.cpp
-  libraries/USB/src/USBHIDGamepad.cpp
-  libraries/USB/src/USBHIDConsumerControl.cpp
-  libraries/USB/src/USBHIDSystemControl.cpp
-  libraries/USB/src/USBHIDVendor.cpp
-  libraries/USB/src/USBVendor.cpp)
-
-set(ARDUINO_LIBRARY_WebServer_SRCS
-  libraries/WebServer/src/WebServer.cpp
-  libraries/WebServer/src/Parsing.cpp
-  libraries/WebServer/src/detail/mimetable.cpp)
-
-set(ARDUINO_LIBRARY_WiFiClientSecure_SRCS
-  libraries/WiFiClientSecure/src/ssl_client.cpp
-  libraries/WiFiClientSecure/src/WiFiClientSecure.cpp)
-
-set(ARDUINO_LIBRARY_WiFi_SRCS
-  libraries/WiFi/src/WiFiAP.cpp
-  libraries/WiFi/src/WiFiClient.cpp
-  libraries/WiFi/src/WiFi.cpp
-  libraries/WiFi/src/WiFiGeneric.cpp
-  libraries/WiFi/src/WiFiMulti.cpp
-  libraries/WiFi/src/WiFiScan.cpp
-  libraries/WiFi/src/WiFiServer.cpp
-  libraries/WiFi/src/WiFiSTA.cpp
-  libraries/WiFi/src/WiFiUdp.cpp)
-
-set(ARDUINO_LIBRARY_WiFiProv_SRCS libraries/WiFiProv/src/WiFiProv.cpp)
 
 set(ARDUINO_LIBRARY_Wire_SRCS libraries/Wire/src/Wire.cpp)
 
