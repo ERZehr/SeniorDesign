@@ -138,8 +138,8 @@ public:
 
   void Setup() {
     // currentPalette = CRGBPalette16(CRGB::Black, CRGB::Blue, CRGB::Aqua, CRGB::White);
-    currentPalette = OceanColors_p;
-    loadPalette(1);
+    currentPalette = RainbowColors_p;
+    loadPalette(0);
     // NoiseVariablesSetup();
   }
 

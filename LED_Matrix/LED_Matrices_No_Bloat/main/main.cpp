@@ -122,6 +122,7 @@ extern "C" void app_main(void)
   // Adjust default brightness to about 75% - plenty bright for normal conditions
   // (to be adjusted further by light sensor)
   matrix -> setBrightness8(192);    // range is 0-255, 0 - 0%, 255 - 100%
+  // matrix -> setBrightness8(255);    // range is 0-255, 0 - 0%, 255 - 100%
 
   // Create VirtualDisplay object based on our newly created dma_display object
   virtualDisp = new VirtualMatrixPanel((*matrix), NUM_ROWS, NUM_COLS, PANEL_RES_X, PANEL_RES_Y, CHAIN_TOP_LEFT_DOWN);
