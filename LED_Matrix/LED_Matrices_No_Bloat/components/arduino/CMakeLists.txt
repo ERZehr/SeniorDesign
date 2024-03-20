@@ -93,10 +93,6 @@ set(ARDUINO_ALL_LIBRARIES
   # SPI (needed by Adafruit_BusIO)
   # Wire (needed by Adafruit_BusIO)
 
-  # Libraries not needed for build (LED Matrix only):
-  # BLE
-  # SimpleBLE
-
   
 set(ARDUINO_LIBRARY_Adafruit_BusIO_SRCS 
   libraries/Adafruit_BusIO/src/Adafruit_BusIO_Register.cpp
