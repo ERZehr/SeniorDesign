@@ -1,53 +1,20 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C6 | ESP32-H2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- |
+# _ble_spp_server_
 
-## ESP-IDF GATT SERVER SPP Example
+## Code Usage
+Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Libary builds in Windows 10/11 VSCode using 
+the ESP-IDF extension. Listed below are the requirements for a good build.
 
-For description of this application please refer to [ESP-IDF GATT CLIENT SPP Example](../ble_spp_client/README.md)
+## Build Instructions
+Download VSCode, and follow this tutorial to install the ESP-IDF extension: 
+https://github.com/espressif/vscode-esp-idf-extension/blob/HEAD/docs/tutorial/install.md After this is completed, follow these steps:
+- Click on the ESP-IDF button on the left pane to see the Espressif Command List.
+- Set the Espressif target as esp32 > ESP32 chip (via USB-Bridge).
+- Ensure that the serial port matches the COM port on the machine.
+- Build the project using the Espressif Build Command
 
-## How to Use Example
+## Flashing Instructions
+After building the project, select the Espressif Flash Command (or Espressif Build, Flash, and Monitor command). If this is the first time
+flashing with this library, a prompt will appear asking which interface to flash with: select UART
 
-Before project configuration and build, be sure to set the correct chip target using:
-
-```bash
-idf.py set-target <chip_name>
-```
-
-### Hardware Required
-
-* A development board with ESP32/ESP32-C3/ESP32-S3/ESP32-C2/ESP32-H2 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
-* A USB cable for Power supply and programming
-
-See [Development Boards](https://www.espressif.com/en/products/devkits) for more information about it.
-
-### Build and Flash
-
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
-
-(To exit the serial monitor, type ``Ctrl-]``.)
-
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
-
-## Example Output
-
-```
-I (4452) GATTS_SPP_DEMO: EVT 14, gatts if 3
-I (4452) GATTS_SPP_DEMO: event = e
-I (5022) GATTS_SPP_DEMO: EVT 4, gatts if 3
-I (5022) GATTS_SPP_DEMO: event = 4
-I (5152) GATTS_SPP_DEMO: EVT 2, gatts if 3
-I (5152) GATTS_SPP_DEMO: event = 2
-I (5152) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 5
-I (5242) GATTS_SPP_DEMO: EVT 2, gatts if 3
-I (5242) GATTS_SPP_DEMO: event = 2
-I (5242) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 10
-I (18462) GATTS_SPP_DEMO: EVT 5, gatts if 3
-I (18462) GATTS_SPP_DEMO: event = 5
-I (27652) GATTS_SPP_DEMO: EVT 2, gatts if 3
-I (27652) GATTS_SPP_DEMO: event = 2
-I (27652) GATTS_SPP_DEMO: ESP_GATTS_WRITE_EVT : handle = 2
-```
-
-## Troubleshooting
-
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+## Interface Instructions
+Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see incoming messages. On an Android-based smartphone, download the nRF Connect app: https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp. On the scanner tab, find the device labeled ESP32_BLE and connect to it. There is a tab of operations under "Nordic UART Service", with a UUID matching the code's `SERVICE_UUID`. At the time of prototyping, this UUID has both a TX and RX characteristic, both from the chip's perspective. Click on the upload arrow next to the RX Characteristic, and send any string you like. The resulting string should get sent to the chip, where it will be output to the serial line.
