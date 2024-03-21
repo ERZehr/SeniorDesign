@@ -9,7 +9,7 @@
 #include "esp_log.h"
 
 /********************************
- * HUB75 -> GPIO Mappings
+ * HUB75 -> GPIO DEFINES
  *******************************/
 #define R_1 25
 #define G_1 26
@@ -21,7 +21,7 @@
 #define CH_B 19
 #define CH_C 5
 #define CH_D 33
-#define CH_E -1 // UNUSED - always -1 for 32x32 matrix
+#define CH_E -1 // UNUSED - always -1 for our 32x32 matrices
 #define CLK 18
 #define STB 4
 #define OE 15
@@ -40,7 +40,7 @@
 
 // Virtual Panel dimensions
 #define VPANEL_W PANEL_RES_X*NUM_COLS // Kosso: All Pattern files have had the MATRIX_WIDTH and MATRIX_HEIGHT replaced by these.
-#define VPANEL_H PANEL_RES_Y*NUM_ROWS //
+#define VPANEL_H PANEL_RES_Y*NUM_ROWS
 
 /* -------------------------- Class Initialisation -------------------------- */
 #include "ESP32-VirtualMatrixPanel-I2S-DMA.h"

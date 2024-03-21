@@ -1,7 +1,7 @@
 {
     "version":            "1",
     "project_name":       "WROOM_LED_BLE",
-    "project_version":    "9929fb6-dirty",
+    "project_version":    "f482e78-dirty",
     "project_path":       "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE",
     "idf_path":           "C:/Users/Bailey/esp/esp-idf",
     "build_dir":          "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE/build",
@@ -1075,7 +1075,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE/build/esp-idf/main/libmain.a",
-            "sources": [ "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE/main/main.cpp" ],
+            "sources": [ "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE/main/main.cpp", "C:/Users/Bailey/Documents/SRD_REPO/SeniorDesign/WROOM_Code/WROOM_LED_BLE/components/arduino/libraries/FastLED/src/noise.cpp" ],
             "include_dirs": [ "." ]
         },
         "mbedtls": {
