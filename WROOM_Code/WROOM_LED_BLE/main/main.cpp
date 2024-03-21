@@ -25,8 +25,6 @@
 // NOTE: includes for LED Matrix are under the comment header: LED MATRIX VARIABLE DECLARATIONS
 // This is done so that the Matrix object can be easily handed off to dependent files within main/
 
-// TODO: TEST THIS FILE
-
 /********************************
  * DISPLAY CONFIGURATION DEFINES
  *******************************/
@@ -187,6 +185,9 @@ static void rx_to_config_handler(void *arg) {
   for(;;) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
+
+    // Somewhere in here need to have logic for palette changing
+    // setPalette("Ocean");
   }
 }
 
