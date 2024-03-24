@@ -22,6 +22,9 @@
 #include "BLEUtils.h"
 #include "BLE2902.h"
 
+// #include "esp_adc/adc_oneshot.h"
+#include <driver/adc.h>
+
 // NOTE: includes for LED Matrix are under the comment header: LED MATRIX VARIABLE DECLARATIONS
 // This is done so that the Matrix object can be easily handed off to dependent files within main/
 
@@ -44,6 +47,7 @@
 #define DISPLAY_IDLE_MODE true  // TODO: parse a field in WROVER-sent UART command to determine this var's state
 // Set initial brightness - 192 ~ 75% brightness which is plenty for most conditions
 #define INIT_BRIGHT 192
+#define MAX_BRIGHT 255
 #define INIT_PATTERN "Life"
 
 /********************************
@@ -73,6 +77,12 @@
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+/********************************
+ * ADC DEFINES
+ *******************************/
+#define LIGHT_SENSOR_MIN 0
+#define LIGHT_SENSOR_MAX 205  // TODO: experimentally determine this
 
 /********************************
  * LED MATRIX VARIABLE DECLARATIONS
@@ -114,6 +124,11 @@ BLECharacteristic *pCharacteristic;
 bool deviceConnected = false;
 
 /********************************
+ * ADC VARIABLE DECLARATIONS
+ *******************************/
+static int adc_raw_val;
+
+/********************************
  * BLE CLASS DEFINITIONS
  *******************************/
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -152,7 +167,22 @@ static void patternAdvance(){
 }
 
 /********************************
- * TASK HANDLING - LED MATRIX AND BLE
+ * ADC STATIC FUNCTIONS
+ *******************************/
+// Update the current brightness in accordance with brightness thresholds
+static void updateCurrBright(int new_bright_val){
+  // Quickly determine where new value sits within thresholds and update curr_bright
+  curr_bright = new_bright_val < BRIGHT_LVL_1 ? BRIGHT_LVL_0 :
+                new_bright_val < BRIGHT_LVL_2 ? BRIGHT_LVL_1 :
+                new_bright_val < BRIGHT_LVL_3 ? BRIGHT_LVL_2 :
+                new_bright_val < BRIGHT_LVL_4 ? BRIGHT_LVL_3 :
+                new_bright_val < BRIGHT_LVL_5 ? BRIGHT_LVL_4 :
+                new_bright_val < BRIGHT_LVL_6 ? BRIGHT_LVL_5 :
+                new_bright_val < BRIGHT_LVL_7 ? BRIGHT_LVL_6 : BRIGHT_LVL_7;
+}
+
+/********************************
+ * TASK HANDLING - ALL FUNCTIONS
  *******************************/
 static TaskHandle_t s_matrix_driving_task_handle = NULL;  /* handle of driving task  */
 static TaskHandle_t s_rx_to_config_handle = NULL;  /* handle of config task  */
@@ -193,13 +223,21 @@ static void rx_to_config_handler(void *arg) {
 
 static void matrix_bright_handler(void *arg) {
   for(;;) {
-    // Delay until next cycle
-    vTaskDelay(1 / portTICK_PERIOD_MS);
+    // Delay for about 5 seconds - too frequent reading yields poor output stability
+    vTaskDelay(pdMS_TO_TICKS(5000));
+
+    // Read raw ADC value
+    adc_raw_val = adc1_get_raw(ADC1_CHANNEL_0);
+
+    // TESTING: ESP_LOG the percentage the light sensor is experiencing
+    updateCurrBright(adc_raw_val * MAX_BRIGHT) / LIGHT_SENSOR_MAX;
+
+    // TODO: link ADC-read value to discrete brightness settings
     // curr_bright = TODO: read in light sensor value
     // Only attempt to update brightness if there is a change - no need otherwise
-    if(curr_bright != prev_bright) {
-      matrix -> setBrightness8(curr_bright);
-    }
+    // if(curr_bright != prev_bright) {
+    //   matrix -> setBrightness8(curr_bright);
+    // }
   }
 }
 
@@ -249,6 +287,11 @@ extern "C" void app_main(void)
   // Start advertising
   pServer->getAdvertising()->start();
   ESP_LOGI("BLEClient", "Waiting on a client connection to notify...");
+
+  // Initialize ADC1 (values from 0-4095)
+  adc1_config_width(ADC_WIDTH_BIT_12);
+  // Configure ADC1 to use Channel 0 (full-scale voltage to 1.5V)
+  adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_2_5);
   
   // Create the task that handles LED matrix driving
   xTaskCreate(matrix_driving_handler, "LEDMatrixTask", 3072, NULL, 2, &s_matrix_driving_task_handle);

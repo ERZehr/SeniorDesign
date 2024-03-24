@@ -1,7 +1,7 @@
-# _ble_spp_server_
+# _BT_DSP_2_RINGBUF_
 
 ## Code Usage
-Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Library builds in Windows 10/11 VSCode using 
+Designed for ESP32 chips, specifically tested on the ESP32-WROVER-based DOIT DevKitC v4. Library builds in Windows 10/11 VSCode using 
 the ESP-IDF extension. Listed below are the requirements for a good build.
 
 ## Build Instructions
@@ -17,4 +17,4 @@ After building the project, select the Espressif Flash Command (or Espressif Bui
 flashing with this library, a prompt will appear asking which interface to flash with: select UART
 
 ## Interface Instructions
-Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see incoming messages. On an Android-based smartphone, download the nRF Connect app: https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp. On the scanner tab, find the device labeled ESP32_BLE and connect to it. There is a tab of operations under "Nordic UART Service", with a UUID matching the code's `SERVICE_UUID`. At the time of prototyping, this UUID has both a TX and RX characteristic, both from the chip's perspective. Click on the upload arrow next to the RX Characteristic, and send any string you like. The resulting string should get sent to the chip, where it will be output to the serial line.
+Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see logging messages about audio streaming. On an Android-based smartphone, use the built-in Bluetooth device connector to find the device named `ARTYISYN` and pair with it to connect. Begin streaming audio via any media app you desire, including but not limited to: Spotify, YouTube, YouTube Music, Samsung Music, etc. You will see the logging messages on the serial terminal/debugger print out messages about audio streaming, especially related to play/pause and positional information.

@@ -1,7 +1,7 @@
 # _LED_Matrices_No_Bloat_
 
 ## Code Usage
-Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Libary builds in Windows 10/11 VSCode using 
+Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Library builds in Windows 10/11 VSCode using 
 the ESP-IDF extension. Listed below are the requirements for a good build.
 
 ## Build Instructions
