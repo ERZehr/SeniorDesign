@@ -83,6 +83,14 @@
  *******************************/
 #define LIGHT_SENSOR_MIN 0
 #define LIGHT_SENSOR_MAX 205  // TODO: experimentally determine this
+#define BRIGHT_LVL_0 0
+#define BRIGHT_LVL_1 63  // Level 31 unnecessarily dim - start at 63
+#define BRIGHT_LVL_2 95
+#define BRIGHT_LVL_3 127
+#define BRIGHT_LVL_4 159
+#define BRIGHT_LVL_5 191
+#define BRIGHT_LVL_6 223
+#define BRIGHT_LVL_7 255
 
 /********************************
  * LED MATRIX VARIABLE DECLARATIONS
@@ -230,11 +238,10 @@ static void matrix_bright_handler(void *arg) {
     adc_raw_val = adc1_get_raw(ADC1_CHANNEL_0);
 
     // TESTING: ESP_LOG the percentage the light sensor is experiencing
-    updateCurrBright(adc_raw_val * MAX_BRIGHT) / LIGHT_SENSOR_MAX;
+    updateCurrBright((adc_raw_val * MAX_BRIGHT) / LIGHT_SENSOR_MAX);
 
-    // TODO: link ADC-read value to discrete brightness settings
-    // curr_bright = TODO: read in light sensor value
     // Only attempt to update brightness if there is a change - no need otherwise
+    // TODO: link ADC-read value to discrete brightness settings
     // if(curr_bright != prev_bright) {
     //   matrix -> setBrightness8(curr_bright);
     // }

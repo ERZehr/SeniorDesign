@@ -240,6 +240,10 @@ void bt_app_a2d_cb(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *param)
 
 void bt_app_a2d_data_cb(const uint8_t *data, uint32_t len)
 {
+    // Attempt to conduct DSP before right to the ringbuffer
+    if(!bt_media_biquad_bilinear_filter(data, len)) {
+        ESP_LOGW(BT_AV_TAG, "DSP Failed!");
+    }
     // write_ringbuf(data, len, "DSP");  // Should be this
     write_ringbuf(data, len, "I2S");  // Testing purposes
 

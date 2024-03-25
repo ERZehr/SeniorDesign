@@ -54,7 +54,7 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         sample_r = (int16_t)((media[i + 3] << 8) | media[i + 2]);
 
         // Inner loop generates coefficients for each band
-        for(uint8_t z = 0; z < 2; z++) {
+        for(uint8_t z = 0; z < BAND_MAX; z++) {
             // Re-initialize floats with any changes to samples
             sample_l_f = (float)sample_l / 0x8000;
             sample_r_f = (float)sample_r / 0x8000;
