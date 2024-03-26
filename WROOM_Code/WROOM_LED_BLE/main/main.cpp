@@ -81,16 +81,12 @@
 /********************************
  * ADC DEFINES
  *******************************/
-#define LIGHT_SENSOR_MIN 0
-#define LIGHT_SENSOR_MAX 205  // TODO: experimentally determine this
-#define BRIGHT_LVL_0 0
-#define BRIGHT_LVL_1 63  // Level 31 unnecessarily dim - start at 63
-#define BRIGHT_LVL_2 95
-#define BRIGHT_LVL_3 127
-#define BRIGHT_LVL_4 159
-#define BRIGHT_LVL_5 191
-#define BRIGHT_LVL_6 223
-#define BRIGHT_LVL_7 255
+#define LIGHT_SENSOR_MIN 1100
+#define LIGHT_SENSOR_MAX 2500  // TODO: experimentally determine this
+#define BRIGHT_LVL_0 95
+#define BRIGHT_LVL_1 135
+#define BRIGHT_LVL_2 175
+#define BRIGHT_LVL_3 255
 
 /********************************
  * LED MATRIX VARIABLE DECLARATIONS
@@ -134,7 +130,7 @@ bool deviceConnected = false;
 /********************************
  * ADC VARIABLE DECLARATIONS
  *******************************/
-static int adc_raw_val;
+static int adc_avg_val;
 
 /********************************
  * BLE CLASS DEFINITIONS
@@ -180,13 +176,9 @@ static void patternAdvance(){
 // Update the current brightness in accordance with brightness thresholds
 static void updateCurrBright(int new_bright_val){
   // Quickly determine where new value sits within thresholds and update curr_bright
-  curr_bright = new_bright_val < BRIGHT_LVL_1 ? BRIGHT_LVL_0 :
+  curr_bright = new_bright_val < BRIGHT_LVL_1 ? BRIGHT_LVL_0 :  // Too small of threshold - has to be REALLY dark to fully shut off
                 new_bright_val < BRIGHT_LVL_2 ? BRIGHT_LVL_1 :
-                new_bright_val < BRIGHT_LVL_3 ? BRIGHT_LVL_2 :
-                new_bright_val < BRIGHT_LVL_4 ? BRIGHT_LVL_3 :
-                new_bright_val < BRIGHT_LVL_5 ? BRIGHT_LVL_4 :
-                new_bright_val < BRIGHT_LVL_6 ? BRIGHT_LVL_5 :
-                new_bright_val < BRIGHT_LVL_7 ? BRIGHT_LVL_6 : BRIGHT_LVL_7;
+                new_bright_val < BRIGHT_LVL_3 ? BRIGHT_LVL_2 : BRIGHT_LVL_3;
 }
 
 /********************************
@@ -232,13 +224,26 @@ static void rx_to_config_handler(void *arg) {
 static void matrix_bright_handler(void *arg) {
   for(;;) {
     // Delay for about 5 seconds - too frequent reading yields poor output stability
-    vTaskDelay(pdMS_TO_TICKS(5000));
+      vTaskDelay(pdMS_TO_TICKS(2000));
 
-    // Read raw ADC value
-    adc_raw_val = adc1_get_raw(ADC1_CHANNEL_0);
+    // Read raw ADC value, average over 10 samples
+    uint16_t adc_raw_val = 0;
+    for(int i = 0; i < 10; i++) {
+      adc_raw_val += analogRead(36);
+      vTaskDelay(pdMS_TO_TICKS(1));
+    }
+    adc_avg_val = adc_raw_val / 10;
 
     // TESTING: ESP_LOG the percentage the light sensor is experiencing
-    updateCurrBright((adc_raw_val * MAX_BRIGHT) / LIGHT_SENSOR_MAX);
+    // (NEW - LOW) * MAX_BRIGHT / (HIGH - LOW)
+    updateCurrBright(((adc_avg_val - LIGHT_SENSOR_MIN) * MAX_BRIGHT) / (LIGHT_SENSOR_MAX - LIGHT_SENSOR_MIN));
+    // ESP_LOGI("ADC", "BRIGHT: %d", (int)curr_bright);
+
+    // // TESTING ADC
+    // vTaskDelay(pdMS_TO_TICKS(500));
+    // adc_raw_val = adc1_get_raw(ADC1_CHANNEL_0);
+    ESP_LOGI("ADC", "RAW: %d", adc_avg_val);
+
 
     // Only attempt to update brightness if there is a change - no need otherwise
     // TODO: link ADC-read value to discrete brightness settings
@@ -294,16 +299,11 @@ extern "C" void app_main(void)
   // Start advertising
   pServer->getAdvertising()->start();
   ESP_LOGI("BLEClient", "Waiting on a client connection to notify...");
-
-  // Initialize ADC1 (values from 0-4095)
-  adc1_config_width(ADC_WIDTH_BIT_12);
-  // Configure ADC1 to use Channel 0 (full-scale voltage to 1.5V)
-  adc1_config_channel_atten(ADC1_CHANNEL_0, ADC_ATTEN_DB_2_5);
   
   // Create the task that handles LED matrix driving
   xTaskCreate(matrix_driving_handler, "LEDMatrixTask", 3072, NULL, 2, &s_matrix_driving_task_handle);
   // Create the task that handles config settings updating
   // xTaskCreate(rx_to_config_handler, "ConfigValueTask", 2048, NULL, 10, &s_rx_to_config_handle);
   // Create the task that handles matrix brightness updating
-  // xTaskCreate(matrix_bright_handler, "BrightTask", 2048, NULL, 11, &s_matrix_bright_handle);
+  xTaskCreate(matrix_bright_handler, "BrightTask", 3072, NULL, 11, &s_matrix_bright_handle);
 }

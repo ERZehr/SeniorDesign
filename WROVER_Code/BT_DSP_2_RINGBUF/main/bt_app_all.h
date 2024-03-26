@@ -4,19 +4,44 @@
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  */
 
-#ifndef __BT_APP_CORE_H__
-#define __BT_APP_CORE_H__
+#ifndef __BT_APP_ALL_H__
+#define __BT_APP_ALL_H__
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include "bt_dsp.h"
+#include "esp_a2dp_api.h"
 
-/* log tag */
+/* log tags */
+#define BT_AV_TAG       "BT_AV"
+#define BT_RC_TG_TAG    "RC_TG"
+#define BT_RC_CT_TAG    "RC_CT"
 #define BT_APP_CORE_TAG    "BT_APP_CORE"
+
+/* I2S Pin Definitions */
+#define I2S_BCK_PIN 26
+#define I2S_DATA_PIN 25
+#define I2S_LRCK_PIN 22
 
 /* signal for `bt_app_work_dispatch` */
 #define BT_APP_SIG_WORK_DISPATCH    (0x01)
+
+/**
+ * @brief  callback function for A2DP sink
+ *
+ * @param [in] event  event id
+ * @param [in] param  callback parameter
+ */
+void bt_app_a2d_cb(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *param);
+
+/**
+ * @brief  callback function for A2DP sink audio data stream
+ *
+ * @param [out] data  data stream writteen by application task
+ * @param [in]  len   length of data stream in byte
+ */
+void bt_app_a2d_data_cb(const uint8_t *data, uint32_t len);
 
 /**
  * @brief  handler for the dispatched work
@@ -87,4 +112,4 @@ void bt_i2s_task_shut_down(void);
  */
 size_t write_ringbuf(const uint8_t *data, size_t size, const char* ringbuf_name);
 
-#endif /* __BT_APP_CORE_H__ */
+#endif /* __BT_APP_ALL_H__*/
