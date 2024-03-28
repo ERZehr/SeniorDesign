@@ -82,7 +82,7 @@
  * ADC DEFINES
  *******************************/
 #define LIGHT_SENSOR_MIN 1100
-#define LIGHT_SENSOR_MAX 2500  // TODO: experimentally determine this
+#define LIGHT_SENSOR_MAX 2000 
 #define BRIGHT_LVL_0 40
 #define BRIGHT_LVL_1 95
 #define BRIGHT_LVL_2 135
@@ -234,19 +234,10 @@ static void matrix_bright_handler(void *arg) {
     }
     adc_avg_val = adc_raw_val / 10;
 
-    // TESTING: ESP_LOG the percentage the light sensor is experiencing
     // (NEW - LOW) * MAX_BRIGHT / (HIGH - LOW)
     updateCurrBright(((adc_avg_val - LIGHT_SENSOR_MIN) * MAX_BRIGHT) / (LIGHT_SENSOR_MAX - LIGHT_SENSOR_MIN));
-    // ESP_LOGI("ADC", "BRIGHT: %d", (int)curr_bright);
-
-    // // TESTING ADC
-    // vTaskDelay(pdMS_TO_TICKS(500));
-    // adc_raw_val = adc1_get_raw(ADC1_CHANNEL_0);
-    ESP_LOGI("ADC", "RAW: %d", adc_avg_val);
-
-
+    // ESP_LOGI("ADC", "RAW: %d", adc_avg_val);
     // Only attempt to update brightness if there is a change - no need otherwise
-    // TODO: link ADC-read value to discrete brightness settings
     if(curr_bright != prev_bright) {
       matrix -> setBrightness8(curr_bright);
       prev_bright = curr_bright;
@@ -265,8 +256,7 @@ extern "C" void app_main(void)
     ESP_LOGE("DMA_I2S", "I2S Memory Allocation Failed!");
   }
 
-  // Initialize brightness
-  // TODO: (to be adjusted further by light sensor)
+  // Initialize brightness - adjusted further in runtime by light sensor
   matrix -> setBrightness8(INIT_BRIGHT);
   // Create VirtualDisplay object based on our newly created dma_display object
   virtualDisp = new VirtualMatrixPanel((*matrix), NUM_ROWS, NUM_COLS, PANEL_RES_X, PANEL_RES_Y, CHAIN_TOP_LEFT_DOWN);
