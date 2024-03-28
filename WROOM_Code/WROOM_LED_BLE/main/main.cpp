@@ -83,9 +83,9 @@
  *******************************/
 #define LIGHT_SENSOR_MIN 1100
 #define LIGHT_SENSOR_MAX 2500  // TODO: experimentally determine this
-#define BRIGHT_LVL_0 95
-#define BRIGHT_LVL_1 135
-#define BRIGHT_LVL_2 175
+#define BRIGHT_LVL_0 40
+#define BRIGHT_LVL_1 95
+#define BRIGHT_LVL_2 135
 #define BRIGHT_LVL_3 255
 
 /********************************
@@ -230,7 +230,7 @@ static void matrix_bright_handler(void *arg) {
     uint16_t adc_raw_val = 0;
     for(int i = 0; i < 10; i++) {
       adc_raw_val += analogRead(36);
-      vTaskDelay(pdMS_TO_TICKS(1));
+      vTaskDelay(pdMS_TO_TICKS(5));
     }
     adc_avg_val = adc_raw_val / 10;
 
@@ -247,9 +247,10 @@ static void matrix_bright_handler(void *arg) {
 
     // Only attempt to update brightness if there is a change - no need otherwise
     // TODO: link ADC-read value to discrete brightness settings
-    // if(curr_bright != prev_bright) {
-    //   matrix -> setBrightness8(curr_bright);
-    // }
+    if(curr_bright != prev_bright) {
+      matrix -> setBrightness8(curr_bright);
+      prev_bright = curr_bright;
+    }
   }
 }
 

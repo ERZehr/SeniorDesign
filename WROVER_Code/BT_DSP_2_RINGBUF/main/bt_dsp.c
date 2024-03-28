@@ -27,6 +27,32 @@ static int16_t x2_r = 0;
 // USER MODIFIED - see update_multipliers function for details
 static float multipliers[BAND_MAX] = {1,1,0,0,0,0,0,0,0,0,0,0};
 
+
+// // Int only
+// static int sample_l = 0;
+// static int sample_r = 0;
+// // EVERYTHING THAT IS 10101 IS PLACEHOLDER
+// static int a0[BAND_MAX] = {10037, 10036, 10071, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
+// static int a1[BAND_MAX] = {-20000, -19999, -19996, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101};
+// static int a2[BAND_MAX] = {9963, 9964, 9929, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
+// static int b0[BAND_MAX] = {37, 36, 71, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
+// static int b2[BAND_MAX] = {-37, -36, -71, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101};
+// static int y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int x0_l = 0;
+// static int x1_l = 0;
+// static int x2_l = 0;
+// static int y_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int y1_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int y2_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+// static int x0_r = 0;
+// static int x1_r = 0;
+// static int x2_r = 0;
+
+// // USER MODIFIED - see update_multipliers function for details
+// static int multipliers[BAND_MAX] = {1,1,0,0,0,0,0,0,0,0,0,0};
+
 bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
     /* Inspiration for processing hierarchy: https://hackaday.io/project/166122-esp32-as-bt-receiver-with-dsp-capabilities
                                              https://github.com/YetAnotherElectronicsChannel/ESP32_Bluetooth_DSP_Speaker/tree/master
@@ -53,49 +79,111 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         sample_l = (int16_t)((media[i + 1] << 8) | media[i]);
         sample_r = (int16_t)((media[i + 3] << 8) | media[i + 2]);
 
+        
+        sample_l_f = (float)sample_l;
+        sample_r_f = (float)sample_r;
+
+        
+        outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
+        outBuf[i] = (uint8_t) (0xff & sample_l);
+        outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
+        outBuf[i + 2] = (uint8_t) (0xff & sample_r);
+
         // Inner loop generates coefficients for each band
-        for(uint8_t z = 0; z < BAND_MAX; z++) {
-            // Re-initialize floats with any changes to samples
-            sample_l_f = (float)sample_l / 0x8000;
-            sample_r_f = (float)sample_r / 0x8000;
+        // for(uint8_t z = 0; z < 1; z++) {
+        //     // Re-initialize floats with any changes to samples
+        //     sample_l_f = (float)sample_l / 0x8000;
+        //     sample_r_f = (float)sample_r / 0x8000;
 
-            // Coefficient generation for each iteration - left channel
-            y2_l[z] = y1_l[z];
-            y1_l[z] = y_l[z];
-            x2_l = x1_l;
-            x1_l = x0_l;
-            x0_l = sample_l_f;
-            y_l[z] = (b0[z]*x0_l + b2[z]*x2_l - (a1[z]*y1_l[z] + a2[z]*y2_l[z])) / a0[z];
+        //     // Coefficient generation for each iteration - left channel
+        //     y2_l[z] = y1_l[z];
+        //     y1_l[z] = y_l[z];
+        //     x2_l = x1_l;
+        //     x1_l = x0_l;
+        //     x0_l = sample_l_f;
+        //     y_l[z] = (b0[z]*x0_l + b2[z]*x2_l - (a1[z]*y1_l[z] + a2[z]*y2_l[z])) / a0[z];
             
-            // Coefficient generation for each iteration - right channel
-            y2_r[z] = y1_r[z];
-            y1_r[z] = y_r[z];
-            x2_r = x1_r;
-            x1_r = x0_r;
-            x0_r = sample_r_f;
-            y_r[z] = (b0[z]*x0_r + b2[z]*x2_r - (a1[z]*y1_r[z] + a2[z]*y2_r[z])) / a0[z];
+        //     // Coefficient generation for each iteration - right channel
+        //     y2_r[z] = y1_r[z];
+        //     y1_r[z] = y_r[z];
+        //     x2_r = x1_r;
+        //     x1_r = x0_r;
+        //     x0_r = sample_r_f;
+        //     y_r[z] = (b0[z]*x0_r + b2[z]*x2_r - (a1[z]*y1_r[z] + a2[z]*y2_r[z])) / a0[z];
 
-            // Audio processing - left channel
-            sample_l_f -= multipliers[z] * y_l[z];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_l_f > 32767) {sample_l_f = 32767;}
-            if(sample_l_f < -32768) {sample_l_f = -32768;}
-            // Convert back to int and place in output buffer
-            sample_l = (int16_t) sample_l_f;
-            outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
-            outBuf[i] = (uint8_t) (0xff & sample_l);
+        //     // Audio processing - left channel
+        //     sample_l_f -= multipliers[z] * y_l[z];
+        //     // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+        //     if(sample_l_f > 32767) {sample_l_f = 32767;}
+        //     if(sample_l_f < -32768) {sample_l_f = -32768;}
+        //     // Convert back to int and place in output buffer
+        //     sample_l = (int16_t) sample_l_f;
+        //     outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
+        //     outBuf[i] = (uint8_t) (0xff & sample_l);
+        //     // // Mono
+        //     // outBuf[i + 3] = (uint8_t) ((sample_l >> 8) & 0xff);
+        //     // outBuf[i + 2] = (uint8_t) (0xff & sample_l);
 
-            // Audio processing - right channel
-            sample_r_f -= multipliers[z] * y_r[z];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_r_f > 32767) {sample_r_f = 32767;}
-            if(sample_r_f < -32768) {sample_r_f = -32768;}
-            // Convert back to int and place in output buffer
-            sample_r = (int16_t) sample_r_f;
-            outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
-            outBuf[i + 2] = (uint8_t) (0xff & sample_r);
-        }
+        //     // Audio processing - right channel
+        //     sample_r_f -= multipliers[z] * y_r[z];
+        //     // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+        //     if(sample_r_f > 32767) {sample_r_f = 32767;}
+        //     if(sample_r_f < -32768) {sample_r_f = -32768;}
+        //     // Convert back to int and place in output buffer
+        //     sample_r = (int16_t) sample_r_f;
+        //     outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
+        //     outBuf[i + 2] = (uint8_t) (0xff & sample_r);
+        // }
     }
+
+    // // Modified to use ints
+    // for(uint32_t i = 0; i < len; i += L_R_BYTE_NUM) {
+    //     // Grab left and right samples from within media data packet
+    //     sample_l = (int)((media[i + 1] << 8) | media[i]);
+    //     sample_r = (int)((media[i + 3] << 8) | media[i + 2]);
+
+    //     // Inner loop generates coefficients for each band
+    //     for(uint8_t z = 0; z < 6; z++) {
+    //         // Coefficient generation for each iteration - left channel
+    //         y2_l[z] = y1_l[z];
+    //         y1_l[z] = y_l[z];
+    //         x2_l = x1_l;
+    //         x1_l = x0_l;
+    //         x0_l = sample_l;
+    //         y_l[z] = (b0[z]*x0_l + b2[z]*x2_l - (a1[z]*y1_l[z] + a2[z]*y2_l[z])) / a0[z];
+            
+    //         // Coefficient generation for each iteration - right channel
+    //         y2_r[z] = y1_r[z];
+    //         y1_r[z] = y_r[z];
+    //         x2_r = x1_r;
+    //         x1_r = x0_r;
+    //         x0_r = sample_r;
+    //         y_r[z] = (b0[z]*x0_r + b2[z]*x2_r - (a1[z]*y1_r[z] + a2[z]*y2_r[z])) / a0[z];
+
+    //         // Audio processing - left channel
+    //         sample_l -= multipliers[z] * y_l[z];
+    //         sample_l /= 10000;  // Shift back to proper value
+    //         // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+    //         if(sample_l > 32767) {sample_l = 32767;}
+    //         if(sample_l < -32768) {sample_l = -32768;}
+    //         // Convert back to int and place in output buffer
+    //         outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
+    //         outBuf[i] = (uint8_t) (0xff & sample_l);
+    //         // // Mono
+    //         // outBuf[i + 3] = (uint8_t) ((sample_l >> 8) & 0xff);
+    //         // outBuf[i + 2] = (uint8_t) (0xff & sample_l);
+
+    //         // Audio processing - right channel
+    //         sample_r -= multipliers[z] * y_r[z];
+    //         sample_l /= 10000;  // Shift back to proper value
+    //         // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+    //         if(sample_r > 32767) {sample_r = 32767;}
+    //         if(sample_r < -32768) {sample_r = -32768;}
+    //         // Convert back to int and place in output buffer
+    //         outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
+    //         outBuf[i + 2] = (uint8_t) (0xff & sample_r);
+    //     }
+    // }
 
     // Copy over elements and free malloc'd buffer
     memcpy(media, outBuf, len);
