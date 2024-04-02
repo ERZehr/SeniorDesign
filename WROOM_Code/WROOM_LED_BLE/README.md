@@ -6,7 +6,11 @@ the ESP-IDF extension. Listed below are the requirements for a good build.
 
 ## Build Instructions
 Download VSCode, and follow this tutorial to install the ESP-IDF extension: 
-https://github.com/espressif/vscode-esp-idf-extension/blob/HEAD/docs/tutorial/install.md After this is completed, follow these steps:
+https://github.com/espressif/vscode-esp-idf-extension/blob/HEAD/docs/tutorial/install.md 
+
+NOTE: It is important to install system files in a directory with the shortest path length possible (e.g., `C:\Users\{USERNAME}\esp`) to avoid potential build and flash issues.
+
+After this is completed, follow these steps:
 - Click on the ESP-IDF button on the left pane to see the Espressif Command List.
 - Set the Espressif target as esp32 > ESP32 chip (via USB-Bridge).
 - Ensure that the serial port matches the COM port on the machine.
