@@ -1,4 +1,4 @@
-# _ble_spp_server_
+# _WROOM_LED_BLE_
 
 ## Code Usage
 Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Library builds in Windows 10/11 VSCode using 
