@@ -2,28 +2,6 @@
 /*******************************
  * STATIC VARIABLE DEFINITIONS
  ******************************/
-// static int16_t sample_l = 0;
-// static int16_t sample_r = 0;
-// static float sample_l_f = 0.0f;
-// static float sample_r_f = 0.0f;
-// static float a0[BAND_MAX] = {1.0037, 1.0036, 1.0071};
-// static float a1[BAND_MAX] = {-2,-1.9999, -1.9996};
-// static float a2[BAND_MAX] = {0.9963, 0.9964, 0.9929};
-// static float b0[BAND_MAX] = {0.0037, 0.0036, 0.0071};
-// static float b2[BAND_MAX] = {-0.0037, -0.0036, -0.0071};
-// static float y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static float y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static float y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int16_t x0_l = 0;
-// static int16_t x1_l = 0;
-// static int16_t x2_l = 0;
-// static float y_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static float y1_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static float y2_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int16_t x0_r = 0;
-// static int16_t x1_r = 0;
-// static int16_t x2_r = 0;
-
 // // USER MODIFIED - see update_multipliers function for details
 // static float multipliers[BAND_MAX] = {1,1,0,0,0,0,0,0,0,0,0,0};
 
@@ -31,17 +9,28 @@ static int16_t sample_l = 0;
 static int16_t sample_r = 0;
 static float sample_l_f = 0.0f;
 static float sample_r_f = 0.0f;
-static float a0 = 1.0037;
-static float a1 = -2;
-static float a2 = 0.9963;
-static float b0 = 0.0037;
-static float b2 = -0.0037;
+static float a0_user = 1.0037;
+static float a1_user = -2;
+static float a2_user = 0.9963;
+static float b0_user = 0.0037;
+static float b2_user = -0.0037;
+static float a0[BAND_MAX] = {1.0037, 1.0036, 1.0071};
+static float a1[BAND_MAX] = {-2,-1.9999, -1.9996};
+static float a2[BAND_MAX] = {0.9963, 0.9964, 0.9929};
+static float b0[BAND_MAX] = {0.0037, 0.0036, 0.0071};
+static float b2[BAND_MAX] = {-0.0037, -0.0036, -0.0071};
+static float y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static float y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static float y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y_l = 0;
 static float y1_l = 0;
 static float y2_l = 0;
 static int16_t x0_l = 0;
 static int16_t x1_l = 0;
 static int16_t x2_l = 0;
+static float y_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static float y1_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static float y2_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y_r = 0;
 static float y1_r = 0;
 static float y2_r = 0;
@@ -96,6 +85,20 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         
            0     1     2     3     4     5     6     7    .............  len-4 len-3 len-2 len-1
     */ 
+    y_l = y1_l = y2_l = y_r = y1_r = y1_l = {0};
+    // 20 samples - display only
+    for(uint32_t i = 0; i < BAND_MAX; i++) {
+        for(uint32_t j = 0; j < COEFF_SAMPLE_MAX; j++) {
+            // Grab new sample of media[j]
+            // Grab coefficient of last value - add to array to get 12 total
+            // Coefficient is y_l xor y_r
+            // Nothing placed in outBuf
+        }
+
+    }
+    // Grab 12 coefficients at the end
+
+    // All samples - audio only
     for(uint32_t i = 0; i < len; i += L_R_BYTE_NUM) {
         // Grab left and right samples from within media data packet
         sample_l = (int16_t)((media[i + 1] << 8) | media[i]);

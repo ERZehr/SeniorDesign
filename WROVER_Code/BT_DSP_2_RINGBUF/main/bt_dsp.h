@@ -9,6 +9,7 @@
 #define BAND_MAX 12
 #define L_R_BYTE_NUM 4
 #define DSP_OK true
+#define COEFF_SAMPLE_MAX 20
 
 /* 
     DSP Capabilities inspired by these past projects:
