@@ -326,7 +326,8 @@ static void matrix_driving_handler(void *arg) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
 
-    if(disp_idle_mode) {
+    // TODO: if(disp_idle_mode)
+    if(true) {
       ms_current = esp_timer_get_time() / 1000;
       if ((ms_current - ms_previous) > ms_animation_max_duration) {
         patternAdvance();

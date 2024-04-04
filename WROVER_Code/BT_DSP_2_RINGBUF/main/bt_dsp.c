@@ -85,20 +85,55 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         
            0     1     2     3     4     5     6     7    .............  len-4 len-3 len-2 len-1
     */ 
+    // Reset the accumulators
     y_l = y1_l = y2_l = y_r = y1_r = y1_l = {0};
-    // 20 samples - display only
-    for(uint32_t i = 0; i < BAND_MAX; i++) {
-        for(uint32_t j = 0; j < COEFF_SAMPLE_MAX; j++) {
-            // Grab new sample of media[j]
-            // Grab coefficient of last value - add to array to get 12 total
-            // Coefficient is y_l xor y_r
-            // Nothing placed in outBuf
+    // DSP FOR DISPLAY
+    for(uint32_t i = 0; i < COEFF_SAMPLE_MAX; i++) {
+        // Grab left and right samples from within media data packet
+        sample_l = (int16_t)((media[i + 1] << 8) | media[i]);
+        sample_r = (int16_t)((media[i + 3] << 8) | media[i + 2]);
+        for(uint32_t j = 0; j < BAND_MAX; j++) {
+            // Coefficient generation for each iteration - left channel
+            y2_l[j] = y1_l[j];
+            y1_l[j] = y_l[j];
+            x2_l = x1_l;
+            x1_l = x0_l;
+            x0_l = sample_l_f;
+            y_l[j] = (b0[j]*x0_l + b2[j]*x2_l - (a1[j]*y1_l[j] + a2[j]*y2_l[j])) / a0[j];
+            
+            // Coefficient generation for each iteration - right channel
+            y2_r[j] = y1_r[j];
+            y1_r[j] = y_r[j];
+            x2_r = x1_r;
+            x1_r = x0_r;
+            x0_r = sample_r_f;
+            y_r[j] = (b0[j]*x0_r + b2[j]*x2_r - (a1[j]*y1_r[j] + a2[j]*y2_r[j])) / a0[j];
+
+            // Audio processing - left channel
+            sample_l_f = y_l[j];
+            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+            if(sample_l_f > 32767) {sample_l_f = 32767;}
+            if(sample_l_f < -32768) {sample_l_f = -32768;}
+
+            // Audio processing - right channel
+            sample_r_f = y_r[j];
+            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+            if(sample_r_f > 32767) {sample_r_f = 32767;}
+            if(sample_r_f < -32768) {sample_r_f = -32768;}
         }
-
     }
-    // Grab 12 coefficients at the end
+    // Average the left/right coefficients to yield 12 total band coefficients
+    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 100 * (float)Before
+    // WROOM will need to be able to handle this conversion
+    int coeffs_to_send[BAND_MAX];
+    for(int i = 0; i < BAND_MAX; i++) {
+        // Equivalent to ((coeff_l + coeff_r) / 2) * 100
+        coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 50.0f);
+    }
+    // TODO send coeffs to main for UART
 
-    // All samples - audio only
+
+    // DSP FOR AUDIO
     for(uint32_t i = 0; i < len; i += L_R_BYTE_NUM) {
         // Grab left and right samples from within media data packet
         sample_l = (int16_t)((media[i + 1] << 8) | media[i]);
@@ -107,16 +142,6 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         
         sample_l_f = (float)sample_l;
         sample_r_f = (float)sample_r;
-
-        
-        // outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
-        // outBuf[i] = (uint8_t) (0xff & sample_l);
-        // outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
-        // outBuf[i + 2] = (uint8_t) (0xff & sample_r);
-
-        // Inner loop generates coefficients for each band
-        // for(uint8_t z = 0; z < BAND_MAX; z++) {
-            // Re-initialize floats with any changes to samples
 
         // Coefficient generation for each iteration - left channel
         y2_l = y1_l;
@@ -153,57 +178,7 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         sample_r = (int16_t) sample_r_f;
         outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
         outBuf[i + 2] = (uint8_t) (0xff & sample_r);
-        // }
     }
-
-    // // Modified to use ints
-    // for(uint32_t i = 0; i < len; i += L_R_BYTE_NUM) {
-    //     // Grab left and right samples from within media data packet
-    //     sample_l = (int)((media[i + 1] << 8) | media[i]);
-    //     sample_r = (int)((media[i + 3] << 8) | media[i + 2]);
-
-    //     // Inner loop generates coefficients for each band
-    //     for(uint8_t z = 0; z < 6; z++) {
-    //         // Coefficient generation for each iteration - left channel
-    //         y2_l[z] = y1_l[z];
-    //         y1_l[z] = y_l[z];
-    //         x2_l = x1_l;
-    //         x1_l = x0_l;
-    //         x0_l = sample_l;
-    //         y_l[z] = (b0[z]*x0_l + b2[z]*x2_l - (a1[z]*y1_l[z] + a2[z]*y2_l[z])) / a0[z];
-            
-    //         // Coefficient generation for each iteration - right channel
-    //         y2_r[z] = y1_r[z];
-    //         y1_r[z] = y_r[z];
-    //         x2_r = x1_r;
-    //         x1_r = x0_r;
-    //         x0_r = sample_r;
-    //         y_r[z] = (b0[z]*x0_r + b2[z]*x2_r - (a1[z]*y1_r[z] + a2[z]*y2_r[z])) / a0[z];
-
-    //         // Audio processing - left channel
-    //         sample_l -= multipliers[z] * y_l[z];
-    //         sample_l /= 10000;  // Shift back to proper value
-    //         // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-    //         if(sample_l > 32767) {sample_l = 32767;}
-    //         if(sample_l < -32768) {sample_l = -32768;}
-    //         // Convert back to int and place in output buffer
-    //         outBuf[i + 1] = (uint8_t) ((sample_l >> 8) & 0xff);
-    //         outBuf[i] = (uint8_t) (0xff & sample_l);
-    //         // // Mono
-    //         // outBuf[i + 3] = (uint8_t) ((sample_l >> 8) & 0xff);
-    //         // outBuf[i + 2] = (uint8_t) (0xff & sample_l);
-
-    //         // Audio processing - right channel
-    //         sample_r -= multipliers[z] * y_r[z];
-    //         sample_l /= 10000;  // Shift back to proper value
-    //         // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-    //         if(sample_r > 32767) {sample_r = 32767;}
-    //         if(sample_r < -32768) {sample_r = -32768;}
-    //         // Convert back to int and place in output buffer
-    //         outBuf[i + 3] = (uint8_t) ((sample_r >> 8) & 0xff);
-    //         outBuf[i + 2] = (uint8_t) (0xff & sample_r);
-    //     }
-    // }
 
     // Copy over elements and free malloc'd buffer
     memcpy(media, outBuf, len);
