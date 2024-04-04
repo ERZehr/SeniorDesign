@@ -6,7 +6,7 @@
   LED Matrix Code based on ESP32-HUB75-MatrixPanel-DMA example: https://github.com/mrfaptastic/ESP32-HUB75-MatrixPanel-DMA/tree/master/examples/ChainedPanelsAuroraDemo
   Ported to be compatible with VSCode ESP-IDF Extension (C++) by Bailey Mosher
 */
-
+// Standard includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -17,16 +17,21 @@
 #include "esp_system.h"
 #include "esp_log.h"
 
+// BLE Includes
 #include "BLEDevice.h"
 #include "BLEServer.h"
 #include "BLEUtils.h"
 #include "BLE2902.h"
 
-// #include "esp_adc/adc_oneshot.h"
+// ADC Includes
 #include <driver/adc.h>
 
+// UART Includes
+#include "driver/uart.h"
+#include "driver/gpio.h"
+
 // NOTE: includes for LED Matrix are under the comment header: LED MATRIX VARIABLE DECLARATIONS
-// This is done so that the Matrix object can be easily handed off to dependent files within main/
+// This is done so that the Matrix object can be easily handed off to dependent files within main/ directory
 
 /********************************
  * DISPLAY CONFIGURATION DEFINES
@@ -43,8 +48,6 @@
 // Virtual Panel dimensions
 #define VPANEL_W PANEL_RES_X*NUM_COLS // Kosso: All Pattern files have had the MATRIX_WIDTH and MATRIX_HEIGHT replaced by these.
 #define VPANEL_H PANEL_RES_Y*NUM_ROWS
-// Display is either in Idle Mode, or in Playback Mode
-#define DISPLAY_IDLE_MODE true  // TODO: parse a field in WROVER-sent UART command to determine this var's state
 // Set initial brightness - 192 ~ 75% brightness which is plenty for most conditions
 #define INIT_BRIGHT 192
 #define MAX_BRIGHT 255
@@ -88,8 +91,44 @@
 #define BRIGHT_LVL_3 255
 
 /********************************
+ * UART DEFINES
+ *******************************/
+#define WROOM_UART_BUF_SIZE 1024
+#define WROOM_UART_BAUD 115200
+#define WROOM_UART_PORT_NUM 2
+#define WROOM_UART_RX 16
+#define WROOM_UART_TX 17
+#define WROOM_UART_STACK_SIZE 2048
+#define WROOM_EXPECTED_RX_VALS 13
+
+// WROVER-Controlled Variables
+static int coeff_1;
+static int coeff_2;
+static int coeff_3;
+static int coeff_4;
+static int coeff_5;
+static int coeff_6;
+static int coeff_7;
+static int coeff_8;
+static int coeff_9;
+static int coeff_10;
+static int coeff_11;
+static int coeff_12;
+
+static int disp_idle_mode;
+
+// TODO delete these once we have good coeffs
+// WROOM-Controlled Variables
+static int fir_1 = 11;
+static int fir_2 = 12;
+static int fir_3 = 13;
+static int fir_4 = 14;
+static int fir_5 = 15;
+
+/********************************
  * LED MATRIX VARIABLE DECLARATIONS
  *******************************/
+// LED Matrix Includes
 #include "ESP32-VirtualMatrixPanel-I2S-DMA.h"
 #include "FastLED.h"  // Used for some mathematics calculations and effects.
 
@@ -161,7 +200,7 @@ class MyCallbacks: public BLECharacteristicCallbacks {
 };
 
 /********************************
- * LED MATRIX STATIC FUNCTIONS
+ * LED MATRIX STATIC FUNCTION DEFINITIONS
  *******************************/
 // Advances pattern to next in rotation
 static void patternAdvance(){
@@ -172,7 +211,7 @@ static void patternAdvance(){
 }
 
 /********************************
- * ADC STATIC FUNCTIONS
+ * ADC STATIC FUNCTION DEFINITIONS
  *******************************/
 // Update the current brightness in accordance with brightness thresholds
 static void updateCurrBright(int new_bright_val){
@@ -183,10 +222,103 @@ static void updateCurrBright(int new_bright_val){
 }
 
 /********************************
+ * UART STATIC FUNCTION DECLARATIONS
+ *******************************/
+/* UART configuration function - intended to be called from app_main */
+static void wroom_uart_init();
+/* Processing function for RX data */
+static void update_coeff_vals(uint8_t* data, int len);
+/* Populating function for TX data */
+static bool populate_tx_buf(uint8_t* data, int len);
+/* RX Task - Data received from WROVER */
+static void wroom_rx_task(void *arg);
+/* TX Task - Data sent to WROVER */
+static void wroom_tx_task(void *arg);
+
+/********************************
+ * UART STATIC FUNCTION DEFINITIONS
+ *******************************/
+static TaskHandle_t s_wroom_rx_handle = NULL;  /* handle of wroom rx task  */
+static TaskHandle_t s_wroom_tx_handle = NULL;  /* handle of wroom tx task */
+
+static void wroom_uart_init() {
+    /* Configure parameters of an UART driver,
+     * communication pins and install the driver */
+    uart_config_t wroom_uart_config = {
+        .baud_rate = WROOM_UART_BAUD,
+        .data_bits = UART_DATA_8_BITS,
+        .parity    = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE,
+        .source_clk = UART_SCLK_DEFAULT,
+    };
+
+    ESP_ERROR_CHECK(uart_driver_install(WROOM_UART_PORT_NUM, WROOM_UART_BUF_SIZE * 2, 0, 0, NULL, 0));
+    ESP_ERROR_CHECK(uart_param_config(WROOM_UART_PORT_NUM, &wroom_uart_config));
+    // Ensure for WROOM: TX : GPIO17, RX : GPIO16 - don't use RTS/CTS
+    ESP_ERROR_CHECK((uart_set_pin(WROOM_UART_PORT_NUM, WROOM_UART_TX, WROOM_UART_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE)));
+
+    // Start a task for both the RX and TX
+    xTaskCreate(wroom_rx_task, "wroom_rx_task", WROOM_UART_STACK_SIZE, NULL, 20, &s_wroom_rx_handle);
+    xTaskCreate(wroom_tx_task, "wroom_tx_task", WROOM_UART_STACK_SIZE, NULL, 21, &s_wroom_tx_handle);
+}
+
+static void update_coeff_vals(uint8_t* data, int len) {
+    // TODO ensure accurate number of sent values
+    // Begin parsing received JSON-like string
+    // EXPECTED FORMAT (JSON-like):
+    /*
+        {
+            "COEFFS" : {
+                            "C1" : 1,
+                            "C2" : 2,
+                            .....
+                            "C12" : 12
+            },
+            "IDLE MODE" : 0
+        }
+    */
+  //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
+  //  coeff_1 = coeff_2 = coeff_3 = coeff_4 = coeff_5 = coeff_6 = 0;
+  //  coeff_7 = coeff_8 = coeff_9 = coeff_10 = coeff_11 = coeff_12 = 0;
+  //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
+
+    sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
+           &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12, &disp_idle_mode);                      
+
+    // // DEBUGGING - values should NOT be 0
+    // ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d,\tC9:%d\nC10:%d,\tC11:%d,\tC12:%d\n\n",
+    //          coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
+}
+
+static bool populate_tx_buf(uint8_t* data, int len) {
+    // TODO - actually grab coefficients (delete predefined ones at the top of the file)
+    // Use snprintf() to quickly and safely place coefficients in data buffer
+    // EXPECTED FORMAT (JSON-like):
+    /*
+        {
+            "FIRS" : {
+                            "F1" : 1,
+                            "F2" : 2,
+                            .....
+                            "F5" : 5
+            }
+        }
+    */
+    int written = snprintf((char*)data, len, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}}",
+                           fir_1, fir_2, fir_3, fir_4, fir_5);
+
+    // Error if not enough space for bytes, or if 0 or ERROR bytes are written
+    if(written > len || written < 1) {
+        return false;
+    }
+    return true;
+}
+
+/********************************
  * TASK HANDLING - ALL FUNCTIONS
  *******************************/
 static TaskHandle_t s_matrix_driving_task_handle = NULL;  /* handle of driving task  */
-static TaskHandle_t s_rx_to_config_handle = NULL;  /* handle of config task  */
 static TaskHandle_t s_matrix_bright_handle = NULL;  /* handle of brightness task  */
 
 static void matrix_driving_handler(void *arg) {
@@ -194,7 +326,7 @@ static void matrix_driving_handler(void *arg) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
 
-    if(DISPLAY_IDLE_MODE) {
+    if(disp_idle_mode) {
       ms_current = esp_timer_get_time() / 1000;
       if ((ms_current - ms_previous) > ms_animation_max_duration) {
         patternAdvance();
@@ -209,16 +341,6 @@ static void matrix_driving_handler(void *arg) {
       // TODO: real-time graphic eq display logic
     }
 
-  }
-}
-
-static void rx_to_config_handler(void *arg) {
-  for(;;) {
-    // Delay until next cycle
-    vTaskDelay(1 / portTICK_PERIOD_MS);
-
-    // Somewhere in here need to have logic for palette changing
-    // setPalette("Ocean");
   }
 }
 
@@ -244,6 +366,45 @@ static void matrix_bright_handler(void *arg) {
       prev_bright = curr_bright;
     }
   }
+}
+
+static void wroom_rx_task(void *arg) {
+    // Allocate a buffer for incoming data
+    uint8_t* rx_data = (uint8_t*) malloc(WROOM_UART_BUF_SIZE);
+
+    for(;;) {
+        // Give enough of a delay before reading
+        // Read in a maximum of (BUF_SIZE-1) bytes - leave space for a terminating '\0'
+        int byte_len = uart_read_bytes(WROOM_UART_PORT_NUM, rx_data, (WROOM_UART_BUF_SIZE - 1), 20 / portTICK_PERIOD_MS);
+
+        // Coeff values are at LEAST 160 characters long
+        if(byte_len > 160) {
+            // Terminate the byte array, and send for processing
+            rx_data[byte_len] = '\0';
+            update_coeff_vals(rx_data, byte_len);
+        }
+    }
+    free(rx_data);
+}
+
+static void wroom_tx_task(void *arg) {
+    // Allocate a buffer for outgoing data
+    uint8_t* tx_data = (uint8_t*) malloc(WROOM_UART_BUF_SIZE);
+
+    for(;;) {
+        if(!populate_tx_buf(tx_data, WROOM_UART_BUF_SIZE)) {
+            ESP_LOGE("UART", "TX FIR Populating Failed");
+            continue;
+        }
+        // Give enough of a delay before sending - about 1 time per second
+        vTaskDelay(pdMS_TO_TICKS(1000));
+        int err = uart_write_bytes(WROOM_UART_PORT_NUM, (const char*)tx_data, WROOM_UART_BUF_SIZE);
+
+        if(err == -1) {
+            ESP_LOGE("UART", "TX Send Failed");
+        }
+    }
+    free(tx_data);
 }
 
 /********************************
@@ -293,8 +454,8 @@ extern "C" void app_main(void)
   
   // Create the task that handles LED matrix driving
   xTaskCreate(matrix_driving_handler, "LEDMatrixTask", 3072, NULL, 2, &s_matrix_driving_task_handle);
-  // Create the task that handles config settings updating
-  // xTaskCreate(rx_to_config_handler, "ConfigValueTask", 2048, NULL, 10, &s_rx_to_config_handle);
   // Create the task that handles matrix brightness updating
   xTaskCreate(matrix_bright_handler, "BrightTask", 3072, NULL, 11, &s_matrix_bright_handle);
+  // Start the UART channel
+  wroom_uart_init();
 }

@@ -5,7 +5,7 @@
  * 
  * UART Inspired by: https://github.com/espressif/esp-idf/blob/master/examples/peripherals/uart/uart_echo/main/uart_echo_example_main.c
  */
-
+// Standard includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,6 +18,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 
+// BT Includes
 #include "esp_bt.h"
 #include "bt_app_all.h"
 #include "esp_bt_main.h"
@@ -25,6 +26,7 @@
 #include "esp_gap_bt_api.h"
 #include "esp_a2dp_api.h"
 
+// UART Includes
 #include "driver/uart.h"
 #include "driver/gpio.h"
 
@@ -42,8 +44,10 @@
 #define WROVER_UART_RX 14
 #define WROVER_UART_TX 27
 #define WROVER_UART_STACK_SIZE 2048
+#define WROVER_EXPECTED_RX_VALS 5
 
 // TODO delete these once we have good coeffs
+// WROVER-Controlled Variables
 static int coeff_1 = 101;
 static int coeff_2 = 102;
 static int coeff_3 = 103;
@@ -56,6 +60,16 @@ static int coeff_9 = 109;
 static int coeff_10 = 110;
 static int coeff_11 = 111;
 static int coeff_12 = 112;
+
+static int disp_idle_mode = 1;
+
+// WROOM-Controlled Variables
+static int fir_1;
+static int fir_2;
+static int fir_3;
+static int fir_4;
+static int fir_5;
+
 
 /* event for stack up */
 enum {
@@ -164,7 +178,7 @@ static void bt_av_hdl_stack_evt(uint16_t event, void *p_param)
 /* UART configuration function - intended to be called from app_main */
 static void wrover_uart_init();
 /* Processing function for RX data */
-static bool update_fir_vals(uint8_t* data, int len);
+static void update_fir_vals(uint8_t* data, int len);
 /* Populating function for TX data */
 static bool populate_tx_buf(uint8_t* data, int len);
 /* RX Task - Data received from WROOM */
@@ -175,6 +189,9 @@ static void wrover_tx_task(void *arg);
 /********************************
  * UART STATIC FUNCTION DEFINITIONS
  *******************************/
+static TaskHandle_t s_wrover_rx_handle = NULL;  /* handle of wrover rx task  */
+static TaskHandle_t s_wrover_tx_handle = NULL;  /* handle of wrover tx task */
+
 static void wrover_uart_init() {
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
@@ -193,10 +210,63 @@ static void wrover_uart_init() {
     ESP_ERROR_CHECK((uart_set_pin(WROVER_UART_PORT_NUM, WROVER_UART_TX, WROVER_UART_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE)));
 
     // Start a task for both the RX and TX
-    xTaskCreate(wrover_rx_task, "wrover_rx_task", WROVER_UART_STACK_SIZE, NULL, 20, NULL);
-    xTaskCreate(wrover_tx_task, "wrover_tx_task", WROVER_UART_STACK_SIZE, NULL, 21, NULL);
+    xTaskCreate(wrover_rx_task, "wrover_rx_task", WROVER_UART_STACK_SIZE, NULL, 20, &s_wrover_rx_handle);
+    xTaskCreate(wrover_tx_task, "wrover_tx_task", WROVER_UART_STACK_SIZE, NULL, 21, &s_wrover_tx_handle);
 }
 
+static void update_fir_vals(uint8_t* data, int len) {
+    // TODO ensure accurate number of sent values
+    // Begin parsing received JSON-like string
+    // EXPECTED FORMAT (JSON-like):
+    /*
+        {
+            "FIRS" : {
+                            "F1" : 1,
+                            "F2" : 2,
+                            .....
+                            "F5" : 5
+            }
+        }
+    */
+    //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
+    //  fir_1 = fir_2 = fir_3 = fir_4 = fir_5 = 0;
+    //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
+    sscanf((const char*)data, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}}",
+           &fir_1, &fir_2, &fir_3, &fir_4, &fir_5);
+    
+    // // DEBUGGING - values should NOT be 0
+    // ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",
+    //          fir_1, fir_2, fir_3, fir_4, fir_5);
+}
+
+static bool populate_tx_buf(uint8_t* data, int len) {
+    // TODO - actually grab coefficients (delete predefined ones at the top of the file)
+    // Use snprintf() to quickly and safely place coefficients in data buffer
+    // EXPECTED FORMAT (JSON-like):
+    /*
+        {
+            "COEFFS" : {
+                            "C1" : 1,
+                            "C2" : 2,
+                            .....
+                            "C12" : 12
+            },
+            "IDLE MODE" : 0
+        }
+    */
+    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
+                           coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12, disp_idle_mode);
+
+    // Error if not enough space for bytes, or if 0 or ERROR bytes are written
+    if(written > len || written < 1) {
+        return false;
+    }
+    return true;
+}
+
+/********************************
+ * TASK HANDLING - ALL FUNCTIONS
+ *******************************/
 static void wrover_rx_task(void *arg) {
     // Allocate a buffer for incoming data
     uint8_t* rx_data = (uint8_t*) malloc(WROVER_UART_BUF_SIZE);
@@ -206,12 +276,11 @@ static void wrover_rx_task(void *arg) {
         // Read in a maximum of (BUF_SIZE-1) bytes - leave space for a terminating '\0'
         int byte_len = uart_read_bytes(WROVER_UART_PORT_NUM, rx_data, (WROVER_UART_BUF_SIZE - 1), 20 / portTICK_PERIOD_MS);
 
-        if(byte_len) {
+        // FIR values are at LEAST 60 characters long
+        if(byte_len > 60) {
             // Terminate the byte array, and send for processing
             rx_data[byte_len] = '\0';
-            if(!update_fir_vals(rx_data, byte_len)) {
-                ESP_LOGE("UART", "RX FIR Updating Failed");
-            }
+            update_fir_vals(rx_data, byte_len);
         }
     }
     free(rx_data);
@@ -226,8 +295,8 @@ static void wrover_tx_task(void *arg) {
             ESP_LOGE("UART", "TX Coefficient Populating Failed");
             continue;
         }
-        // Give enough of a delay before sending - about 60 times per second
-        vTaskDelay(pdMS_TO_TICKS(1000 / 60));
+        // Give enough of a delay before sending - about 30 times per second
+        vTaskDelay(pdMS_TO_TICKS(1000 / 30));
         int err = uart_write_bytes(WROVER_UART_PORT_NUM, (const char*)tx_data, WROVER_UART_BUF_SIZE);
 
         if(err == -1) {
@@ -235,24 +304,6 @@ static void wrover_tx_task(void *arg) {
         }
     }
     free(tx_data);
-}
-
-static bool update_fir_vals(uint8_t* data, int len) {
-    // TODO
-    return true;
-}
-
-static bool populate_tx_buf(uint8_t* data, int len) {
-    // TODO - actually grab coefficients (delete predefined ones at the top of the file)
-    // Use snprintf() to quickly and safely place coefficients in data buffer
-    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
-    coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
-
-    // Error if not enough space for bytes, or if 0 or ERROR bytes are written
-    if(written > len || written < 1) {
-        return false;
-    }
-    return true;
 }
 
 /*******************************
