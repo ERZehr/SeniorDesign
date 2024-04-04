@@ -225,7 +225,7 @@ static void rx_to_config_handler(void *arg) {
 static void matrix_bright_handler(void *arg) {
   for(;;) {
     // Delay for about 5 seconds - too frequent reading yields poor output stability
-      vTaskDelay(pdMS_TO_TICKS(2000));
+    vTaskDelay(pdMS_TO_TICKS(2000));
 
     // Read raw ADC value, average over 10 samples
     uint16_t adc_raw_val = 0;
