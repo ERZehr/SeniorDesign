@@ -14,11 +14,11 @@ static float a1_user = -2;
 static float a2_user = 0.9963;
 static float b0_user = 0.0037;
 static float b2_user = -0.0037;
-static float a0[BAND_MAX] = {1.0037, 1.0036, 1.0071};
-static float a1[BAND_MAX] = {-2,-1.9999, -1.9996};
-static float a2[BAND_MAX] = {0.9963, 0.9964, 0.9929};
-static float b0[BAND_MAX] = {0.0037, 0.0036, 0.0071};
-static float b2[BAND_MAX] = {-0.0037, -0.0036, -0.0071};
+static float a0[BAND_MAX] = {1.0004, 1.0008, 1.0015, 1.0031, 1.0062, 1.0124, 1.0247, 1.0371, 1.0494, 1.0618, 1.099, 1.1997};
+static float a1[BAND_MAX] = {-2,-1.9999, -1.9997, -1.9987, -1.9949, -1.9797, -1.9194, -1.8201, -1.6839, -1.5136, -0.8355, 1.3019};
+static float a2[BAND_MAX] = {0.9996, 0.9992, 0.9985, 0.9969, 0.9938, 0.9876, 0.9753, 0.9629, 0.9506, 0.9382, 0.9010, 0.8003};
+static float b0[BAND_MAX] = {0.003832, 0.007787, 0.0015, 0.0031, 0.0062, 0.0124, 0.0247, 0.0371, 0.0494, 0.0618, 0.099, 0.1997};
+static float b2[BAND_MAX] = {-0.003832, -0.007787, -0.0015, -0.0031, -0.0062, -0.0124, -0.0247, -0.0371, -0.0494, -0.0618, -0.099, -0.1997};
 static float y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
@@ -39,32 +39,6 @@ static int16_t x1_r = 0;
 static int16_t x2_r = 0;
 
 static int coeffs_to_send[BAND_MAX];
-
-
-// // Int only
-// static int sample_l = 0;
-// static int sample_r = 0;
-// // EVERYTHING THAT IS 10101 IS PLACEHOLDER
-// static int a0[BAND_MAX] = {10037, 10036, 10071, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
-// static int a1[BAND_MAX] = {-20000, -19999, -19996, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101};
-// static int a2[BAND_MAX] = {9963, 9964, 9929, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
-// static int b0[BAND_MAX] = {37, 36, 71, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101, 10101};
-// static int b2[BAND_MAX] = {-37, -36, -71, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101, -10101};
-// static int y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int x0_l = 0;
-// static int x1_l = 0;
-// static int x2_l = 0;
-// static int y_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int y1_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int y2_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-// static int x0_r = 0;
-// static int x1_r = 0;
-// static int x2_r = 0;
-
-// // USER MODIFIED - see update_multipliers function for details
-// static int multipliers[BAND_MAX] = {1,1,0,0,0,0,0,0,0,0,0,0};
 
 bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
     /* Inspiration for processing hierarchy: https://hackaday.io/project/166122-esp32-as-bt-receiver-with-dsp-capabilities
@@ -100,6 +74,12 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
         // Grab left and right samples from within media data packet
         sample_l = (int16_t)((media[i + 1] << 8) | media[i]);
         sample_r = (int16_t)((media[i + 3] << 8) | media[i + 2]);
+        // Absolute value only
+        sample_l = sample_l < 0 ? sample_l * -1 : sample_l;
+        sample_r = sample_r < 0 ? sample_r * -1 : sample_r;
+        
+        sample_l_f = (float)sample_l;
+        sample_r_f = (float)sample_r;
         for(uint32_t j = 0; j < BAND_MAX; j++) {
             // Coefficient generation for each iteration - left channel
             y2_l[j] = y1_l[j];
@@ -108,6 +88,8 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
             x1_l = x0_l;
             x0_l = sample_l_f;
             y_l[j] = (b0[j]*x0_l + b2[j]*x2_l - (a1[j]*y1_l[j] + a2[j]*y2_l[j])) / a0[j];
+
+            y_l[j] = y_l[j] < 0 ? y_l[j] * -1.0f : y_l[j];
             
             // Coefficient generation for each iteration - right channel
             y2_r[j] = y1_r[j];
@@ -116,6 +98,8 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len) {
             x1_r = x0_r;
             x0_r = sample_r_f;
             y_r[j] = (b0[j]*x0_r + b2[j]*x2_r - (a1[j]*y1_r[j] + a2[j]*y2_r[j])) / a0[j];
+
+            y_r[j] = y_r[j] < 0 ? y_r[j] * -1.0f : y_r[j];
 
             // Audio processing - left channel
             sample_l_f = y_l[j];
