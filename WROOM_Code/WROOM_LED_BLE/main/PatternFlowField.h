@@ -66,9 +66,7 @@ class PatternFlowField : public Drawable {
         int ioffset = scale * boid->location.x;
         int joffset = scale * boid->location.y;
 
-        byte angle = inoise8(x + ioffset, y + joffset, z); // - causing issues right now
-        // byte angle = 0;
-        // byte angle = (uint8_t) esp_random();
+        byte angle = inoise8(x + ioffset, y + joffset, z);
 
         boid->velocity.x = (float) sin8(angle) * 0.0078125 - 1.0;
         boid->velocity.y = -((float)cos8(angle) * 0.0078125 - 1.0);

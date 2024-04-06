@@ -46,22 +46,34 @@
 #define WROVER_UART_STACK_SIZE 2048
 #define WROVER_EXPECTED_RX_VALS 5
 
-// TODO delete these once we have good coeffs
 // WROVER-Controlled Variables
-static int coeff_1 = 101;
-static int coeff_2 = 102;
-static int coeff_3 = 103;
-static int coeff_4 = 104;
-static int coeff_5 = 105;
-static int coeff_6 = 106;
-static int coeff_7 = 107;
-static int coeff_8 = 108;
-static int coeff_9 = 109;
-static int coeff_10 = 110;
-static int coeff_11 = 111;
-static int coeff_12 = 112;
+// static int coeff_1 = 0;
+// static int coeff_2 = 0;
+// static int coeff_3 = 0;
+// static int coeff_4 = 0;
+// static int coeff_5 = 0;
+// static int coeff_6 = 0;
+// static int coeff_7 = 0;
+// static int coeff_8 = 0;
+// static int coeff_9 = 0;
+// static int coeff_10 = 0;
+// static int coeff_11 = 0;
+// static int coeff_12 = 0;
 
-static int disp_idle_mode = 1;
+static int coeff_1 = 10;
+static int coeff_2 = 20;
+static int coeff_3 = 30;
+static int coeff_4 = 40;
+static int coeff_5 = 50;
+static int coeff_6 = 60;
+static int coeff_7 = 70;
+static int coeff_8 = 80;
+static int coeff_9 = 90;
+static int coeff_10 = 100;
+static int coeff_11 = 110;
+static int coeff_12 = 120;
+
+int disp_idle_mode = 1;
 
 // WROOM-Controlled Variables
 static int fir_1;
@@ -254,6 +266,19 @@ static bool populate_tx_buf(uint8_t* data, int len) {
             "IDLE MODE" : 0
         }
     */
+    coeff_1 = get_coeff(1);
+    coeff_2 = get_coeff(2);
+    coeff_3 = get_coeff(3);
+    coeff_4 = get_coeff(4);
+    coeff_5 = get_coeff(5);
+    coeff_6 = get_coeff(6);
+    coeff_7 = get_coeff(7);
+    coeff_8 = get_coeff(8);
+    coeff_9 = get_coeff(9);
+    coeff_10 = get_coeff(10);
+    coeff_11 = get_coeff(11);
+    coeff_12 = get_coeff(12);
+
     int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
                            coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12, disp_idle_mode);
 

@@ -71,6 +71,10 @@
 #define STB 4
 #define OE 15
 
+// TODO: eliminate once app ready
+#define DISP_IDLE_CONTROLLED false
+#define DISP_EQ_CONTROLLED true
+
 /********************************
  * BLE UUID DEFINES
  *******************************/
@@ -147,7 +151,9 @@ Effects effects;
 
 #include "Drawable.h"
 #include "Patterns.h"
+#include "Equalizer.h"
 Patterns patterns;
+Equalizer equalizer;
 
 // State machine-esque control vars over LED brightness
 static uint8_t curr_bright = INIT_BRIGHT;
@@ -286,9 +292,9 @@ static void update_coeff_vals(uint8_t* data, int len) {
     sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
            &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12, &disp_idle_mode);                      
 
-    // // DEBUGGING - values should NOT be 0
-    // ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d,\tC9:%d\nC10:%d,\tC11:%d,\tC12:%d\n\n",
-    //          coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
+    // DEBUGGING - values should NOT be 0
+    ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d,\tC9:%d\nC10:%d,\tC11:%d,\tC12:%d\n\n",
+             coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
@@ -326,8 +332,7 @@ static void matrix_driving_handler(void *arg) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
 
-    // TODO: if(disp_idle_mode)
-    if(true) {
+    if(DISP_IDLE_CONTROLLED/*disp_idle_mode*/) {
       ms_current = esp_timer_get_time() / 1000;
       if ((ms_current - ms_previous) > ms_animation_max_duration) {
         patternAdvance();
@@ -338,10 +343,13 @@ static void matrix_driving_handler(void *arg) {
         next_frame = patterns.drawFrame() + ms_current;
       }
     }
-    else {
-      // TODO: real-time graphic eq display logic
+    // TODO: should be else only
+    else if(DISP_EQ_CONTROLLED) {
+      ms_current = esp_timer_get_time() / 1000;
+      if ( next_frame < ms_current) {
+        next_frame = equalizer.drawFrame() + ms_current;
+      }
     }
-
   }
 }
 

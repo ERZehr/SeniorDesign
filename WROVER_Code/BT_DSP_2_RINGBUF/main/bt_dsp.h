@@ -38,3 +38,12 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len);
  * @NOTE: Length not needed - assumed to be equal to BAND_MAX
  */
 void update_multipliers(uint8_t *mults);
+
+/**
+ * @brief Grabs multiplier coefficients for each frequency band
+ *
+ * @param [in] idx       which band to grab the coefficient of
+ * 
+ * @return  coefficient of requested bande
+ */
+int get_coeff(int idx);
