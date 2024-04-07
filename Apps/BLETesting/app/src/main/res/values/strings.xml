@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BLE Testing</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_start_scan_text">Start Scan</string>
+    <string name="btn_connect_text">Connect</string>
+    <string name="btn_disconnect_text">Disconnect</string>
+    <string name="btn_read_text">Read</string>
+    <string name="tw_scan_results_title">Scan Results\n</string>
+</resources>
