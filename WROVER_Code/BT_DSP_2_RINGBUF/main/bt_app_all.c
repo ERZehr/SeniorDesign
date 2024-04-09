@@ -554,17 +554,33 @@ void bt_app_a2d_cb(esp_a2d_cb_event_t event, esp_a2d_cb_param_t *param)
 
 void bt_app_a2d_data_cb(const uint8_t *data, uint32_t len)
 {
-    // Attempt to conduct DSP before right to the ringbuffer
-    if(!bt_media_biquad_bilinear_filter(data, len)) {
-        ESP_LOGW(BT_AV_TAG, "DSP Failed!");
+    // Allocate memory to output buffer - more interrupt-safe than modifying media in-place   
+    uint8_t *outBuf = malloc(len);
+    if(outBuf == NULL) {
+        ESP_LOGI(DSP_TAG, "Malloc fail for output buffer - skipping algorithm");
+        write_ringbuf(data, len, "I2S");
+    } else {
+        // Attempt to conduct DSP before right to the ringbuffer
+        if(!bt_media_biquad_bilinear_filter(data, len, outBuf)) {
+            
+            ESP_LOGI(DSP_TAG, "Malloc fail for output buffer - skipping algorithm");
+            write_ringbuf(data, len, "I2S");
+        }
+        else {
+            // Perform I2S volume control - speakers are too loud
+            for(uint32_t i = 0; i < len; i += 2) {
+                uint16_t sampl = (int16_t)((outBuf[i + 1] << 8) | outBuf[i]) >> 6;
+                outBuf[i + 1] = (uint8_t) ((sampl >> 8) & 0xff);
+                outBuf[i] = (uint8_t) (0xff & sampl);
+            }
+            write_ringbuf(outBuf, len, "I2S");  // Testing purposes
+        }
     }
-    // Perform I2S volume control - speakers are too loud
-
-    write_ringbuf(data, len, "I2S");  // Testing purposes
-    // write_ringbuf(data, len, "DSP");  // Should be this
 
     /* log the number every 100 packets */
     if (++s_pkt_cnt % 100 == 0) {
         ESP_LOGI(BT_AV_TAG, "Audio packet count: %"PRIu32, s_pkt_cnt);
     }
+
+    free(outBuf);
 }

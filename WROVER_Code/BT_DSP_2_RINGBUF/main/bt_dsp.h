@@ -11,6 +11,8 @@
 #define DSP_OK true
 #define COEFF_SAMPLE_MAX 20
 
+extern float get_dsp_coeff(int idx);
+
 /* 
     DSP Capabilities inspired by these past projects:
 
@@ -23,10 +25,11 @@
  *
  * @param [in] media       byte array of media data
  * @param [in] len         length of media array (typ. 4096)
+ * @param [in] outBuf      byte array of output media data
  * 
  * @return  true if malloc'd and filtered correctly - false otherwise
  */
-bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len);
+bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t* outBuf);
 
 /**
  * @brief Updates multiplier coefficients for each frequency band

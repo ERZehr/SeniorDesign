@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <inttypes.h>
+#include <math.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
@@ -71,18 +72,16 @@
 #define STB 4
 #define OE 15
 
-// TODO: eliminate once app ready
-#define DISP_IDLE_CONTROLLED false
-#define DISP_EQ_CONTROLLED true
-
 /********************************
- * BLE UUID DEFINES
+ * BLE DEFINES
  *******************************/
   // See the following for generating UUIDs:
   // https://www.uuidgenerator.net/
 #define SERVICE_UUID           "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" // UART service UUID
 #define CHARACTERISTIC_UUID_RX "6E400002-B5A3-F393-E0A9-E50E24DCCA9E"
 #define CHARACTERISTIC_UUID_TX "6E400003-B5A3-F393-E0A9-E50E24DCCA9E"
+
+#define SAMP_FREQ 44100
 
 /********************************
  * ADC DEFINES
@@ -119,15 +118,16 @@ static int coeff_10;
 static int coeff_11;
 static int coeff_12;
 
-static int disp_idle_mode;
+// WROOM-Controlled Variables - multiplied by 10 ^5
+static int fir_1;  // a0
+static int fir_2;  // a1
+static int fir_3;  // a2
+static int fir_4;  // b0
+static int fir_5;  // b2
+static float q_val = 0.25;  // Q
+static int fc_val = 63;  // f_c
+static int disp_idle_mode;  // 1 - in idle, 0 - active playback
 
-// TODO delete these once we have good coeffs
-// WROOM-Controlled Variables
-static int fir_1 = 11;
-static int fir_2 = 12;
-static int fir_3 = 13;
-static int fir_4 = 14;
-static int fir_5 = 15;
 
 /********************************
  * LED MATRIX VARIABLE DECLARATIONS
@@ -177,6 +177,43 @@ bool deviceConnected = false;
 static int adc_avg_val;
 
 /********************************
+ * BLE STATIC FUNCTION DEFINITIONS
+ *******************************/
+static void parse_and_calc_dsp_coeffs(const char* rx_val) {
+    // Begin parsing received JSON-like string
+    // EXPECTED FORMAT (JSON-like):
+    /*
+        {
+            "USER" : {
+                            "Q" : 1,
+                            "FC" : 2000
+            },
+            "IDLE MODE" : 0/1
+        }
+    */
+  sscanf(rx_val, "{\"USER\" : {\"Q\" : %f, \"FC\" : %d}, \"IDLE MODE\" : %d}",
+        &q_val, &fc_val, &disp_idle_mode);
+
+  // DEBUGGING - values should NOT be 0
+  ESP_LOGI("BLE_USER", "USER:\nQ:%f,\tFC:%d,\tIDLE MODE:%d\n\n", q_val, fc_val, disp_idle_mode);
+
+  // Calculate the coefficients needed to send to the WROVER
+  float omega = 2 * 3.141528f * fc_val / SAMP_FREQ;
+  float alpha = sin(omega) * sinh(log(2) / 2) * q_val * omega / sin(omega);
+
+  // a0
+  fir_1 = (int)((1 + alpha) * 100000);
+  // a1
+  fir_2 = (int)((-2 * cos(omega)) * 100000);
+  // a2
+  fir_3 = (int)((1 - alpha) * 100000);
+  // b0
+  fir_4 = (int)(alpha * 100000);
+  // b2
+  fir_5 = (int)(-alpha * 100000);
+}
+
+/********************************
  * BLE CLASS DEFINITIONS
  *******************************/
 class MyServerCallbacks: public BLEServerCallbacks {
@@ -198,9 +235,11 @@ class MyCallbacks: public BLECharacteristicCallbacks {
       // Use ESP_LOGE for now...
       if (rxLen > 0) {
         const char* rxValueCharArr = rxValue.c_str();
+        // Debugging
         ESP_LOGI("RXValue", "*********");
         ESP_LOGI("RXValue", "Received Value: %s", rxValueCharArr);
         ESP_LOGI("RXValue", "*********");
+        parse_and_calc_dsp_coeffs(rxValueCharArr);
       }
     }
 };
@@ -270,7 +309,6 @@ static void wroom_uart_init() {
 }
 
 static void update_coeff_vals(uint8_t* data, int len) {
-    // TODO ensure accurate number of sent values
     // Begin parsing received JSON-like string
     // EXPECTED FORMAT (JSON-like):
     /*
@@ -280,8 +318,7 @@ static void update_coeff_vals(uint8_t* data, int len) {
                             "C2" : 2,
                             .....
                             "C12" : 12
-            },
-            "IDLE MODE" : 0
+            }
         }
     */
   //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
@@ -289,8 +326,8 @@ static void update_coeff_vals(uint8_t* data, int len) {
   //  coeff_7 = coeff_8 = coeff_9 = coeff_10 = coeff_11 = coeff_12 = 0;
   //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
 
-    sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
-           &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12, &disp_idle_mode);                      
+    sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
+           &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12);                      
 
     // DEBUGGING - values should NOT be 0
     ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d,\tC9:%d\nC10:%d,\tC11:%d,\tC12:%d\n\n",
@@ -298,7 +335,6 @@ static void update_coeff_vals(uint8_t* data, int len) {
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
-    // TODO - actually grab coefficients (delete predefined ones at the top of the file)
     // Use snprintf() to quickly and safely place coefficients in data buffer
     // EXPECTED FORMAT (JSON-like):
     /*
@@ -332,7 +368,7 @@ static void matrix_driving_handler(void *arg) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
 
-    if(DISP_IDLE_CONTROLLED/*disp_idle_mode*/) {
+    if(disp_idle_mode) {
       ms_current = esp_timer_get_time() / 1000;
       if ((ms_current - ms_previous) > ms_animation_max_duration) {
         patternAdvance();
@@ -343,8 +379,7 @@ static void matrix_driving_handler(void *arg) {
         next_frame = patterns.drawFrame() + ms_current;
       }
     }
-    // TODO: should be else only
-    else if(DISP_EQ_CONTROLLED) {
+    else {
       ms_current = esp_timer_get_time() / 1000;
       if ( next_frame < ms_current) {
         next_frame = equalizer.drawFrame() + ms_current;

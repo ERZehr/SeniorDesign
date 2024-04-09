@@ -73,9 +73,7 @@ static int coeff_10 = 100;
 static int coeff_11 = 110;
 static int coeff_12 = 120;
 
-int disp_idle_mode = 1;
-
-// WROOM-Controlled Variables
+// WROOM-Controlled Variables - need to divide by 10^5
 static int fir_1;
 static int fir_2;
 static int fir_3;
@@ -183,6 +181,13 @@ static void bt_av_hdl_stack_evt(uint16_t event, void *p_param)
     }
 }
 
+/********************************
+ * EXTERNAL-USE FUNCTIONS
+ *******************************/
+float get_dsp_coeff(int idx) {
+    return idx == 1 ? (float)fir_1 / 100000 : idx == 2 ? (float)fir_2 / 100000 : 
+           idx == 3 ? (float)fir_3 / 100000 : idx == 4 ? (float)fir_4 / 100000 : (float)fir_5 / 10000;
+}
 
 /********************************
  * UART STATIC FUNCTION DECLARATIONS
@@ -246,9 +251,9 @@ static void update_fir_vals(uint8_t* data, int len) {
     sscanf((const char*)data, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}}",
            &fir_1, &fir_2, &fir_3, &fir_4, &fir_5);
     
-    // // DEBUGGING - values should NOT be 0
-    // ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",
-    //          fir_1, fir_2, fir_3, fir_4, fir_5);
+    // DEBUGGING - values should NOT be 0
+    ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",
+             fir_1, fir_2, fir_3, fir_4, fir_5);
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
@@ -262,8 +267,7 @@ static bool populate_tx_buf(uint8_t* data, int len) {
                             "C2" : 2,
                             .....
                             "C12" : 12
-            },
-            "IDLE MODE" : 0
+            }
         }
     */
     coeff_1 = get_coeff(1);
@@ -279,8 +283,8 @@ static bool populate_tx_buf(uint8_t* data, int len) {
     coeff_11 = get_coeff(11);
     coeff_12 = get_coeff(12);
 
-    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}, \"IDLE MODE\" : %d}",
-                           coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12, disp_idle_mode);
+    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
+                           coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
 
     // Error if not enough space for bytes, or if 0 or ERROR bytes are written
     if(written > len || written < 1) {
