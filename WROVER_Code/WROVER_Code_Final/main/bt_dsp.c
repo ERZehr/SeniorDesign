@@ -19,11 +19,19 @@ static float a1_user = 0;
 static float a2_user = 0;
 static float b0_user = 0;
 static float b2_user = 0;
-static float a0[BAND_MAX] = {1.0004, 1.0008, 1.0015, 1.0031, 1.0062, 1.0124, 1.0247, 1.0371, 1.0494, 1.0618, 1.099, 1.1997};
-static float a1[BAND_MAX] = {-2,-1.9999, -1.9997, -1.9987, -1.9949, -1.9797, -1.9194, -1.8201, -1.6839, -1.5136, -0.8355, 1.3019};
-static float a2[BAND_MAX] = {0.9996, 0.9992, 0.9985, 0.9969, 0.9938, 0.9876, 0.9753, 0.9629, 0.9506, 0.9382, 0.9010, 0.8003};
-static float b0[BAND_MAX] = {0.003832, 0.007787, 0.0015, 0.0031, 0.0062, 0.0124, 0.0247, 0.0371, 0.0494, 0.0618, 0.099, 0.1997};
-static float b2[BAND_MAX] = {-0.003832, -0.007787, -0.0015, -0.0031, -0.0062, -0.0124, -0.0247, -0.0371, -0.0494, -0.0618, -0.099, -0.1997};
+// static float a0[BAND_MAX] = {1.0004, 1.0008, 1.0015, 1.0031, 1.0062, 1.0124, 1.0247, 1.0371, 1.0494, 1.0618, 1.099, 1.1997};
+// static float a1[BAND_MAX] = {-2,-1.9999, -1.9997, -1.9987, -1.9949, -1.9797, -1.9194, -1.8201, -1.6839, -1.5136, -0.8355, 1.3019};
+// static float a2[BAND_MAX] = {0.9996, 0.9992, 0.9985, 0.9969, 0.9938, 0.9876, 0.9753, 0.9629, 0.9506, 0.9382, 0.9010, 0.8003};
+// static float b0[BAND_MAX] = {0.003832, 0.007787, 0.0015, 0.0031, 0.0062, 0.0124, 0.0247, 0.0371, 0.0494, 0.0618, 0.099, 0.1997};
+// static float b2[BAND_MAX] = {-0.003832, -0.007787, -0.0015, -0.0031, -0.0062, -0.0124, -0.0247, -0.0371, -0.0494, -0.0618, -0.099, -0.1997};
+// Narrower bandwidth
+//                                                                                  FREQUENCY BANDS
+//                              31            63          125          250         500        1000        2000       3000       4000         5000        8000       16000 
+static float a0[BAND_MAX] = { 1.00,        1.0002,      1.0003,      1.0006,     1.0031,     1.0010,      1.002,     1.003,     1.004,      1.0049,     1.4076,     1.9406};
+static float a1[BAND_MAX] = {-2.00,       -1.9999,     -1.9997,     -1.9987,    -1.9987,    -1.9797,     -1.9194,   -1.8201,   -1.6839,    -1.5136,    -0.8355,     1.3019};
+static float a2[BAND_MAX] = { 1.00,        0.9998,      0.9997,      0.9994,     0.9969,     0.999,       0.998,     0.997,     0.996,      0.9951,     0.5924,     0.0594};
+static float b0[BAND_MAX] = { 0.00003061,  0.0001555,   0.0003086,   0.0006173,  0.0012,     0.0009876,   0.002,     0.003,     0.004,      0.0049,     0.4076,     0.9406};
+static float b2[BAND_MAX] = {-0.00003061, -0.0001555,  -0.0003086,  -0.0006173, -0.0012,    -0.0009876,  -0.002,    -0.003,    -0.004,     -0.0049,    -0.4076,    -0.9406};
 static float y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
 static float y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
@@ -110,14 +118,20 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t *outB
     }
     
     // Average the left/right coefficients to yield 12 total band coefficients
-    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 100 * (float)Before
+    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 10000 * (float)Before
     // WROOM will need to be able to handle this conversion
     for(int i = 0; i < BAND_MAX; i++) {
         // Magnitude of the coefficients only for visual readout
         y_l[i] = y_l[i] < 0 ? y_l[i] * -1.0f : y_l[i];
         y_r[i] = y_r[i] < 0 ? y_r[i] * -1.0f : y_r[i];
-        // Equivalent to ((coeff_l + coeff_r) / 2) * 100
-        coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 50.0f);
+        // Equivalent to ((coeff_l + coeff_r) / 2) * 10000
+        if(i < 10) {
+            coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 5000.0f);
+        }
+        // Equivalent to ((coeff_l + coeff_r) / 2) * 1000000
+        else {
+            coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 500000.0f);
+        }
     }
 
     // DSP FOR AUDIO
