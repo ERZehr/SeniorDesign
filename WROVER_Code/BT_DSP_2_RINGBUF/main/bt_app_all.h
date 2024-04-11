@@ -7,11 +7,15 @@
 #ifndef __BT_APP_ALL_H__
 #define __BT_APP_ALL_H__
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdio.h>
+extern "C" {
+    #include <stdint.h>
+    #include <stdbool.h>
+    #include <stdio.h>
+
+    #include "esp_a2dp_api.h"
+}
+
 #include "bt_dsp.h"
-#include "esp_a2dp_api.h"
 
 /* log tags */
 #define BT_AV_TAG       "BT_AV"
@@ -20,9 +24,9 @@
 #define BT_APP_CORE_TAG    "BT_APP_CORE"
 
 /* I2S Pin Definitions */
-#define I2S_BCK_PIN 26
-#define I2S_DATA_PIN 25
-#define I2S_LRCK_PIN 22
+#define I2S_BCK_PIN (gpio_num_t)26
+#define I2S_DATA_PIN (gpio_num_t)25
+#define I2S_LRCK_PIN (gpio_num_t)22
 
 /* signal for `bt_app_work_dispatch` */
 #define BT_APP_SIG_WORK_DISPATCH    (0x01)

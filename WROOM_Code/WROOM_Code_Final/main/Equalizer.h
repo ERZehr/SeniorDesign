@@ -4,29 +4,43 @@
 #define GAP_WIDTH 1
 #define BAND_WIDTH 6
 #define GROUP_WIDTH 8
-#define COEFF_MIN 0
-#define COEFF_MAX 1000000 / 10  // experimental max (remember this is 100*actual val)
-#define COEFF_1 2
-#define COEFF_2 4
-#define COEFF_3 6
-#define COEFF_4 8
-#define COEFF_5 10
-#define COEFF_6 12
-#define COEFF_7 14
-#define COEFF_8 16
-#define COEFF_9 18
-#define COEFF_10 20
-#define COEFF_11 22
-#define COEFF_12 24
+#define COEFF_MIN 1000
+#define COEFF_MAX 100000  // experimental max (remember this is 100*actual val)
 
-#define ATTEN_1 1 / 4
-#define ATTEN_2 3 / 40
-#define ATTEN_3 3 / 20
-#define ATTEN_4 1 / 6
-#define ATTEN_5 1 / 4
-#define ATTEN_6 3 / 5
-#define ATTEN_7 3 / 4
-#define ATTEN_8 3 / 4
+
+#define COEFF_MIN_1 100
+#define COEFF_MAX_1 10000
+#define COEFF_MIN_2 500
+#define COEFF_MAX_2 10000
+#define COEFF_MIN_3 3500
+#define COEFF_MAX_3 25000
+#define COEFF_MIN_4 5000
+#define COEFF_MAX_4 28000
+#define COEFF_MIN_5 2500
+#define COEFF_MAX_5 30000
+#define COEFF_MIN_6 2500
+#define COEFF_MAX_6 20000
+#define COEFF_MIN_7 1250
+#define COEFF_MAX_7 20000
+#define COEFF_MIN_8 6000
+#define COEFF_MAX_8 65000
+#define COEFF_MIN_9 5000
+#define COEFF_MAX_9 140000
+#define COEFF_MIN_10 5000
+#define COEFF_MAX_10 85000
+#define COEFF_MIN_11 100000
+#define COEFF_MAX_11 800000
+#define COEFF_MIN_12 100000
+#define COEFF_MAX_12 950000
+
+#define ATTEN_1 4
+#define ATTEN_2 40 / 3
+#define ATTEN_3 20 / 6
+#define ATTEN_4 6
+#define ATTEN_5 4
+#define ATTEN_6 5 / 3
+#define ATTEN_7 4 / 3
+#define ATTEN_8 4 / 3
 #define ATTEN_9 1
 #define ATTEN_10 1
 #define ATTEN_11 1
@@ -81,20 +95,38 @@ public:
                     //             curr_band_num == 7 ? coeff_7 * ATTEN_7 : curr_band_num == 8 ? coeff_8 * ATTEN_8 :
                     //             curr_band_num == 9 ? coeff_9 * ATTEN_9 : curr_band_num == 10 ? coeff_10 * ATTEN_10 :
                     //             curr_band_num == 11 ? coeff_11 * ATTEN_11 : coeff_12 * ATTEN_12;
-                    curr_y_max = curr_band_num == 12 ? coeff_12 * ATTEN_12 : curr_band_num == 11 ? coeff_11 * ATTEN_11 :
-                                curr_band_num == 10 ? coeff_10 * ATTEN_10 : curr_band_num == 9 ? coeff_9 * ATTEN_9 :
-                                curr_band_num == 8 ? coeff_8 * ATTEN_8 : curr_band_num == 7 ? coeff_7 * ATTEN_7 :
-                                curr_band_num == 6 ? coeff_6 * ATTEN_6 : curr_band_num == 5 ? coeff_5 * ATTEN_5 :
-                                curr_band_num == 4 ? coeff_4 * ATTEN_4 : curr_band_num == 3 ? coeff_3 * ATTEN_3 :
-                                curr_band_num == 2 ? coeff_2 * ATTEN_2 : coeff_1 * ATTEN_1;
-                    // Increment next band number
-                    curr_band_num++;
-
+                    // curr_y_max = curr_band_num == 12 ? coeff_12 * ATTEN_12 : curr_band_num == 11 ? coeff_11 * ATTEN_11 :
+                    //             curr_band_num == 10 ? coeff_10 * ATTEN_10 : curr_band_num == 9 ? coeff_9 * ATTEN_9 :
+                    //             curr_band_num == 8 ? coeff_8 * ATTEN_8 : curr_band_num == 7 ? coeff_7 * ATTEN_7 :
+                    //             curr_band_num == 6 ? coeff_6 * ATTEN_6 : curr_band_num == 5 ? coeff_5 * ATTEN_5 :
+                    //             curr_band_num == 4 ? coeff_4 * ATTEN_4 : curr_band_num == 3 ? coeff_3 * ATTEN_3 :
+                    //             curr_band_num == 2 ? coeff_2 * ATTEN_2 : coeff_1 * ATTEN_1;
+                    curr_y_max = curr_band_num == 12 ? coeff_12 : curr_band_num == 11 ? coeff_11 :
+                                curr_band_num == 10 ? coeff_10 : curr_band_num == 9 ? coeff_9 :
+                                curr_band_num == 8 ? coeff_8 : curr_band_num == 7 ? coeff_7 :
+                                curr_band_num == 6 ? coeff_6 : curr_band_num == 5 ? coeff_5 :
+                                curr_band_num == 4 ? coeff_4 : curr_band_num == 3 ? coeff_3 :
+                                curr_band_num == 2 ? coeff_2 : coeff_1;
+                                
                     // Recall that coefficient was multiplied by 100, and is really a float.
                     // But the ratio of given coefficient to the max value takes care of this - it's just a fraction
                     // Also standardize to value in range [0, 31]
-                    // TODO: uncomment
-                    curr_y_max = ((curr_y_max - COEFF_MIN) * VPANEL_H) / (COEFF_MAX - COEFF_MIN);
+                    // Place within each coefficient's min and max values
+                    curr_y_max = curr_band_num == 12 ? ((curr_y_max - COEFF_MIN_12) * VPANEL_H) / (COEFF_MAX_12 - COEFF_MIN_12) :
+                                 curr_band_num == 11 ? ((curr_y_max - COEFF_MIN_11) * VPANEL_H) / (COEFF_MAX_11 - COEFF_MIN_11) :
+                                 curr_band_num == 10 ? ((curr_y_max - COEFF_MIN_10) * VPANEL_H) / (COEFF_MAX_10 - COEFF_MIN_10) :
+                                 curr_band_num == 9 ? ((curr_y_max - COEFF_MIN_9) * VPANEL_H) / (COEFF_MAX_9 - COEFF_MIN_9) :
+                                 curr_band_num == 8 ? ((curr_y_max - COEFF_MIN_8) * VPANEL_H) / (COEFF_MAX_8 - COEFF_MIN_8) :
+                                 curr_band_num == 7 ? ((curr_y_max - COEFF_MIN_7) * VPANEL_H) / (COEFF_MAX_7 - COEFF_MIN_7) :
+                                 curr_band_num == 6 ? ((curr_y_max - COEFF_MIN_6) * VPANEL_H) / (COEFF_MAX_6 - COEFF_MIN_6) :
+                                 curr_band_num == 5 ? ((curr_y_max - COEFF_MIN_5) * VPANEL_H) / (COEFF_MAX_5 - COEFF_MIN_5) :
+                                 curr_band_num == 4 ? ((curr_y_max - COEFF_MIN_4) * VPANEL_H) / (COEFF_MAX_4 - COEFF_MIN_4) :
+                                 curr_band_num == 3 ? ((curr_y_max - COEFF_MIN_3) * VPANEL_H) / (COEFF_MAX_3 - COEFF_MIN_3) :
+                                 curr_band_num == 2 ? ((curr_y_max - COEFF_MIN_2) * VPANEL_H) / (COEFF_MAX_2 - COEFF_MIN_2) :
+                                 ((curr_y_max - COEFF_MIN_1) * VPANEL_H) / (COEFF_MAX_1 - COEFF_MIN_1);
+                    // Increment next band number
+                    curr_band_num++;
+
                 }
                 
             }

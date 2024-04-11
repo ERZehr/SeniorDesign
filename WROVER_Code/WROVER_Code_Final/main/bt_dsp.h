@@ -9,7 +9,7 @@
 #define BAND_MAX 12
 #define L_R_BYTE_NUM 4
 #define DSP_OK true
-#define COEFF_SAMPLE_MAX 20
+#define COEFF_SAMPLE_MAX 500
 
 extern float get_dsp_coeff(int idx);
 

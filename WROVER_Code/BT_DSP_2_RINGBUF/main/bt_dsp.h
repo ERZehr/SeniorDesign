@@ -4,12 +4,13 @@
 #include <string.h>
 #include <inttypes.h>
 #include "esp_log.h"
+#include "../components/arduino/libraries/arduinoFFT/src/arduinoFFT.h"
 
 #define DSP_TAG "DSP"
 #define BAND_MAX 12
 #define L_R_BYTE_NUM 4
 #define DSP_OK true
-#define COEFF_SAMPLE_MAX 20
+#define COEFF_SAMPLE_MAX 32
 
 extern float get_dsp_coeff(int idx);
 
@@ -29,7 +30,7 @@ extern float get_dsp_coeff(int idx);
  * 
  * @return  true if malloc'd and filtered correctly - false otherwise
  */
-bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t* outBuf);
+bool bt_media_biquad_bilinear_filter(const uint8_t *media, uint32_t len, uint8_t* outBuf);
 
 /**
  * @brief Updates multiplier coefficients for each frequency band

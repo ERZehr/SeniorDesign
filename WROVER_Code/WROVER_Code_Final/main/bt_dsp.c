@@ -32,24 +32,32 @@ static float a1[BAND_MAX] = {-2.00,       -1.9999,     -1.9997,     -1.9987,    
 static float a2[BAND_MAX] = { 1.00,        0.9998,      0.9997,      0.9994,     0.9969,     0.999,       0.998,     0.997,     0.996,      0.9951,     0.5924,     0.0594};
 static float b0[BAND_MAX] = { 0.00003061,  0.0001555,   0.0003086,   0.0006173,  0.0012,     0.0009876,   0.002,     0.003,     0.004,      0.0049,     0.4076,     0.9406};
 static float b2[BAND_MAX] = {-0.00003061, -0.0001555,  -0.0003086,  -0.0006173, -0.0012,    -0.0009876,  -0.002,    -0.003,    -0.004,     -0.0049,    -0.4076,    -0.9406};
-static float y_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-static float y1_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-static float y2_l[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static float y_l[BAND_MAX] = {0};
+static float y1_l[BAND_MAX] = {0};
+static float y2_l[BAND_MAX] = {0};
+static int16_t x0_l[BAND_MAX] = {0};
+static int16_t x1_l[BAND_MAX] = {0};
+static int16_t x2_l[BAND_MAX] = {0};
+static float y_r[BAND_MAX] = {0};
+static float y1_r[BAND_MAX] = {0};
+static float y2_r[BAND_MAX] = {0};
+static int16_t x0_r[BAND_MAX] = {0};
+static int16_t x1_r[BAND_MAX] = {0};
+static int16_t x2_r[BAND_MAX] = {0};
+
+
 static float y_l_audio = 0;
 static float y1_l_audio = 0;
 static float y2_l_audio = 0;
-static int16_t x0_l = 0;
-static int16_t x1_l = 0;
-static int16_t x2_l = 0;
-static float y_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-static float y1_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
-static float y2_r[BAND_MAX] = {0,0,0,0,0,0,0,0,0,0,0,0};
+static int16_t x0_l_audio = 0;
+static int16_t x1_l_audio = 0;
+static int16_t x2_l_audio = 0;
 static float y_r_audio = 0;
 static float y1_r_audio = 0;
 static float y2_r_audio = 0;
-static int16_t x0_r = 0;
-static int16_t x1_r = 0;
-static int16_t x2_r = 0;
+static int16_t x0_r_audio = 0;
+static int16_t x1_r_audio = 0;
+static int16_t x2_r_audio = 0;
 
 static int coeffs_to_send[BAND_MAX];
 
@@ -75,6 +83,12 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t *outB
     memset(y_r, 0, sizeof(y_r));
     memset(y1_r, 0, sizeof(y1_r));
     memset(y2_r, 0, sizeof(y2_r));
+    memset(x0_l, 0, sizeof(x0_l));
+    memset(x1_l, 0, sizeof(x1_l));
+    memset(x2_l, 0, sizeof(x2_l));
+    memset(x0_r, 0, sizeof(x0_l));
+    memset(x1_r, 0, sizeof(x1_l));
+    memset(x2_r, 0, sizeof(x2_l));
     // DSP FOR DISPLAY
     for(uint32_t i = 0; i < COEFF_SAMPLE_MAX; i++) {
         // Grab left and right samples from within media data packet
@@ -90,48 +104,42 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t *outB
             // Coefficient generation for each iteration - left channel
             y2_l[j] = y1_l[j];
             y1_l[j] = y_l[j];
-            x2_l = x1_l;
-            x1_l = x0_l;
-            x0_l = sample_l_f;
-            y_l[j] = (b0[j]*x0_l + b2[j]*x2_l - (a1[j]*y1_l[j] + a2[j]*y2_l[j])) / a0[j];
+            x2_l[j] = x1_l[j];
+            x1_l[j] = x0_l[j];
+            x0_l[j] = sample_l_f;
+            y_l[j] = (b0[j]*x0_l[j] + b2[j]*x2_l[j] - (a1[j]*y1_l[j] + a2[j]*y2_l[j])) / a0[j];
             
             // Coefficient generation for each iteration - right channel
             y2_r[j] = y1_r[j];
             y1_r[j] = y_r[j];
-            x2_r = x1_r;
-            x1_r = x0_r;
-            x0_r = sample_r_f;
-            y_r[j] = (b0[j]*x0_r + b2[j]*x2_r - (a1[j]*y1_r[j] + a2[j]*y2_r[j])) / a0[j];
+            x2_r[j] = x1_r[j];
+            x1_r[j] = x0_r[j];
+            x0_r[j] = sample_r_f;
+            y_r[j] = (b0[j]*x0_r[j] + b2[j]*x2_r[j] - (a1[j]*y1_r[j] + a2[j]*y2_r[j])) / a0[j];
 
-            // Audio processing - left channel
-            sample_l_f = y_l[j];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_l_f > 32767) {sample_l_f = 32767;}
-            if(sample_l_f < -32768) {sample_l_f = -32768;}
+            // // Audio processing - left channel
+            // sample_l_f = y_l[j];
+            // // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+            // if(sample_l_f > 32767) {sample_l_f = 32767;}
+            // if(sample_l_f < -32768) {sample_l_f = -32768;}
 
-            // Audio processing - right channel
-            sample_r_f = y_r[j];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_r_f > 32767) {sample_r_f = 32767;}
-            if(sample_r_f < -32768) {sample_r_f = -32768;}
+            // // Audio processing - right channel
+            // sample_r_f = y_r[j];
+            // // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
+            // if(sample_r_f > 32767) {sample_r_f = 32767;}
+            // if(sample_r_f < -32768) {sample_r_f = -32768;}
         }
     }
     
     // Average the left/right coefficients to yield 12 total band coefficients
-    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 10000 * (float)Before
+    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 100 * (float)Before
     // WROOM will need to be able to handle this conversion
     for(int i = 0; i < BAND_MAX; i++) {
         // Magnitude of the coefficients only for visual readout
         y_l[i] = y_l[i] < 0 ? y_l[i] * -1.0f : y_l[i];
         y_r[i] = y_r[i] < 0 ? y_r[i] * -1.0f : y_r[i];
-        // Equivalent to ((coeff_l + coeff_r) / 2) * 10000
-        if(i < 10) {
-            coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 5000.0f);
-        }
-        // Equivalent to ((coeff_l + coeff_r) / 2) * 1000000
-        else {
-            coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 500000.0f);
-        }
+        // Equivalent to ((coeff_l + coeff_r) / 2) * 100
+        coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 50.0f);
     }
 
     // DSP FOR AUDIO
@@ -153,18 +161,18 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t *outB
         // Coefficient generation for each iteration - left channel
         y2_l_audio = y1_l_audio;
         y1_l_audio = y_l_audio;
-        x2_l = x1_l;
-        x1_l = x0_l;
-        x0_l = sample_l_f;
-        y_l_audio = (b0_user*x0_l + b2_user*x2_l - (a1_user*y1_l_audio + a2_user*y2_l_audio)) / a0_user;
+        x2_l_audio = x1_l_audio;
+        x1_l_audio = x0_l_audio;
+        x0_l_audio = sample_l_f;
+        y_l_audio = (b0_user*x0_l_audio + b2_user*x2_l_audio - (a1_user*y1_l_audio + a2_user*y2_l_audio)) / a0_user;
         
         // Coefficient generation for each iteration - right channel
         y2_r_audio = y1_r_audio;
         y1_r_audio = y_r_audio;
-        x2_r = x1_r;
-        x1_r = x0_r;
-        x0_r = sample_r_f;
-        y_r_audio = (b0_user*x0_r + b2_user*x2_r - (a1_user*y1_r_audio + a2_user*y2_r_audio)) / a0_user;
+        x2_r_audio = x1_r_audio;
+        x1_r_audio = x0_r_audio;
+        x0_r_audio = sample_r_f;
+        y_r_audio = (b0_user*x0_r_audio + b2_user*x2_r_audio - (a1_user*y1_r_audio + a2_user*y2_r_audio)) / a0_user;
 
         // Audio processing - left channel
         sample_l_f = y_l_audio;
