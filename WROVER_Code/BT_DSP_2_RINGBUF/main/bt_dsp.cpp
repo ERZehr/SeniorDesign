@@ -36,13 +36,15 @@ static int16_t x2_r = 0;
 int bandValues[BAND_MAX] = {0};
 double vReal[COEFF_SAMPLE_MAX];
 double vImag[COEFF_SAMPLE_MAX];
-ArduinoFFT FFT = ArduinoFFT<double>(vReal, vImag, COEFF_SAMPLE_MAX, 44100);
+ArduinoFFT FFT = ArduinoFFT<double>(vReal, vImag, COEFF_SAMPLE_MAX, 4000);
 
-static int coeffs_to_send[BAND_MAX];
+static int coeffs_to_send[BAND_MAX] = {0};
+static int prev_coeffs_to_send[BAND_MAX] = {0};
 
 bool bt_media_biquad_bilinear_filter(const uint8_t *media, uint32_t len, uint8_t *outBuf) {
     /* Inspiration for processing hierarchy: https://hackaday.io/project/166122-esp32-as-bt-receiver-with-dsp-capabilities
                                              https://github.com/YetAnotherElectronicsChannel/ESP32_Bluetooth_DSP_Speaker/tree/master
+                                             https://github.com/s-marley/ESP32_FFT_VU/blob/master/ESP32_FFT_VU/ESP32_FFT_VU.ino
     */                                   
     /*
         Outer loop processes each packet in the format:
@@ -63,102 +65,71 @@ bool bt_media_biquad_bilinear_filter(const uint8_t *media, uint32_t len, uint8_t
         vImag[i] = 0;
     }
     // Compute FFT
-    FFT.dcRemoval();
     FFT.windowing(FFT_WIN_TYP_HAMMING, FFT_FORWARD);
     FFT.compute(FFT_FORWARD);
     FFT.complexToMagnitude();
 
     // Analyze FFT results
-    for(int i = 2; i < (COEFF_SAMPLE_MAX / 2); i++) {
+    for(int i = 0; i < (COEFF_SAMPLE_MAX / 2); i++) {
         if(vReal[i] > 500) {  // Crude noise filter
-            if(i <= 2) {
+            // Freqs 1 - 43 Hz
+            if(i <= 1) {
                 bandValues[0] += (int)vReal[i];
             }
-            else if(i == 3) {
+            // Freqs 44 - 86 Hz
+            else if(i <= 2) {
                 bandValues[1] += (int)vReal[i];
             }
-            else if(i <= 5) {
+            // Freqs 87 - 129 Hz
+            else if(i <= 3) {
                 bandValues[2] += (int)vReal[i];
             }
-            else if(i <= 7) {
+            // Freqs 130 - 258 Hz
+            else if(i <= 6) {
                 bandValues[3] += (int)vReal[i];
             }
-            else if(i <= 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 259 - 516 Hz
+            else if(i <= 12) {
+                bandValues[4] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 517 - 1033 Hz
+            else if(i <= 24) {
+                bandValues[5] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 1034 - 2024 Hz
+            else if(i <= 47) {
+                bandValues[6] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 2025 - 3014 Hz
+            else if(i <= 70) {
+                bandValues[7] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 3015 - 4005 Hz
+            else if(i <= 93) {
+                bandValues[8] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 4006 - 4995 Hz
+            else if(i <= 116) {
+                bandValues[9] += (int)vReal[i];
             }
-            else if(i == 3) {
-                bandValues[1] += (int)vReal[i];
+            // Freqs 4996 - 8010 Hz
+            else if(i <= 186) {
+                bandValues[10] += (int)vReal[i];
             }
-
+            // Freqs 8011 - 22000 Hz
+            else {
+                bandValues[11] += (int)vReal[i];
+            }
         }
     }
 
-    // DSP FOR DISPLAY
-    for(uint32_t i = 0; i < COEFF_SAMPLE_MAX; i++) {
-        // Grab left and right samples from within media data packet
-        sample_l = (int16_t)((media[i + 1] << 8) | media[i]);
-        sample_r = (int16_t)((media[i + 3] << 8) | media[i + 2]);
-        // // Absolute value only
-        // sample_l = sample_l < 0 ? sample_l * -1 : sample_l;
-        // sample_r = sample_r < 0 ? sample_r * -1 : sample_r;
-        
-        sample_l_f = (float)sample_l;
-        sample_r_f = (float)sample_r;
-        for(uint32_t j = 0; j < BAND_MAX; j++) {
-            // Coefficient generation for each iteration - left channel
-            y2_l[j] = y1_l[j];
-            y1_l[j] = y_l[j];
-            x2_l = x1_l;
-            x1_l = x0_l;
-            x0_l = sample_l_f;
-            y_l[j] = (b0[j]*x0_l + b2[j]*x2_l - (a1[j]*y1_l[j] + a2[j]*y2_l[j])) / a0[j];
-            
-            // Coefficient generation for each iteration - right channel
-            y2_r[j] = y1_r[j];
-            y1_r[j] = y_r[j];
-            x2_r = x1_r;
-            x1_r = x0_r;
-            x0_r = sample_r_f;
-            y_r[j] = (b0[j]*x0_r + b2[j]*x2_r - (a1[j]*y1_r[j] + a2[j]*y2_r[j])) / a0[j];
-
-            // Audio processing - left channel
-            sample_l_f = y_l[j];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_l_f > 32767) {sample_l_f = 32767;}
-            if(sample_l_f < -32768) {sample_l_f = -32768;}
-
-            // Audio processing - right channel
-            sample_r_f = y_r[j];
-            // Clamp audio between uint16_t max limits - strictly in range [0, 65534]
-            if(sample_r_f > 32767) {sample_r_f = 32767;}
-            if(sample_r_f < -32768) {sample_r_f = -32768;}
-        }
-    }
-    
-    // Average the left/right coefficients to yield 12 total band coefficients
-    // Note: the coefficients are converted to ints (losing all but two decimals) such that: (int)After = 100 * (float)Before
-    // WROOM will need to be able to handle this conversion
+    // Scale the coefficients for sending to the room
+    // Average with previous coefficients
     for(int i = 0; i < BAND_MAX; i++) {
-        // Magnitude of the coefficients only for visual readout
-        y_l[i] = y_l[i] < 0 ? y_l[i] * -1.0f : y_l[i];
-        y_r[i] = y_r[i] < 0 ? y_r[i] * -1.0f : y_r[i];
-        // Equivalent to ((coeff_l + coeff_r) / 2) * 100
-        coeffs_to_send[i] = (int)((y_l[i] + y_r[i]) * 50.0f);
+        // coeffs_to_send[i] = (int)(((bandValues[i] / 100) + prev_coeffs_to_send[i]) / 2);
+        // prev_coeffs_to_send[i] = coeffs_to_send[i];  // TODO: may vanish?
+        coeffs_to_send[i] = (int)(bandValues[i] / 100);
+        
     }
 
     // DSP FOR AUDIO

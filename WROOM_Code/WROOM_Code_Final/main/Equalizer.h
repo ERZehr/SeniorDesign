@@ -8,30 +8,30 @@
 #define COEFF_MAX 100000  // experimental max (remember this is 100*actual val)
 
 
-#define COEFF_MIN_1 100
-#define COEFF_MAX_1 10000
-#define COEFF_MIN_2 500
-#define COEFF_MAX_2 10000
-#define COEFF_MIN_3 3500
-#define COEFF_MAX_3 25000
-#define COEFF_MIN_4 5000
-#define COEFF_MAX_4 28000
-#define COEFF_MIN_5 2500
-#define COEFF_MAX_5 30000
-#define COEFF_MIN_6 2500
-#define COEFF_MAX_6 20000
-#define COEFF_MIN_7 1250
-#define COEFF_MAX_7 20000
-#define COEFF_MIN_8 6000
-#define COEFF_MAX_8 65000
-#define COEFF_MIN_9 5000
-#define COEFF_MAX_9 140000
-#define COEFF_MIN_10 5000
-#define COEFF_MAX_10 85000
-#define COEFF_MIN_11 100000
-#define COEFF_MAX_11 800000
-#define COEFF_MIN_12 100000
-#define COEFF_MAX_12 950000
+#define COEFF_MIN_1 255000
+#define COEFF_MAX_1 400000
+#define COEFF_MIN_2 1500
+#define COEFF_MAX_2 25000
+#define COEFF_MIN_3 10000
+#define COEFF_MAX_3 20000
+#define COEFF_MIN_4 30000
+#define COEFF_MAX_4 40000
+#define COEFF_MIN_5 40000
+#define COEFF_MAX_5 58000
+#define COEFF_MIN_6 60000
+#define COEFF_MAX_6 70000
+#define COEFF_MIN_7 100000
+#define COEFF_MAX_7 125000
+#define COEFF_MIN_8 90000
+#define COEFF_MAX_8 108000
+#define COEFF_MIN_9 80000
+#define COEFF_MAX_9 90000
+#define COEFF_MIN_10 70000
+#define COEFF_MAX_10 78000
+#define COEFF_MIN_11 110000
+#define COEFF_MAX_11 125000
+#define COEFF_MIN_12 600000
+#define COEFF_MAX_12 630000
 
 #define ATTEN_1 4
 #define ATTEN_2 40 / 3
