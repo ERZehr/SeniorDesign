@@ -6,7 +6,7 @@
 #include "esp_log.h"
 
 #define DSP_TAG "DSP"
-#define BAND_MAX 12
+#define BAND_MAX 8
 #define L_R_BYTE_NUM 4
 #define DSP_OK true
 #define COEFF_SAMPLE_MAX 20

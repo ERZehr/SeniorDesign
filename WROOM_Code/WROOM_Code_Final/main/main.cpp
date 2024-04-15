@@ -87,7 +87,7 @@
  * ADC DEFINES
  *******************************/
 #define LIGHT_SENSOR_MIN 1100
-#define LIGHT_SENSOR_MAX 2000 
+#define LIGHT_SENSOR_MAX 2300 
 #define BRIGHT_LVL_0 40
 #define BRIGHT_LVL_1 95
 #define BRIGHT_LVL_2 135
@@ -113,10 +113,10 @@ static int coeff_5;
 static int coeff_6;
 static int coeff_7;
 static int coeff_8;
-static int coeff_9;
-static int coeff_10;
-static int coeff_11;
-static int coeff_12;
+// static int coeff_9;
+// static int coeff_10;
+// static int coeff_11;
+// static int coeff_12;
 
 // WROOM-Controlled Variables - multiplied by 10 ^5
 static int fir_1;  // a0
@@ -198,7 +198,7 @@ static void parse_and_calc_dsp_coeffs(const char* rx_val) {
   ESP_LOGI("BLE_USER", "USER:\nQ:%f,\tFC:%d,\tIDLE MODE:%d\n\n", q_val, fc_val, disp_idle_mode);
 
   // Calculate the coefficients needed to send to the WROVER
-  float omega = 2 * 3.141528f * fc_val / SAMP_FREQ;
+  float omega = 2 * 3.141593f * fc_val / SAMP_FREQ;
   float alpha = sin(omega) * sinh(log(2) / 2) * q_val * omega / sin(omega);
 
   // a0
@@ -317,7 +317,7 @@ static void update_coeff_vals(uint8_t* data, int len) {
                             "C1" : 1,
                             "C2" : 2,
                             .....
-                            "C12" : 12
+                            "C8" : 8
             }
         }
     */
@@ -326,12 +326,15 @@ static void update_coeff_vals(uint8_t* data, int len) {
   //  coeff_7 = coeff_8 = coeff_9 = coeff_10 = coeff_11 = coeff_12 = 0;
   //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
 
-    sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
-           &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12);                      
+    // sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
+          //  &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8, &coeff_9, &coeff_10, &coeff_11, &coeff_12);                      
 
-    // DEBUGGING - values should NOT be 0
-    ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d,\tC9:%d\nC10:%d,\tC11:%d,\tC12:%d\n\n",
-             coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
+    sscanf((const char*)data, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d}}",
+           &coeff_1, &coeff_2, &coeff_3, &coeff_4, &coeff_5, &coeff_6, &coeff_7, &coeff_8);        
+
+    // // DEBUGGING - values should NOT be 0
+    ESP_LOGI("UART", "COEFFS:\nC1:%d,\tC2:%d,\tC3:%d\nC4:%d,\tC5:%d,\tC6:%d\nC7:%d,\tC8:%d\n\n",
+             coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8);
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
@@ -403,7 +406,7 @@ static void matrix_bright_handler(void *arg) {
 
     // (NEW - LOW) * MAX_BRIGHT / (HIGH - LOW)
     updateCurrBright(((adc_avg_val - LIGHT_SENSOR_MIN) * MAX_BRIGHT) / (LIGHT_SENSOR_MAX - LIGHT_SENSOR_MIN));
-    // ESP_LOGI("ADC", "RAW: %d", adc_avg_val);
+    // ESP_LOGI("ADC", "AVG: %d", adc_avg_val);
     // Only attempt to update brightness if there is a change - no need otherwise
     if(curr_bright != prev_bright) {
       matrix -> setBrightness8(curr_bright);

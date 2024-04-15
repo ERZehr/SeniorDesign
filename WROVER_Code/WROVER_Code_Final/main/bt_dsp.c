@@ -77,18 +77,18 @@ bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t *outB
     */ 
     // // Reset the accumulators
     // y_l = y1_l = y2_l = y_r = y1_r = y1_l = {0};
-    memset(y_l, 0, sizeof(y_l));
-    memset(y1_l, 0, sizeof(y1_l));
-    memset(y2_l, 0, sizeof(y2_l));
-    memset(y_r, 0, sizeof(y_r));
-    memset(y1_r, 0, sizeof(y1_r));
-    memset(y2_r, 0, sizeof(y2_r));
-    memset(x0_l, 0, sizeof(x0_l));
-    memset(x1_l, 0, sizeof(x1_l));
-    memset(x2_l, 0, sizeof(x2_l));
-    memset(x0_r, 0, sizeof(x0_l));
-    memset(x1_r, 0, sizeof(x1_l));
-    memset(x2_r, 0, sizeof(x2_l));
+    // memset(y_l, 0, sizeof(y_l));
+    // memset(y1_l, 0, sizeof(y1_l));
+    // memset(y2_l, 0, sizeof(y2_l));
+    // memset(y_r, 0, sizeof(y_r));
+    // memset(y1_r, 0, sizeof(y1_r));
+    // memset(y2_r, 0, sizeof(y2_r));
+    // memset(x0_l, 0, sizeof(x0_l));
+    // memset(x1_l, 0, sizeof(x1_l));
+    // memset(x2_l, 0, sizeof(x2_l));
+    // memset(x0_r, 0, sizeof(x0_l));
+    // memset(x1_r, 0, sizeof(x1_l));
+    // memset(x2_r, 0, sizeof(x2_l));
     // DSP FOR DISPLAY
     for(uint32_t i = 0; i < COEFF_SAMPLE_MAX; i++) {
         // Grab left and right samples from within media data packet

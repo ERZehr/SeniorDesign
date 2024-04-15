@@ -68,17 +68,17 @@ static int coeff_5 = 50;
 static int coeff_6 = 60;
 static int coeff_7 = 70;
 static int coeff_8 = 80;
-static int coeff_9 = 90;
-static int coeff_10 = 100;
-static int coeff_11 = 110;
-static int coeff_12 = 120;
+// static int coeff_9 = 90;
+// static int coeff_10 = 100;
+// static int coeff_11 = 110;
+// static int coeff_12 = 120;
 
 // WROOM-Controlled Variables - need to divide by 10^5
-static int fir_1;
-static int fir_2;
-static int fir_3;
-static int fir_4;
-static int fir_5;
+static int fir_1 = 200745;
+static int fir_2 = -191935;
+static int fir_3 = -745;
+static int fir_4 = 100745;
+static int fir_5 = -100745;
 
 
 /* event for stack up */
@@ -266,7 +266,7 @@ static bool populate_tx_buf(uint8_t* data, int len) {
                             "C1" : 1,
                             "C2" : 2,
                             .....
-                            "C12" : 12
+                            "C8" : 8
             }
         }
     */
@@ -278,13 +278,16 @@ static bool populate_tx_buf(uint8_t* data, int len) {
     coeff_6 = get_coeff(6);
     coeff_7 = get_coeff(7);
     coeff_8 = get_coeff(8);
-    coeff_9 = get_coeff(9);
-    coeff_10 = get_coeff(10);
-    coeff_11 = get_coeff(11);
-    coeff_12 = get_coeff(12);
+    // coeff_9 = get_coeff(9);
+    // coeff_10 = get_coeff(10);
+    // coeff_11 = get_coeff(11);
+    // coeff_12 = get_coeff(12);
 
-    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
-                           coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
+    // int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
+    //                        coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
+
+    int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d}}",
+                           coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8);
 
     // Error if not enough space for bytes, or if 0 or ERROR bytes are written
     if(written > len || written < 1) {
