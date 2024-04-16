@@ -27,6 +27,9 @@
 /* signal for `bt_app_work_dispatch` */
 #define BT_APP_SIG_WORK_DISPATCH    (0x01)
 
+
+extern uint8_t get_num_bands();
+
 /**
  * @brief  callback function for A2DP sink
  *

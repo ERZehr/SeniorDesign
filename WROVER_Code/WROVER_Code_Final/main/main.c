@@ -79,6 +79,7 @@ static int fir_2 = -191935;
 static int fir_3 = -745;
 static int fir_4 = 100745;
 static int fir_5 = -100745;
+static int band_num = 8;
 
 
 /* event for stack up */
@@ -189,6 +190,10 @@ float get_dsp_coeff(int idx) {
            idx == 3 ? (float)fir_3 / 100000 : idx == 4 ? (float)fir_4 / 100000 : (float)fir_5 / 10000;
 }
 
+uint8_t get_num_bands() {
+    return (uint8_t)band_num;
+}
+
 /********************************
  * UART STATIC FUNCTION DECLARATIONS
  *******************************/
@@ -242,14 +247,15 @@ static void update_fir_vals(uint8_t* data, int len) {
                             "F2" : 2,
                             .....
                             "F5" : 5
-            }
+            },
+            "BANDS" : 2-8
         }
     */
     //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
     //  fir_1 = fir_2 = fir_3 = fir_4 = fir_5 = 0;
     //  // DEBUGGING ONLY - comment out otherwise, it's unnecessary
-    sscanf((const char*)data, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}}",
-           &fir_1, &fir_2, &fir_3, &fir_4, &fir_5);
+    sscanf((const char*)data, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}, \"BANDS\" : %d}",
+           &fir_1, &fir_2, &fir_3, &fir_4, &fir_5, &band_num);
     
     // // DEBUGGING - values should NOT be 0
     // ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",

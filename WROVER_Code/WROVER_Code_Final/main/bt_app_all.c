@@ -561,7 +561,7 @@ void bt_app_a2d_data_cb(const uint8_t *data, uint32_t len)
         write_ringbuf(data, len, "I2S");
     } else {
         // Attempt to conduct DSP before right to the ringbuffer
-        if(!bt_media_biquad_bilinear_filter(data, len, outBuf)) {
+        if(!bt_media_biquad_bilinear_filter(data, len, outBuf, get_num_bands())) {
             
             ESP_LOGI(DSP_TAG, "Malloc fail for output buffer - skipping algorithm");
             write_ringbuf(data, len, "I2S");
@@ -569,7 +569,7 @@ void bt_app_a2d_data_cb(const uint8_t *data, uint32_t len)
         else {
             // Perform I2S volume control - speakers are too loud
             for(uint32_t i = 0; i < len; i += 2) {
-                uint16_t sampl = (int16_t)((outBuf[i + 1] << 8) | outBuf[i]) >> 6;
+                uint16_t sampl = (int16_t)((outBuf[i + 1] << 8) | outBuf[i]) >> 7;
                 outBuf[i + 1] = (uint8_t) ((sampl >> 8) & 0xff);
                 outBuf[i] = (uint8_t) (0xff & sampl);
             }

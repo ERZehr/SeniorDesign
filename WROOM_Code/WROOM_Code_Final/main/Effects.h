@@ -174,18 +174,14 @@ public:
         currentPaletteName = (char *)"Party";
         break;
       case 5:
-        setupGrayscalePalette();
-        currentPaletteName = (char *)"Grey";
-        break;
-      case HeatColorsPaletteIndex:
         targetPalette = HeatColors_p;
         currentPaletteName = (char *)"Heat";
         break;
-      case 7:
+      case 6:
         targetPalette = LavaColors_p;
         currentPaletteName = (char *)"Lava";
         break;
-      case 8:
+      case 7:
         setupIcePalette();
         currentPaletteName = (char *)"Ice";
         break;
@@ -203,14 +199,12 @@ public:
       loadPalette(3);
     else if (paletteName == "Party")
       loadPalette(4);
-    else if (paletteName == "Grayscale")
-      loadPalette(5);
     else if (paletteName == "Heat")
-      loadPalette(6);
+      loadPalette(5);
     else if (paletteName == "Lava")
-      loadPalette(7);
+      loadPalette(6);
     else if (paletteName == "Ice")
-      loadPalette(8);
+      loadPalette(7);
   }
 
   void setupGrayscalePalette() {

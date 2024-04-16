@@ -126,7 +126,10 @@ static int fir_4;  // b0
 static int fir_5;  // b2
 static float q_val = 0.25;  // Q
 static int fc_val = 63;  // f_c
+static int band_num = 8;  // num of bands 2-8
 static int disp_idle_mode;  // 1 - in idle, 0 - active playback
+static int theme_sel = 0;  // 0-7 for different themes
+static int prev_theme_sel;
 
 
 /********************************
@@ -185,17 +188,19 @@ static void parse_and_calc_dsp_coeffs(const char* rx_val) {
     /*
         {
             "USER" : {
-                            "Q" : 1,
-                            "FC" : 2000
+                        "Q" : 1,
+                        "FC" : 2000,
+                        "BANDS" : 2-8,
             },
-            "IDLE MODE" : 0/1
+            "IDLE MODE" : 0/1,
+            "THEME" : 0-7
         }
     */
-  sscanf(rx_val, "{\"USER\" : {\"Q\" : %f, \"FC\" : %d}, \"IDLE MODE\" : %d}",
-        &q_val, &fc_val, &disp_idle_mode);
+  sscanf(rx_val, "{\"USER\" : {\"Q\" : %f, \"FC\" : %d, \"BANDS\" : %d}, \"IDLE MODE\" : %d, \"THEME\" : %d}",
+        &q_val, &fc_val, &band_num, &disp_idle_mode, &theme_sel);
 
   // DEBUGGING - values should NOT be 0
-  ESP_LOGI("BLE_USER", "USER:\nQ:%f,\tFC:%d,\tIDLE MODE:%d\n\n", q_val, fc_val, disp_idle_mode);
+  ESP_LOGI("BLE_USER", "USER:\nQ:%f,\tFC:%d,\tIDLE MODE:%d,\tTHEME:%d\n\n", q_val, fc_val, disp_idle_mode, theme_sel);
 
   // Calculate the coefficients needed to send to the WROVER
   float omega = 2 * 3.141593f * fc_val / SAMP_FREQ;
@@ -347,11 +352,12 @@ static bool populate_tx_buf(uint8_t* data, int len) {
                             "F2" : 2,
                             .....
                             "F5" : 5
-            }
+            },
+            "BANDS" : 2-8
         }
     */
-    int written = snprintf((char*)data, len, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}}",
-                           fir_1, fir_2, fir_3, fir_4, fir_5);
+    int written = snprintf((char*)data, len, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}, \"BANDS\" : %d}",
+                           fir_1, fir_2, fir_3, fir_4, fir_5, band_num);
 
     // Error if not enough space for bytes, or if 0 or ERROR bytes are written
     if(written > len || written < 1) {
@@ -367,10 +373,17 @@ static TaskHandle_t s_matrix_driving_task_handle = NULL;  /* handle of driving t
 static TaskHandle_t s_matrix_bright_handle = NULL;  /* handle of brightness task  */
 
 static void matrix_driving_handler(void *arg) {
+  prev_theme_sel = theme_sel;
   for(;;) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
 
+    // Update palette selection if a new theme gets sent
+    if(prev_theme_sel != theme_sel) {
+      prev_theme_sel = theme_sel;
+      effects.loadPalette(theme_sel);
+    }
+    // Handle mode of display
     if(disp_idle_mode) {
       ms_current = esp_timer_get_time() / 1000;
       if ((ms_current - ms_previous) > ms_animation_max_duration) {
@@ -477,7 +490,7 @@ extern "C" void app_main(void)
   patterns.start();
 
   // Create the BLE Device
-  BLEDevice::init("ESP32_BLE"); // Give it a name
+  BLEDevice::init("ARTISYN_BLE"); // Give it a name
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(new MyServerCallbacks());
   // Create the BLE Service

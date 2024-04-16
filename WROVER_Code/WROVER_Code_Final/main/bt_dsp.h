@@ -26,10 +26,11 @@ extern float get_dsp_coeff(int idx);
  * @param [in] media       byte array of media data
  * @param [in] len         length of media array (typ. 4096)
  * @param [in] outBuf      byte array of output media data
+ * @param [in] band_num    number of bands to display (does not change actual DSP on audio)
  * 
  * @return  true if malloc'd and filtered correctly - false otherwise
  */
-bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t* outBuf);
+bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t* outBuf, uint8_t band_num);
 
 /**
  * @brief Updates multiplier coefficients for each frequency band
