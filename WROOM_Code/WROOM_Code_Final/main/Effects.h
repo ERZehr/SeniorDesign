@@ -33,9 +33,6 @@
 const int  MATRIX_CENTER_X = VPANEL_W / 2;
 const int  MATRIX_CENTER_Y = VPANEL_H / 2;
 
-// US vs GB, huh? :)
-//const byte MATRIX_CENTRE_X = MATRIX_CENTER_X - 1;
-//const byte MATRIX_CENTRE_Y = MATRIX_CENTER_Y - 1;
 #define MATRIX_CENTRE_X MATRIX_CENTER_X
 #define MATRIX_CENTRE_Y MATRIX_CENTER_Y
 
@@ -92,13 +89,11 @@ public:
   void drawBackgroundFastLEDPixelCRGB(int16_t x, int16_t y, CRGB color)
   {
 	  leds[XY(x, y)] = color;
-	  //matrix.drawPixelRGB888(x, y, color.r, color.g, color.b); 
   }
 
   // write one pixel with the specified color from the current palette to coordinates
   void Pixel(int x, int y, uint8_t colorIndex) {
     leds[XY(x, y)] = ColorFromCurrentPalette(colorIndex);
-    //matrix.drawPixelRGB888(x, y, temp.r, temp.g, temp.b); // now draw it?
   }
 
   void ShowFrame() {
@@ -127,7 +122,6 @@ public:
   }
 
   // palettes
-  // KEEP ALL PALETTE CODE
   static const int paletteCount = 9;
   int paletteIndex = -1;
   TBlendType currentBlendType = LINEARBLEND;
@@ -138,10 +132,8 @@ public:
   static const int HeatColorsPaletteIndex = 6;
 
   void Setup() {
-    // currentPalette = CRGBPalette16(CRGB::Black, CRGB::Blue, CRGB::Aqua, CRGB::White);
     currentPalette = RainbowColors_p;
     loadPalette(0);
-    // NoiseVariablesSetup();
   }
 
   void loadPalette(int index) {

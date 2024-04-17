@@ -3,6 +3,14 @@
  *
  * SPDX-License-Identifier: Unlicense OR CC0-1.0
  */
+/*****************************************
+ * ECE 477 Team 8 "Artysin" Credits:
+ * 
+ * Bailey Mosher:
+ *    * Espressif Code Reformulating and Bloat Removal
+ *    * DSP and Custom Coefficient Linking
+ * 
+*****************************************/
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -38,13 +46,10 @@ enum {
 /*******************************
  * STATIC FUNCTION DECLARATIONS
  ******************************/
-
 /* handler for application task */
 static void bt_app_task_handler(void *arg);
 /* handler for I2S task */
 static void bt_i2s_task_handler(void *arg);
-/* handler for DSP task */
-// static void bt_dsp_task_handler(void *arg);
 /* message sender */
 static bool bt_app_send_msg(bt_app_msg_t *msg);
 /* handle dispatched messages */
@@ -53,17 +58,12 @@ static void bt_app_work_dispatched(bt_app_msg_t *msg);
 /*******************************
  * STATIC VARIABLE DEFINITIONS
  ******************************/
-
 static QueueHandle_t s_bt_app_task_queue = NULL;  /* handle of work queue */
 static TaskHandle_t s_bt_app_task_handle = NULL;  /* handle of application task  */
 static TaskHandle_t s_bt_i2s_task_handle = NULL;  /* handle of I2S task */
-// static TaskHandle_t s_bt_dsp_task_handle = NULL;  /* handle of I2S task */
 static RingbufHandle_t s_ringbuf_i2s = NULL;     /* handle of ringbuffer for I2S */
-// static RingbufHandle_t s_ringbuf_dsp = NULL;     /* handle of ringbuffer for DSP */
 static SemaphoreHandle_t s_i2s_write_semaphore = NULL;
-// static SemaphoreHandle_t s_dsp_semaphore = NULL;
 static uint16_t i2s_ringbuffer_mode = RINGBUFFER_MODE_PROCESSING;
-// static uint16_t dsp_ringbuffer_mode = RINGBUFFER_MODE_PROCESSING;
 
 /*********************************
  * EXTERNAL FUNCTION DECLARATIONS
@@ -151,38 +151,6 @@ static void bt_i2s_task_handler(void *arg)
     }
 }
 
-// static void bt_dsp_task_handler(void *arg)
-// {
-//     uint8_t *data = NULL;
-//     size_t item_size = 0;
-//     const size_t item_size_upto = 240 * 6;
-//     for (;;) {
-//         if (pdTRUE == xSemaphoreTake(s_dsp_semaphore, portMAX_DELAY)) {
-//             for (;;) {
-//                 item_size = 0;
-//                 /* receive data from ringbuffer and process it through DSP algorithm */
-//                 data = (uint8_t *)xRingbufferReceiveUpTo(s_ringbuf_dsp, &item_size, (TickType_t)pdMS_TO_TICKS(20), item_size_upto);
-//                 if (item_size == 0) {
-//                     ESP_LOGI(BT_APP_CORE_TAG, "dsp ringbuffer underflowed! mode changed: RINGBUFFER_MODE_PREFETCHING");
-//                     dsp_ringbuffer_mode = RINGBUFFER_MODE_PREFETCHING;
-//                     break;
-//                 }
-
-//                 // if(!bt_media_biquad_bilinear_filter(data, item_size)) {
-//                 //     ESP_LOGI(BT_APP_CORE_TAG, "Failed DSP!");
-//                 //     break;
-//                 // }
-//                 // Successful DSP processing, send to next ringbuffer
-//                 else {
-//                     write_ringbuf(data, item_size, "I2S");
-//                 }
-//                 // TODO: possibly corrupted data if already altered by dsp()?
-//                 vRingbufferReturnItem(s_ringbuf_dsp, (void *)data);
-//             }
-//         }
-//     }
-// }
-
 /********************************
  * EXTERNAL FUNCTION DEFINITIONS
  *******************************/
@@ -245,16 +213,7 @@ void bt_i2s_task_start_up(void)
         ESP_LOGE(BT_APP_CORE_TAG, "%s, i2s ringbuffer create failed", __func__);
         return;
     }
-    // if ((s_dsp_semaphore = xSemaphoreCreateBinary()) == NULL) {
-    //     ESP_LOGE(BT_APP_CORE_TAG, "%s, dsp semaphore create failed", __func__);
-    //     return;
-    // }
-    // if ((s_ringbuf_dsp = xRingbufferCreate(RINGBUF_HIGHEST_WATER_LEVEL, RINGBUF_TYPE_BYTEBUF)) == NULL) {
-    //     ESP_LOGE(BT_APP_CORE_TAG, "%s, dsp ringbuffer create failed", __func__);
-    //     return;
-    // }
     xTaskCreate(bt_i2s_task_handler, "BTI2STask", 2048, NULL, configMAX_PRIORITIES - 3, &s_bt_i2s_task_handle);
-    // xTaskCreate(bt_dsp_task_handler, "BTDSPTask", 2048, NULL, configMAX_PRIORITIES - 2, &s_bt_dsp_task_handle);
 }
 
 void bt_i2s_task_shut_down(void)
@@ -271,52 +230,13 @@ void bt_i2s_task_shut_down(void)
         vSemaphoreDelete(s_i2s_write_semaphore);
         s_i2s_write_semaphore = NULL;
     }
-    // if (s_ringbuf_dsp) {
-    //     vRingbufferDelete(s_ringbuf_dsp);
-    //     s_ringbuf_dsp = NULL;
-    // }
-    // if (s_dsp_semaphore) {
-    //     vSemaphoreDelete(s_dsp_semaphore);
-    //     s_dsp_semaphore = NULL;
-    // }
 }
 
 size_t write_ringbuf(const uint8_t *data, size_t size, const char* ringbuf_name)
 {
     size_t item_size = 0;
     BaseType_t done = pdFALSE;
-
-    // Write to the DSP ringbuffer
-    // if(strcmp(ringbuf_name, "DSP") == 0) {
-    //     if (dsp_ringbuffer_mode == RINGBUFFER_MODE_DROPPING) {
-    //         ESP_LOGW(BT_APP_CORE_TAG, "dsp ringbuffer is full, drop this packet!");
-    //         vRingbufferGetInfo(s_ringbuf_dsp, NULL, NULL, NULL, NULL, &item_size);
-    //         if (item_size <= RINGBUF_PREFETCH_WATER_LEVEL) {
-    //             ESP_LOGI(BT_APP_CORE_TAG, "dsp ringbuffer data decreased! mode changed: RINGBUFFER_MODE_PROCESSING");
-    //             dsp_ringbuffer_mode = RINGBUFFER_MODE_PROCESSING;
-    //         }
-    //         return 0;
-    //     }
-    //     done = xRingbufferSend(s_ringbuf_dsp, (void *)data, size, (TickType_t)0);
-
-    //     if (!done) {
-    //         ESP_LOGW(BT_APP_CORE_TAG, "dsp ringbuffer overflowed, ready to decrease data! mode changed: RINGBUFFER_MODE_DROPPING");
-    //         dsp_ringbuffer_mode = RINGBUFFER_MODE_DROPPING;
-    //     }
-
-    //     if (dsp_ringbuffer_mode == RINGBUFFER_MODE_PREFETCHING) {
-    //         vRingbufferGetInfo(s_ringbuf_dsp, NULL, NULL, NULL, NULL, &item_size);
-    //         if (item_size >= RINGBUF_PREFETCH_WATER_LEVEL) {
-    //             ESP_LOGI(BT_APP_CORE_TAG, "dsp ringbuffer data increased! mode changed: RINGBUFFER_MODE_PROCESSING");
-    //             dsp_ringbuffer_mode = RINGBUFFER_MODE_PROCESSING;
-    //             if (pdFALSE == xSemaphoreGive(s_dsp_semaphore)) {
-    //                 ESP_LOGE(BT_APP_CORE_TAG, "dsp semaphore give failed");
-    //             }
-    //         }
-    //     }
-    // }
     // Write to the I2S ringbuffer
-    // else {
         if (i2s_ringbuffer_mode == RINGBUFFER_MODE_DROPPING) {
             ESP_LOGW(BT_APP_CORE_TAG, "i2s ringbuffer is full, drop this packet!");
             vRingbufferGetInfo(s_ringbuf_i2s, NULL, NULL, NULL, NULL, &item_size);
@@ -344,10 +264,6 @@ size_t write_ringbuf(const uint8_t *data, size_t size, const char* ringbuf_name)
                 }
             }
         }
-
-    // }
-
-    // Regardless of target ringbuffer, return written information
     return done ? size : 0;
 }
 

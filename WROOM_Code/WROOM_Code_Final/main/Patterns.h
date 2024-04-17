@@ -63,8 +63,6 @@ class Patterns : public Drawable {
       this->currentItem->start();
     }
 
-    // char* name = (char *)"Patterns"; - why needed?
-
     void stop() {
       if (currentItem) {
         currentItem->stop();

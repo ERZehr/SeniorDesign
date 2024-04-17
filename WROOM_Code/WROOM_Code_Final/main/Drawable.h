@@ -39,7 +39,6 @@ public:
     // return how many millisecond delay is requested before the next call to drawFrame()
     virtual unsigned int drawFrame() {
 		matrix->fillScreen(0);
-        //backgroundLayer.fillScreen({ 0, 0, 0 });
         return 0;
     };
 

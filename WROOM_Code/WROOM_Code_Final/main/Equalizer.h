@@ -1,37 +1,20 @@
+/*****************************************
+ * ECE 477 Team 8 "Artisyn" Credits:
+ * 
+ * Bailey Mosher:
+ *    * Coefficient Magnitude -> Bar Height Mapping
+ *    * Frame Display Logic
+ *    * Modifiable Band Number Display Logic
+ * 
+ * Kaden Merrill:
+ *    * Testing and Integration
+ * 
+*****************************************/
 #ifndef Equalizer_H
 #define Equalizer_H
 
-// #define GAP_WIDTH 2
-// #define BAND_WIDTH 9
-// #define BAND_START 5
 #define COEFF_MIN 0
-#define COEFF_MAX 300  // experimental max (remember this is 100*actual val)
-
-
-// #define COEFF_MIN_1 255000
-// #define COEFF_MAX_1 400000
-// #define COEFF_MIN_2 1500
-// #define COEFF_MAX_2 25000
-// #define COEFF_MIN_3 10000
-// #define COEFF_MAX_3 20000
-// #define COEFF_MIN_4 30000
-// #define COEFF_MAX_4 40000
-// #define COEFF_MIN_5 40000
-// #define COEFF_MAX_5 58000
-// #define COEFF_MIN_6 60000
-// #define COEFF_MAX_6 70000
-// #define COEFF_MIN_7 100000
-// #define COEFF_MAX_7 125000
-// #define COEFF_MIN_8 90000
-// #define COEFF_MAX_8 108000
-// #define COEFF_MIN_9 80000
-// #define COEFF_MAX_9 90000
-// #define COEFF_MIN_10 70000
-// #define COEFF_MAX_10 78000
-// #define COEFF_MIN_11 110000
-// #define COEFF_MAX_11 125000
-// #define COEFF_MIN_12 600000
-// #define COEFF_MAX_12 630000
+#define COEFF_MAX 300
 
 #define ATTEN_1 4
 #define ATTEN_2 40 / 3
@@ -41,10 +24,6 @@
 #define ATTEN_6 5 / 3
 #define ATTEN_7 4 / 3
 #define ATTEN_8 4 / 3
-// #define ATTEN_9 1
-// #define ATTEN_10 1
-// #define ATTEN_11 1
-// #define ATTEN_12 1
 
 extern int coeff_1;
 extern int coeff_2;
@@ -59,20 +38,6 @@ extern int band_num;
 static int GAP_WIDTH = 2;
 static int BAND_START = 5;
 static int BAND_WIDTH = 9;
-// extern int coeff_9;
-// extern int coeff_10;
-// extern int coeff_11;
-// extern int coeff_12;
-
-// // Dummies
-// static int temp_coeff_1 = 200;
-// static int temp_coeff_2 = 300;
-// static int temp_coeff_3 = 400;
-// static int temp_coeff_4 = 500;
-// static int temp_coeff_5 = 600;
-// static int temp_coeff_6 = 700;
-// static int temp_coeff_7 = 800;
-// static int temp_coeff_8 = 900;
 
 class Equalizer : public Drawable {
 private:
@@ -123,47 +88,16 @@ public:
                 // Only update height when moving to new band
                 if(new_band_flag) {
                     new_band_flag = false;
-                    // curr_y_max = curr_band_num == 12 ? coeff_12 * ATTEN_12 : curr_band_num == 11 ? coeff_11 * ATTEN_11 :
-                    //             curr_band_num == 10 ? coeff_10 * ATTEN_10 : curr_band_num == 9 ? coeff_9 * ATTEN_9 :
-                    //             curr_band_num == 8 ? coeff_8 * ATTEN_8 : curr_band_num == 7 ? coeff_7 * ATTEN_7 :
-                    //             curr_band_num == 6 ? coeff_6 * ATTEN_6 : curr_band_num == 5 ? coeff_5 * ATTEN_5 :
-                    //             curr_band_num == 4 ? coeff_4 * ATTEN_4 : curr_band_num == 3 ? coeff_3 * ATTEN_3 :
-                    //             curr_band_num == 2 ? coeff_2 * ATTEN_2 : coeff_1 * ATTEN_1;
-                    // curr_y_max = curr_band_num == 12 ? coeff_12 : curr_band_num == 11 ? coeff_11 :
-                    //             curr_band_num == 10 ? coeff_10 : curr_band_num == 9 ? coeff_9 :
-                    //             curr_band_num == 8 ? coeff_8 : curr_band_num == 7 ? coeff_7 :
-                    //             curr_band_num == 6 ? coeff_6 : curr_band_num == 5 ? coeff_5 :
-                    //             curr_band_num == 4 ? coeff_4 : curr_band_num == 3 ? coeff_3 :
-                    //             curr_band_num == 2 ? coeff_2 : coeff_1;
                     curr_y_max = curr_band_num == 8 ? coeff_8 : curr_band_num == 7 ? coeff_7 :
                         curr_band_num == 6 ? coeff_6 : curr_band_num == 5 ? coeff_5 :
                         curr_band_num == 4 ? coeff_4 : curr_band_num == 3 ? coeff_3 :
                         curr_band_num == 2 ? coeff_2 : coeff_1 / 10;
 
+                    // Standardize to value in range [0, 31]
                     curr_y_max = ((curr_y_max - COEFF_MIN) * VPANEL_H) / (COEFF_MAX - COEFF_MIN);
-                        
-                    // curr_y_max = curr_band_num == 8 ? temp_coeff_8 : curr_band_num == 7 ? temp_coeff_7 :
-                    //     curr_band_num == 6 ? temp_coeff_6 : curr_band_num == 5 ? temp_coeff_5 :
-                    //     curr_band_num == 4 ? temp_coeff_4 : curr_band_num == 3 ? temp_coeff_3 :
-                    //     curr_band_num == 2 ? temp_coeff_2 : temp_coeff_1;
-                                
-                    // Recall that coefficient was multiplied by 100, and is really a float.
-                    // But the ratio of given coefficient to the max value takes care of this - it's just a fraction
-                    // Also standardize to value in range [0, 31]
-                    // Place within each coefficient's min and max values
-                    // curr_y_max = curr_band_num == 8 ? ((curr_y_max - COEFF_MIN_8) * VPANEL_H) / (COEFF_MAX_8 - COEFF_MIN_8) :
-                    //              curr_band_num == 7 ? ((curr_y_max - COEFF_MIN_7) * VPANEL_H) / (COEFF_MAX_7 - COEFF_MIN_7) :
-                    //              curr_band_num == 6 ? ((curr_y_max - COEFF_MIN_6) * VPANEL_H) / (COEFF_MAX_6 - COEFF_MIN_6) :
-                    //              curr_band_num == 5 ? ((curr_y_max - COEFF_MIN_5) * VPANEL_H) / (COEFF_MAX_5 - COEFF_MIN_5) :
-                    //              curr_band_num == 4 ? ((curr_y_max - COEFF_MIN_4) * VPANEL_H) / (COEFF_MAX_4 - COEFF_MIN_4) :
-                    //              curr_band_num == 3 ? ((curr_y_max - COEFF_MIN_3) * VPANEL_H) / (COEFF_MAX_3 - COEFF_MIN_3) :
-                    //              curr_band_num == 2 ? ((curr_y_max - COEFF_MIN_2) * VPANEL_H) / (COEFF_MAX_2 - COEFF_MIN_2) :
-                    //              ((curr_y_max - COEFF_MIN_1) * VPANEL_H) / (COEFF_MAX_1 - COEFF_MIN_1);
                     // Increment next band number
                     curr_band_num++;
-
-                }
-                
+                }   
             }
             for (int y = 0; y < VPANEL_H; y++) {
                 // Cut off drawing at the coefficient-dictated level
@@ -181,8 +115,8 @@ public:
 
         effects.ShowFrame();
 
-        // TODO: find good return value - adds to delay ms in main logic
-        return 20;
+        // return 20;
+        return 5;  // delay 5 ms before drawing next frame
     }
 };
 

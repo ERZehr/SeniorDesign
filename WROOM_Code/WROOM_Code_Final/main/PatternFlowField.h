@@ -21,7 +21,6 @@
 */
 
 #ifndef PatternFlowField_H
-// #include "FastLED.h"
 
 #include "Vector.h"
 #include "Boid.h"
@@ -57,9 +56,7 @@ class PatternFlowField : public Drawable {
 
     unsigned int drawFrame() {
       effects.DimAll(240); 
-
-      // CRGB color = effects.ColorFromCurrentPalette(hue);
-
+      
       for (int i = 0; i < count; i++) {
         Boid * boid = &boids[i];
 

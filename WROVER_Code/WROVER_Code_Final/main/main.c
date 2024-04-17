@@ -5,6 +5,15 @@
  * 
  * UART Inspired by: https://github.com/espressif/esp-idf/blob/master/examples/peripherals/uart/uart_echo/main/uart_echo_example_main.c
  */
+/*****************************************
+ * ECE 477 Team 8 "Artisyn" Credits:
+ * 
+ * Bailey Mosher:
+ *    * Espressif BT Code Reformulating and Bloat Removal
+ *    * DSP and Custom Coefficient Inter-File Linking
+ *    * Architecture of UART Comms with WROOM
+ * 
+*****************************************/
 // Standard includes
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,20 +55,6 @@
 #define WROVER_UART_STACK_SIZE 2048
 #define WROVER_EXPECTED_RX_VALS 5
 
-// WROVER-Controlled Variables
-// static int coeff_1 = 0;
-// static int coeff_2 = 0;
-// static int coeff_3 = 0;
-// static int coeff_4 = 0;
-// static int coeff_5 = 0;
-// static int coeff_6 = 0;
-// static int coeff_7 = 0;
-// static int coeff_8 = 0;
-// static int coeff_9 = 0;
-// static int coeff_10 = 0;
-// static int coeff_11 = 0;
-// static int coeff_12 = 0;
-
 static int coeff_1 = 10;
 static int coeff_2 = 20;
 static int coeff_3 = 30;
@@ -68,10 +63,6 @@ static int coeff_5 = 50;
 static int coeff_6 = 60;
 static int coeff_7 = 70;
 static int coeff_8 = 80;
-// static int coeff_9 = 90;
-// static int coeff_10 = 100;
-// static int coeff_11 = 110;
-// static int coeff_12 = 120;
 
 // WROOM-Controlled Variables - need to divide by 10^5
 static int fir_1 = 200745;
@@ -80,7 +71,6 @@ static int fir_3 = -745;
 static int fir_4 = 100745;
 static int fir_5 = -100745;
 static int band_num = 8;
-
 
 /* event for stack up */
 enum {
@@ -185,11 +175,13 @@ static void bt_av_hdl_stack_evt(uint16_t event, void *p_param)
 /********************************
  * EXTERNAL-USE FUNCTIONS
  *******************************/
+// NOTE: WROOM sends coefficients as integers, multiplied by 10^5 to retain 5 decimals - need to account for this
 float get_dsp_coeff(int idx) {
     return idx == 1 ? (float)fir_1 / 100000 : idx == 2 ? (float)fir_2 / 100000 : 
            idx == 3 ? (float)fir_3 / 100000 : idx == 4 ? (float)fir_4 / 100000 : (float)fir_5 / 10000;
 }
 
+// Pretty self-explanatory
 uint8_t get_num_bands() {
     return (uint8_t)band_num;
 }
@@ -237,7 +229,6 @@ static void wrover_uart_init() {
 }
 
 static void update_fir_vals(uint8_t* data, int len) {
-    // TODO ensure accurate number of sent values
     // Begin parsing received JSON-like string
     // EXPECTED FORMAT (JSON-like):
     /*
@@ -263,7 +254,6 @@ static void update_fir_vals(uint8_t* data, int len) {
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
-    // TODO - actually grab coefficients (delete predefined ones at the top of the file)
     // Use snprintf() to quickly and safely place coefficients in data buffer
     // EXPECTED FORMAT (JSON-like):
     /*
@@ -284,13 +274,6 @@ static bool populate_tx_buf(uint8_t* data, int len) {
     coeff_6 = get_coeff(6);
     coeff_7 = get_coeff(7);
     coeff_8 = get_coeff(8);
-    // coeff_9 = get_coeff(9);
-    // coeff_10 = get_coeff(10);
-    // coeff_11 = get_coeff(11);
-    // coeff_12 = get_coeff(12);
-
-    // int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d, \"C9\" : %d, \"C10\" : %d, \"C11\" : %d, \"C12\" : %d}}",
-    //                        coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8, coeff_9, coeff_10, coeff_11, coeff_12);
 
     int written = snprintf((char*)data, len, "{\"COEFFS\" : {\"C1\" : %d, \"C2\" : %d, \"C3\" : %d, \"C4\" : %d, \"C5\" : %d, \"C6\" : %d, \"C7\" : %d, \"C8\" : %d}}",
                            coeff_1, coeff_2, coeff_3, coeff_4, coeff_5, coeff_6, coeff_7, coeff_8);

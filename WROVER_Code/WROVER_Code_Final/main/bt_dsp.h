@@ -33,17 +33,6 @@ extern float get_dsp_coeff(int idx);
 bool bt_media_biquad_bilinear_filter(uint8_t *media, uint32_t len, uint8_t* outBuf, uint8_t band_num);
 
 /**
- * @brief Updates multiplier coefficients for each frequency band
- *
- * @param [in] mults       byte array of media data
- * 
- * @return  true if malloc'd and filtered correctly - false otherwise
- * 
- * @NOTE: Length not needed - assumed to be equal to BAND_MAX
- */
-void update_multipliers(uint8_t *mults);
-
-/**
  * @brief Grabs multiplier coefficients for each frequency band
  *
  * @param [in] idx       which band to grab the coefficient of
