@@ -26,7 +26,6 @@ extern "C" {
 #define ESP_ZB_TRANSCEIVER_ALL_CHANNELS_MASK 0x07FFF800U /*!< channel 11-26 for compatibility with 2.4GHZ*/
 
 #ifdef CONFIG_ZB_ZED
-#define ESP_ZB_SLEEP_MINIMUM_THRESHOLD_MS 20U       /*! Default sleep threshold. Do not sleep when it is less then 1 Beacon Interval to wake up*/
 #define ESP_ZB_SLEEP_MAXIMUM_THRESHOLD_MS 86400000U /*! Maximum sleep threshold*/
 #endif                                              /** CONFIG_ZB_ZED */
 
@@ -94,6 +93,12 @@ typedef enum esp_zb_core_action_callback_id_s {
     ESP_ZB_CORE_DOOR_LOCK_LOCK_DOOR_RESP_CB_ID          = 0x0011,   /*!< Lock/unlock door response, refer to esp_zb_zcl_door_lock_lock_door_resp_message_t */
     ESP_ZB_CORE_IDENTIFY_EFFECT_CB_ID                   = 0x0012,   /*!< Identify triggers effect request, refer to esp_zb_zcl_identify_effect_message_t */
     ESP_ZB_CORE_BASIC_RESET_TO_FACTORY_RESET_CB_ID      = 0x0013,   /*!< Reset all clusters of endpoint to factory default, refer to esp_zb_zcl_basic_reset_factory_default_message_t  */
+    ESP_ZB_CORE_PRICE_GET_CURRENT_PRICE_CB_ID           = 0x0014,   /*!< Price get current price, refer to esp_zb_zcl_price_get_current_price_message_t */
+    ESP_ZB_CORE_PRICE_GET_SCHEDULED_PRICES_CB_ID        = 0x0015,   /*!< Price get scheduled prices, refer to esp_zb_zcl_price_get_scheduled_prices_message_t */
+    ESP_ZB_CORE_PRICE_GET_TIER_LABELS_CB_ID             = 0x0016,   /*!< Price get tier labels, refer to esp_zb_zcl_price_get_tier_labels_message_t */
+    ESP_ZB_CORE_PRICE_PUBLISH_PRICE_CB_ID               = 0x0017,   /*!< Price publish price, refer to esp_zb_zcl_price_publish_price_message_t */
+    ESP_ZB_CORE_PRICE_PUBLISH_TIER_LABELS_CB_ID         = 0x0018,   /*!< Price publish tier labels, refer to esp_zb_zcl_price_publish_tier_labels_message_t */
+    ESP_ZB_CORE_PRICE_PRICE_ACK_CB_ID                   = 0x0019,   /*!< Price price acknowledgement, refer to esp_zb_zcl_price_ack_message_t */
     ESP_ZB_CORE_CMD_READ_ATTR_RESP_CB_ID                = 0x1000,   /*!< Read attribute response, refer to esp_zb_zcl_cmd_read_attr_resp_message_t */
     ESP_ZB_CORE_CMD_WRITE_ATTR_RESP_CB_ID               = 0x1001,   /*!< Write attribute response, refer to esp_zb_zcl_cmd_write_attr_resp_message_t */
     ESP_ZB_CORE_CMD_REPORT_CONFIG_RESP_CB_ID            = 0x1002,   /*!< Configure report response, refer to esp_zb_zcl_cmd_config_report_resp_message_t */
@@ -324,6 +329,51 @@ void esp_zb_zcl_scenes_table_show(uint8_t endpoint);
 esp_err_t esp_zb_zcl_scenes_table_clear_by_index(uint16_t index);
 
 /**
+ * @brief Set the maximum number of devices in a Zigbee network
+ *
+ * @note The function will only take effect when called before esp_zb_init(), it determins
+ *       several table size such as the neighbor table and routing table, 64 by default
+ * @param[in] size The overall network size is expected to be set
+ * @return
+ *       - ESP_OK: on success
+ *       - ESP_FAIL: on failure
+ */
+esp_err_t esp_zb_overall_network_size_set(uint16_t size);
+
+/**
+ * @brief Set Zigbee stack I/O buffer size
+ *
+ * @note The function will only take effect when called before esp_zb_init(), 80 by default.
+ * @param[in] size The I/O buffer size is expected to be set
+ * @return
+ *       - ESP_OK: on success
+ *       - ESP_FAIL: on failure
+ */
+esp_err_t esp_zb_io_buffer_size_set(uint16_t size);
+
+/**
+ * @brief Set APS source binding table size
+ *
+ * @note The function will only take effect when called before esp_zb_init(), 16 by default
+ * @param[in] size The source binding table size is expected to be set
+ * @return
+ *       - ESP_OK: on success
+ *       - ESP_FAIL: on failure
+ */
+esp_err_t esp_zb_aps_src_binding_table_size_set(uint16_t size);
+
+/**
+ * @brief Set APS destination binding table size
+ *
+ * @note The function will only take effect when called before esp_zb_init(), 16 by default
+ * @param[in] size The destination binding table size is expected to be set
+ * @return
+ *       - ESP_OK: on success
+ *       - ESP_FAIL: on failure
+ */
+esp_err_t esp_zb_aps_dst_binding_table_size_set(uint16_t size);
+
+/**
  * @brief  Zigbee stack initialization.
  *
  * @note To be called inside the application's main cycle at start.
@@ -385,16 +435,16 @@ void esp_zb_set_rx_on_when_idle(bool rx_on);
 bool esp_zb_bdb_is_factory_new(void);
 
 /**
- * @brief Get the scan duration of beacon
+ * @brief Get the scan duration time
  *
- * @return Scan duration
+ * @return Scan duration is in beacon intervals (15.36 ms)
  */
 uint8_t esp_zb_bdb_get_scan_duration(void);
 
 /**
- * @brief Set the scan duration of beacon
+ * @brief Set the scan duration time
  *
- * @param[in] duration  Scan time is  ((1 << duration) + 1) * 15.36 ms
+ * @param[in] duration  The scan duration time is in beacon intervals, defined as ((1 << duration) + 1) * 15.36 ms
  */
 void esp_zb_bdb_set_scan_duration(uint8_t duration);
 
@@ -758,6 +808,7 @@ esp_err_t esp_zb_bdb_cancel_formation(void);
 /**
  * @brief Register a Zigbee device.
  *
+ * @note After successful registration, the SDK will retain a copy of the whole data model, the ep_list will be freed.
  * @param[in] ep_list  An endpoint list which wants to register @ref esp_zb_ep_list_s
  *
  * @return
@@ -822,14 +873,14 @@ bool esp_zb_joining_to_distributed_network_enabled(void);
 #endif
 
 /**
- * @brief Set the sleep threshold on the device. When the scheduler detects that the device can enter sleep mode, it will notify the application with the signal ESP_ZB_COMMON_SIGNAL_CAN_SLEEP.
- * The device cannot enter sleep mode when the sleep interval is less than this threshold.
- * Default sleep threshold is 20 milliseconds, because do not sleep when it is less then 1 Beacon Interval to wake up.
+ * @brief Set the sleep threshold on the device. When the scheduler detects that the device can enter sleep mode,
+ *        it will notify the application with the signal ESP_ZB_COMMON_SIGNAL_CAN_SLEEP.
+ *        The default sleep threshold is 20 milliseconds.
  *
  * @param[in] threshold_ms Sleep threshold in milliseconds
  *
  * @return ESP_OK if new threshold is valid and applied.
- * @return ESP_FAIL if the user attempts to set a threshold greater than ESP_ZB_SLEEP_MAXIMUM_THRESHOLD_MS or less than ESP_ZB_SLEEP_MINIMUM_THRESHOLD_MS.
+ * @return ESP_FAIL if the user attempts to set a threshold greater than ESP_ZB_SLEEP_MAXIMUM_THRESHOLD_MS.
  *
  */
 esp_err_t esp_zb_sleep_set_threshold(uint32_t threshold_ms);

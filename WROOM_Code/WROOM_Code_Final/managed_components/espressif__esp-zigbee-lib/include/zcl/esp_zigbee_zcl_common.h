@@ -9,6 +9,7 @@
 extern "C" {
 #endif
 
+#include "esp_err.h"
 #include "esp_zigbee_type.h"
 #include "esp_zigbee_zcl_basic.h"
 #include "esp_zigbee_zcl_identify.h"
@@ -29,6 +30,7 @@ extern "C" {
 #include "esp_zigbee_zcl_electrical_meas.h"
 #include "esp_zigbee_zcl_illuminance_meas.h"
 #include "esp_zigbee_zcl_pressure_meas.h"
+#include "esp_zigbee_zcl_flow_meas.h"
 #include "esp_zigbee_zcl_occupancy_sensing.h"
 #include "esp_zigbee_zcl_window_covering.h"
 #include "esp_zigbee_zcl_thermostat.h"
@@ -41,6 +43,9 @@ extern "C" {
 #include "esp_zigbee_zcl_pm2_5_measurement.h"
 #include "esp_zigbee_zcl_multistate_value.h"
 #include "esp_zigbee_zcl_metering.h"
+#include "esp_zigbee_zcl_diagnostics.h"
+#include "esp_zigbee_zcl_meter_identification.h"
+#include "esp_zigbee_zcl_price.h"
 #ifdef ZB_ENABLE_ZGP
 #include "esp_zigbee_zcl_green_power.h"
 #endif
@@ -158,13 +163,17 @@ typedef enum {
     ESP_ZB_ZCL_CLUSTER_ID_ILLUMINANCE_MEASUREMENT    = 0x0400U,     /*!< Illuminance measurement */
     ESP_ZB_ZCL_CLUSTER_ID_TEMP_MEASUREMENT           = 0x0402U,     /*!< Temperature measurement */
     ESP_ZB_ZCL_CLUSTER_ID_PRESSURE_MEASUREMENT       = 0x0403U,     /*!< Pressure measurement */
+    ESP_ZB_ZCL_CLUSTER_ID_FLOW_MEASUREMENT           = 0x0404U,     /*!< Flow measurement */
     ESP_ZB_ZCL_CLUSTER_ID_REL_HUMIDITY_MEASUREMENT   = 0x0405U,     /*!< Relative humidity measurement */
     ESP_ZB_ZCL_CLUSTER_ID_OCCUPANCY_SENSING          = 0x0406U,     /*!< Occupancy sensing */
     ESP_ZB_ZCL_CLUSTER_ID_CARBON_DIOXIDE_MEASUREMENT = 0x040dU,     /*!< Carbon dioxide measurement */
     ESP_ZB_ZCL_CLUSTER_ID_PM2_5_MEASUREMENT          = 0x042aU,     /*!< PM2.5 measurement */
     ESP_ZB_ZCL_CLUSTER_ID_IAS_ZONE                   = 0x0500U,     /*!< IAS zone */
-    ESP_ZB_ZCL_CLUSTER_ID_ELECTRICAL_MEASUREMENT     = 0x0b04U,     /*!< Electrical measurement */
+    ESP_ZB_ZCL_CLUSTER_ID_PRICE                      = 0x0700U,     /*!< Price cluster identifier. */
     ESP_ZB_ZCL_CLUSTER_ID_METERING                   = 0x0702U,     /*!< Metering */
+    ESP_ZB_ZCL_CLUSTER_ID_METER_IDENTIFICATION       = 0x0b01U,     /*!< Meter Identification cluster identifier */
+    ESP_ZB_ZCL_CLUSTER_ID_ELECTRICAL_MEASUREMENT     = 0x0b04U,     /*!< Electrical measurement */
+    ESP_ZB_ZCL_CLUSTER_ID_DIAGNOSTICS                = 0x0b05U,     /*!< Home Automation Diagnostics */
 } esp_zb_zcl_cluster_id_t;
 
 /**
@@ -342,6 +351,7 @@ uint16_t esp_zb_zcl_get_attribute_size(uint8_t attr_type, uint8_t *attr_value);
  * @return              A pointer indicates the end location in specific memory after a value has been stored
  */
 uint8_t *esp_zb_zcl_put_attribute_value(uint8_t *data_ptr, uint8_t type, uint8_t *value, uint16_t value_size);
+
 #ifdef __cplusplus
 }
 #endif

@@ -46,9 +46,6 @@
 #include "zb_vendor_zgpd.h"
 #endif
 
-#define ZB_IOBUF_POOL_SIZE 80
-#define ZB_SCHEDULER_Q_SIZE 80
-
 #if CONFIG_ZB_R22_ENABLE
 #define ZB_ENABLE_SE
 #define ZB_ENABLE_ZGP
@@ -100,5 +97,5 @@
 /* The time allotted for adding route information using frame data at the beginning (beacon interval units) */
 #define ZB_NWK_AGGRESSIVE_ROUTE_ADD_TIME 10U
 
-/* Platform timer type */
-#define ZB_TIMER_TYPE 64
+/* Memory configuration */
+#define ZB_CONFIGURABLE_MEM

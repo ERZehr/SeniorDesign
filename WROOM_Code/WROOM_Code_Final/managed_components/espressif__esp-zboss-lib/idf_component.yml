@@ -4,7 +4,7 @@ dependencies:
 description: esp-zboss library component
 repository: git://github.com/espressif/esp-zboss-lib.git
 repository_info:
-  commit_sha: 34c673c18fd2aaae4d2b34e5adae3908706d5aad
+  commit_sha: 0d3782ab1593d1775b73915ad85c36a8c1ab24d5
   path: .
 url: https://github.com/espressif/esp-zboss-lib
-version: 1.2.1
+version: 1.2.3
