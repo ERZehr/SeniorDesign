@@ -18,7 +18,7 @@ After this is completed, follow these steps:
 
 ## Flashing Instructions
 After building the project, select the Espressif Flash Command (or Espressif Build, Flash, and Monitor command). If this is the first time
-flashing with this library, a prompt will appear asking which interface to flash with: select UART
+flashing with this library, a prompt will appear asking which interface to flash with: select UART.
 
 ## Interface Instructions
-Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see logging messages about audio streaming. On an Android-based smartphone, use the built-in Bluetooth device connector to find the device named `ARTYISYN` and pair with it to connect. Begin streaming audio via any media app you desire, including but not limited to: Spotify, YouTube, YouTube Music, Samsung Music, etc. You will see the logging messages on the serial terminal/debugger print out messages about audio streaming, especially related to play/pause and positional information.
+Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see logging messages about audio streaming. On an Android-based smartphone, use the built-in Bluetooth device connector to find the device named `ARTYISYN` and pair with it to connect. Begin streaming audio via any media app you desire, including but not limited to: Spotify, YouTube, YouTube Music, Samsung Music, etc. You will see the logging messages on the serial terminal/debugger print out a received-packet count.

@@ -1,4 +1,4 @@
-# _WROOM_LED_BLE_
+# _WROOM_Code_Final_
 
 ## Code Usage
 Designed for ESP32 chips, specifically tested on the ESP32-WROOM-based DOIT DevKit v1. Library builds in Windows 10/11 VSCode using 
@@ -18,7 +18,12 @@ After this is completed, follow these steps:
 
 ## Flashing Instructions
 After building the project, select the Espressif Flash Command (or Espressif Build, Flash, and Monitor command). If this is the first time
-flashing with this library, a prompt will appear asking which interface to flash with: select UART
+flashing with this library, a prompt will appear asking which interface to flash with: select UART.
 
 ## Interface Instructions
-Flash and power the chip, using a serial monitor or signal debugger on TX0/RX0 to see incoming messages. On an Android-based smartphone, download the nRF Connect app: https://play.google.com/store/apps/details?id=no.nordicsemi.android.mcp. On the scanner tab, find the device labeled ESP32_BLE and connect to it. There is a tab of operations under "Nordic UART Service", with a UUID matching the code's `SERVICE_UUID`. At the time of prototyping, this UUID has both a TX and RX characteristic, both from the chip's perspective. Click on the upload arrow next to the RX Characteristic, and send any string you like. The resulting string should get sent to the chip, where it will be output to the serial line.
+Flash, power, and reset the chip, using a serial monitor or signal debugger on TX0/RX0 to see incoming messages. On an Android-based smartphone, download the Artisyn app. Start a scan, ensure the app finds the Artisyn device, and connect to it. Use the sliders and buttons within the app to send the desired:
+- Q-factor
+- Center Frequency
+- Band Number
+- Theme
+- Active (Spectrum Analyzer) / Idle (Graphics) Mode 
