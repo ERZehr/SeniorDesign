@@ -167,8 +167,10 @@ Effects effects;
 #include "Drawable.h"
 #include "Patterns.h"
 #include "Equalizer.h"
+#include "Startup.h"
 Patterns patterns;
 Equalizer equalizer;
+Startup startup;
 
 // State machine-esque control vars over LED brightness
 static uint8_t curr_bright = INIT_BRIGHT;
@@ -374,7 +376,24 @@ static TaskHandle_t s_matrix_driving_task_handle = NULL;  /* handle of driving t
 static TaskHandle_t s_matrix_bright_handle = NULL;  /* handle of brightness task  */
 
 static void matrix_driving_handler(void *arg) {
+  // Init the prev_theme to the current theme
   prev_theme_sel = theme_sel;
+  // Draw the startup logo
+  for(;;) {
+    // Delay until next cycle
+    vTaskDelay(1 / portTICK_PERIOD_MS);
+    ms_current = esp_timer_get_time() / 1000;
+    // Continue onto normal drawing after 5 seconds of logo shown
+    if ((ms_current - ms_previous) > ms_animation_max_duration / 2) {
+      break;
+    }
+    // Draw new frame of logo
+    if ( next_frame < ms_current) {
+      next_frame = startup.drawFrame() + ms_current;
+    }
+  }
+
+  // Continue to draw forever (until power off)
   for(;;) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
@@ -515,7 +534,7 @@ extern "C" void app_main(void)
   pServer->getAdvertising()->start();
   ESP_LOGI("BLEClient", "Waiting on a client connection to notify...");
   
-  // Create the task that handles LED matrix driving
+  // Create the task that handles LED matrix driving (also includes logo startup drawing)
   xTaskCreate(matrix_driving_handler, "LEDMatrixTask", 3072, NULL, 2, &s_matrix_driving_task_handle);
   // Create the task that handles matrix brightness updating
   xTaskCreate(matrix_bright_handler, "BrightTask", 3072, NULL, 11, &s_matrix_bright_handle);

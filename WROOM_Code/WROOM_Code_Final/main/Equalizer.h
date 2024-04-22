@@ -16,14 +16,7 @@
 #define COEFF_MIN 0
 #define COEFF_MAX 300
 
-#define ATTEN_1 4
-#define ATTEN_2 40 / 3
-#define ATTEN_3 20 / 6
-#define ATTEN_4 6
-#define ATTEN_5 4
-#define ATTEN_6 5 / 3
-#define ATTEN_7 4 / 3
-#define ATTEN_8 4 / 3
+#define ATTEN 2
 
 extern int coeff_1;
 extern int coeff_2;
@@ -94,7 +87,7 @@ public:
                         curr_band_num == 2 ? coeff_2 : coeff_1 / 10;
 
                     // Standardize to value in range [0, 31]
-                    curr_y_max = ((curr_y_max - COEFF_MIN) * VPANEL_H) / (COEFF_MAX - COEFF_MIN);
+                    curr_y_max = ((curr_y_max - COEFF_MIN) * VPANEL_H * ATTEN) / (COEFF_MAX - COEFF_MIN);
                     // Increment next band number
                     curr_band_num++;
                 }   

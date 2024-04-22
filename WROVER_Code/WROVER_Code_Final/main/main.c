@@ -50,7 +50,8 @@
 #define WROVER_UART_BUF_SIZE 1024
 #define WROVER_UART_BAUD 115200
 #define WROVER_UART_PORT_NUM 2
-#define WROVER_UART_RX 14
+// #define WROVER_UART_RX 14
+#define WROVER_UART_RX 13
 #define WROVER_UART_TX 27
 #define WROVER_UART_STACK_SIZE 2048
 #define WROVER_EXPECTED_RX_VALS 5
@@ -248,9 +249,9 @@ static void update_fir_vals(uint8_t* data, int len) {
     sscanf((const char*)data, "{\"FIRS\" : {\"F1\" : %d, \"F2\" : %d, \"F3\" : %d, \"F4\" : %d, \"F5\" : %d}, \"BANDS\" : %d}",
            &fir_1, &fir_2, &fir_3, &fir_4, &fir_5, &band_num);
     
-    // // DEBUGGING - values should NOT be 0
-    // ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",
-    //          fir_1, fir_2, fir_3, fir_4, fir_5);
+    // DEBUGGING - values should NOT be 0
+    ESP_LOGI("UART", "FIRS:\nF1:%d,\tF2:%d,\tF3:%d\nF4:%d,\tF5:%d\n\n",
+             fir_1, fir_2, fir_3, fir_4, fir_5);
 }
 
 static bool populate_tx_buf(uint8_t* data, int len) {
