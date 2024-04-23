@@ -141,7 +141,7 @@ static int fir_5;  // b2
 static float q_val = 0.25;  // Q
 static int fc_val = 63;  // f_c
 static int band_num = 8;  // num of bands 2-8
-static int disp_idle_mode;  // 1 - in idle, 0 - active playback
+static int disp_idle_mode = 1;  // 1 - in idle, 0 - active playback
 static int theme_sel = 0;  // 0-7 for different themes
 static int prev_theme_sel = 0;  // state machine-esque way to ensure theme not continuously updating
 
