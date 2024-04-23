@@ -2,7 +2,7 @@
  * ECE 477 Team 8 "Artisyn" Credits:
  * 
  * Bailey Mosher:
- *    * Custom startup logo
+ *    * Custom startup logo scheme, background animation
  * 
 *****************************************/
 #ifndef Startup_H
@@ -22,7 +22,6 @@
 */
 // The matrix is written to match the layout - but still needs to be inverted because C matrices go [row][col]
 // and the matrix wants to be drawn [col][row]
-// TODO: put something fancy in the background to dynamically highlight the static colors
 static uint8_t artisyn_logo[32][96] = {
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
@@ -59,6 +58,8 @@ static uint8_t artisyn_logo[32][96] = {
 
 class Startup : public Drawable {
 private:
+    int time = 0;
+    int cycles = 0;
 
 public:
     Startup() {
@@ -66,26 +67,51 @@ public:
     }
 
     byte hue = 0;
+    uint8_t blur_factor = 8;
+    uint8_t dim_factor = 32;
 
     unsigned int drawFrame() {
+      // Give a glowing effect to the logo
+      // blur_amount: 0 - no blur, 255 - most blur
+      blur2d(effects.leds, VPANEL_W, VPANEL_H, blur_factor);
 
+        // Original drawing
         for (int x = 0; x < VPANEL_W; x++) {
             for (int y = 0; y < VPANEL_H; y++) {
                 // Matrix set up opposite from an array - need to invert y and x
+                
+                int16_t v = 0;
+                uint8_t wibble = sin8(time);
+                v += sin16(x * wibble * 6 + time);
+                v += cos16(y * (128 - wibble) * 6 + time);
+                v += sin16(y * x * cos8(-time) / 8);
                 // Draw only desired pixels
                 if(artisyn_logo[y][x] != 0) {
-                    effects.Pixel(x, y, hue);
+                    // effects.drawBackgroundFastLEDPixelCRGB(x, y, effects.ColorFromCurrentPalette(hue));
+                    effects.Pixel(x, y, (v >> 8) + 127);
                 }
             }
         }
-        
-        EVERY_N_MILLIS(100) {
-            hue++;
+
+        time += 1;
+        cycles++;
+
+        if (cycles >= 2048) {
+            time = 0;
+            cycles = 0;
+        }
+
+        EVERY_N_MILLIS(250) {
+            blur_factor++;
+        }
+        // Don't let it get too blurry - just in case
+        if(blur_factor >= 100) {
+            blur_factor = 100;
         }
 
         effects.ShowFrame();
 
-        return 5;  // delay 30 ms before drawing next frame
+        return 30;
     }
 };
 

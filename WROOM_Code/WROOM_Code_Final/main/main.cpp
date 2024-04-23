@@ -102,8 +102,9 @@
 /********************************
  * ADC DEFINES
  *******************************/
-#define LIGHT_SENSOR_MIN 1100
-#define LIGHT_SENSOR_MAX 2200 
+// NOTE: with the capacitor on the light sensor board, these are INVERTED - logic handled in updateCurrBright()
+#define LIGHT_SENSOR_MIN 2830
+#define LIGHT_SENSOR_MAX 2900
 #define BRIGHT_LVL_0 40
 #define BRIGHT_LVL_1 95
 #define BRIGHT_LVL_2 135
@@ -168,9 +169,11 @@ Effects effects;
 #include "Patterns.h"
 #include "Equalizer.h"
 #include "Startup.h"
+#include "PatternAttract.h"
 Patterns patterns;
 Equalizer equalizer;
 Startup startup;
+PatternAttract patternattract;
 
 // State machine-esque control vars over LED brightness
 static uint8_t curr_bright = INIT_BRIGHT;
@@ -181,6 +184,7 @@ unsigned long ms_current  = 0;
 unsigned long ms_previous = 0;
 unsigned long ms_animation_max_duration = 20000; // 10 seconds
 unsigned long next_frame = 0;
+static bool drawing_startup = true;
 
 /********************************
  * BLE VARIABLE DECLARATIONS
@@ -274,9 +278,10 @@ static void patternAdvance(){
 // Update the current brightness in accordance with brightness thresholds
 static void updateCurrBright(int new_bright_val){
   // Quickly determine where new value sits within thresholds and update curr_bright
-  curr_bright = new_bright_val < BRIGHT_LVL_1 ? BRIGHT_LVL_0 :
-                new_bright_val < BRIGHT_LVL_2 ? BRIGHT_LVL_1 :
-                new_bright_val < BRIGHT_LVL_3 ? BRIGHT_LVL_2 : BRIGHT_LVL_3;
+  // This is INVERTED - higher input = lower output
+  curr_bright = new_bright_val > BRIGHT_LVL_2 ? BRIGHT_LVL_0 :
+                new_bright_val > BRIGHT_LVL_1 ? BRIGHT_LVL_1 :
+                new_bright_val > BRIGHT_LVL_0 ? BRIGHT_LVL_2 : BRIGHT_LVL_3;
 }
 
 /********************************
@@ -378,20 +383,43 @@ static TaskHandle_t s_matrix_bright_handle = NULL;  /* handle of brightness task
 static void matrix_driving_handler(void *arg) {
   // Init the prev_theme to the current theme
   prev_theme_sel = theme_sel;
+  bool intro_animation = true;
+  uint8_t startup_bright = 190;
+  patternattract.start();
+  // Temporarily hard-code "Party" - will change to default theme when drawing bars
+  theme_sel = 4;
+  effects.loadPalette(theme_sel);
   // Draw the startup logo
   for(;;) {
     // Delay until next cycle
     vTaskDelay(1 / portTICK_PERIOD_MS);
     ms_current = esp_timer_get_time() / 1000;
-    // Continue onto normal drawing after 5 seconds of logo shown
-    if ((ms_current - ms_previous) > ms_animation_max_duration / 2) {
+    // Continue onto logo drawing after 6 seconds of intro "flock"
+    if ((ms_current - ms_previous) > ms_animation_max_duration * 6 / 10) {
+      intro_animation = false;
+      patternattract.stop();
+      startup.start();
+    }
+    // Continue onto normal drawing after 4 seconds of logo shown (10s total)
+    if ((ms_current - ms_previous) > ms_animation_max_duration) {
       break;
     }
     // Draw new frame of logo
     if ( next_frame < ms_current) {
-      next_frame = startup.drawFrame() + ms_current;
+      if(intro_animation) {
+        next_frame = patternattract.drawFrame() + ms_current;
+      }
+      else {
+        next_frame = startup.drawFrame() + ms_current;
+        // Step down brightness to 0
+        matrix -> setBrightness8(startup_bright);
+        startup_bright = startup_bright == 0 ? 0 : startup_bright - 1;
+      }
     }
   }
+
+  // Indicate startup logo has been drawn
+  drawing_startup = false;
 
   // Continue to draw forever (until power off)
   for(;;) {
@@ -428,24 +456,26 @@ static void matrix_bright_handler(void *arg) {
   for(;;) {
     // Delay for about 5 seconds - too frequent reading yields poor output stability
     vTaskDelay(pdMS_TO_TICKS(2000));
+    if(!drawing_startup) {
 
-    // Read raw ADC value, average over 10 samples
-    uint16_t adc_raw_val = 0;
-    for(int i = 0; i < 10; i++) {
-      adc_raw_val += analogRead(36);
-      vTaskDelay(pdMS_TO_TICKS(5));
-    }
-    adc_avg_val = adc_raw_val / 10;
+      // Read raw ADC value, average over 10 samples
+      uint16_t adc_raw_val = 0;
+      for(int i = 0; i < 10; i++) {
+        adc_raw_val += analogRead(36);
+        vTaskDelay(pdMS_TO_TICKS(5));
+      }
+      adc_avg_val = adc_raw_val / 10;
 
-    // (NEW - LOW) * MAX_BRIGHT / (HIGH - LOW)
-    updateCurrBright(((adc_avg_val - LIGHT_SENSOR_MIN) * MAX_BRIGHT) / (LIGHT_SENSOR_MAX - LIGHT_SENSOR_MIN));
-    // // DEBUGGING
-    // ESP_LOGI("ADC", "AVG: %d", adc_avg_val);
+      // (NEW - LOW) * MAX_BRIGHT / (HIGH - LOW)
+      updateCurrBright(((adc_avg_val - LIGHT_SENSOR_MIN) * MAX_BRIGHT) / (LIGHT_SENSOR_MAX - LIGHT_SENSOR_MIN));
+      // // DEBUGGING
+      // ESP_LOGI("ADC", "AVG: %d", adc_avg_val);
 
-    // Only attempt to update brightness if there is a change - no need otherwise
-    if(curr_bright != prev_bright) {
-      matrix -> setBrightness8(curr_bright);
-      prev_bright = curr_bright;
+      // Only attempt to update brightness if there is a change - no need otherwise
+      if(curr_bright != prev_bright) {
+        matrix -> setBrightness8(curr_bright);
+        prev_bright = curr_bright;
+      }
     }
   }
 }
