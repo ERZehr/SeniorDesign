@@ -50,11 +50,10 @@
 #define WROVER_UART_BUF_SIZE 1024
 #define WROVER_UART_BAUD 115200
 #define WROVER_UART_PORT_NUM 2
-// #define WROVER_UART_RX 14
-#define WROVER_UART_RX 13
+// #define WROVER_UART_RX 14  // <-- Original PCB-supported GPIO
+#define WROVER_UART_RX 13  // <-- Flywire-able GPIO (can be whatever needed)
 #define WROVER_UART_TX 27
 #define WROVER_UART_STACK_SIZE 2048
-#define WROVER_EXPECTED_RX_VALS 5
 
 static int coeff_1 = 10;
 static int coeff_2 = 20;

@@ -117,10 +117,9 @@
 #define WROOM_UART_BAUD 115200
 #define WROOM_UART_PORT_NUM 2
 #define WROOM_UART_RX 16
-// #define WROOM_UART_TX 17
-#define WROOM_UART_TX 22
+// #define WROOM_UART_TX 17  // <-- Original PCB-supported GPIO
+#define WROOM_UART_TX 22  // <-- Flywire-able GPIO (can be whatever needed)
 #define WROOM_UART_STACK_SIZE 4096
-#define WROOM_EXPECTED_RX_VALS 13
 
 // WROVER-Controlled Variables
 static int coeff_1;
