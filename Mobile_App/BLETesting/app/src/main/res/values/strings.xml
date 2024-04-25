@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Artisyn</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="btn_start_scan_text">Start Scan</string>
+    <string name="btn_connect_text">Connect</string>
+    <string name="btn_disconnect_text">Disconnect</string>
+    <string name="btn_read_text">Read</string>
+    <string name="btn_write_text">Write</string>
+    <string name="btn_mode_text">Mode</string>
+    <string name="tw_scan_results_title">Scan
+        Results\n</string>
+    <string-array name="colors">
+        <item>Rainbow</item>
+        <item>Ocean</item>
+        <item>Cloud</item>
+        <item>Forest</item>
+        <item>Party</item>
+        <item>Heat</item>
+        <item>Lava</item>
+        <item>Ice</item>
+    </string-array>
+</resources>
